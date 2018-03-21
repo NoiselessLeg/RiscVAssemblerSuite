@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Assembler
@@ -39,7 +40,15 @@ namespace Assembler
             Task.WaitAll(tasks.ToArray());
             stopwatch.Stop();
             
-            logger.Log(LogLevel.Info, "Build completed in " + stopwatch.Elapsed.ToString());
+            if (tasks.Any(t => !t.Result))
+            {
+                logger.Log(LogLevel.Info, "Build completed (with errors) in " + stopwatch.Elapsed.ToString());
+            }
+            else
+            {
+                logger.Log(LogLevel.Info, "Build completed in " + stopwatch.Elapsed.ToString());
+            }
+
         }
 
         /// <summary>
@@ -69,11 +78,10 @@ namespace Assembler
 
                     // build the symbol table
                     var symTableBuilder = new SymbolTableBuilder();
-                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
-                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
+                    symTableBuilder.GenerateSymbolTable(reader, symTable);
 
                     // use the symbol table to generate code with references resolved.
-                    var objFile = new BasicObjectFile(symTable);
+                    var objFile = new BasicObjectFile(symTable, options.Endianness);
                     var codeGenerator = new CodeGenerator(symTable);
                     codeGenerator.GenerateCode(reader, objFile);
 

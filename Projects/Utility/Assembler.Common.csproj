@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.2.1.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommandLineParser.2.2.1\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ReTrie, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ReTrie.0.1.0\lib\net451\ReTrie.dll</HintPath>
       <Private>True</Private>
@@ -47,7 +51,7 @@
   <ItemGroup>
     <Compile Include="AssemblerOptions.cs" />
     <Compile Include="CommonConstants.cs" />
-    <Compile Include="BitSwapper.cs" />
+    <Compile Include="Endianness.cs" />
     <Compile Include="LoggerBase.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="OutputTypes.cs" />

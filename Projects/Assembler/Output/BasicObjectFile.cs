@@ -1,4 +1,5 @@
-﻿using Assembler.Output.ObjFileComponents;
+﻿using Assembler.Common;
+using Assembler.Output.ObjFileComponents;
 using System.Collections.Generic;
 
 namespace Assembler.Output
@@ -12,9 +13,10 @@ namespace Assembler.Output
         /// Creates an instance of the basic object file.
         /// </summary>
         /// <param name="symTable">The symbol table that will be stored away.</param>
-        public BasicObjectFile(SymbolTable symTable)
+        public BasicObjectFile(SymbolTable symTable, Endianness outputEndianness)
         {
             m_SymTable = symTable;
+            m_Endianness = outputEndianness;
             m_DataElements = new List<IObjectFileComponent>();
             m_TextElements = new List<IObjectFileComponent>();
         }
@@ -34,7 +36,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 16 bit value to add.</param>
         public void AddDataElement(short dataElement)
         {
-            m_DataElements.Add(new Int16DataElement(dataElement));
+            m_DataElements.Add(new Int16DataElement(dataElement, m_Endianness));
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 32 bit value to add.</param>
         public void AddDataElement(int dataElement)
         {
-            m_DataElements.Add(new Int32DataElement(dataElement));
+            m_DataElements.Add(new Int32DataElement(dataElement, m_Endianness));
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 64 bit value to add.</param>
         public void AddDataElement(long dataElement)
         {
-            m_DataElements.Add(new Int64DataElement(dataElement));
+            m_DataElements.Add(new Int64DataElement(dataElement, m_Endianness));
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace Assembler.Output
         /// <param name="instruction">The 32-bit instruction to add.</param>
         public void AddInstruction(int instruction)
         {
-            m_TextElements.Add(new Int32DataElement(instruction));
+            m_TextElements.Add(new Int32DataElement(instruction, m_Endianness));
         }
 
         /// <summary>
@@ -107,6 +109,7 @@ namespace Assembler.Output
         }
 
         private readonly SymbolTable m_SymTable;
+        private readonly Endianness m_Endianness;
         private readonly List<IObjectFileComponent> m_TextElements;
         private readonly List<IObjectFileComponent> m_DataElements;
     }

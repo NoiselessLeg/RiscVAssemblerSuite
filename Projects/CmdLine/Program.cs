@@ -9,7 +9,7 @@ namespace Assembler.CmdLine
     {
         static void Main(string[] args)
         {
-            var parsedArgs = Parser.Default.ParseArguments<Options>(args)
+            var parsedArgs = Parser.Default.ParseArguments<AssemblerOptions>(args)
                                 .WithParsed(options => RunAssembler(options));
 
 #if DEBUG
@@ -21,7 +21,7 @@ namespace Assembler.CmdLine
         /// Runs the assembler with the provided set of arguments.
         /// </summary>
         /// <param name="options"></param>
-        private static void RunAssembler(Options options)
+        private static void RunAssembler(AssemblerOptions options)
         {
             ILogger logger = null;
             string logFileName = options.LogFile;
@@ -35,8 +35,7 @@ namespace Assembler.CmdLine
             }
 
             RiscVAssembler assembler = new RiscVAssembler();
-            var asmOptions = new AssemblerOptions(options.InputFiles);
-            assembler.Assemble(asmOptions, logger);
+            assembler.Assemble(options, logger);
         }
     }
 }
