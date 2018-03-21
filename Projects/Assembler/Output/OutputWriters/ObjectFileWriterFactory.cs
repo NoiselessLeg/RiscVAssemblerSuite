@@ -7,13 +7,17 @@ namespace Assembler.Output.OutputWriters
     /// <summary>
     /// Provides an easy way to access file writers for supported object formats.
     /// </summary>
-    static class ObjectFileWriterFactory
+    class ObjectFileWriterFactory
     {
-        static ObjectFileWriterFactory()
+        /// <summary>
+        /// Creates a new instance of the ObjectFileWriterFactory with the target endianness.
+        /// </summary>
+        /// <param name="targetEndianness">The endianness that should be used to generate output.</param>
+        public ObjectFileWriterFactory(Endianness targetEndianness)
         {
-            s_WriterTypes = new Dictionary<OutputTypes, IObjectFileWriter>()
+            m_WriterTypes = new Dictionary<OutputTypes, IObjectFileWriter>()
             {
-                { OutputTypes.DirectBinary, new BasicBinaryObjectWriter() }
+                { OutputTypes.DirectBinary, new BasicBinaryObjectWriter(targetEndianness) }
             };
         }
 
@@ -22,10 +26,10 @@ namespace Assembler.Output.OutputWriters
         /// </summary>
         /// <param name="outType">The type of file to output.</param>
         /// <returns>A data writer for that file type.</returns>
-        public static IObjectFileWriter GetWriterForObjectType(OutputTypes outType)
+        public IObjectFileWriter GetWriterForObjectType(OutputTypes outType)
         {
             IObjectFileWriter writer = default(IObjectFileWriter);
-            if (!s_WriterTypes.TryGetValue(outType, out writer))
+            if (!m_WriterTypes.TryGetValue(outType, out writer))
             {
                 throw new ArgumentException("Unsupported output type passed to GetWriterForObjectType");
             }
@@ -33,6 +37,6 @@ namespace Assembler.Output.OutputWriters
             return writer;
         }
 
-        private static readonly Dictionary<OutputTypes, IObjectFileWriter> s_WriterTypes;
+        private readonly Dictionary<OutputTypes, IObjectFileWriter> m_WriterTypes;
     }
 }

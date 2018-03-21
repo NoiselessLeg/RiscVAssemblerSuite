@@ -26,7 +26,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// <param name="startingLine">The line that the .data segment starts on. Will be incremented</param>
         public void ParseSymbolsInLine(LineData asmLine, SymbolTable symbolList, int alignment)
         {
-            string[] tokens = asmLine.Text.Split(' ');
+            string[] tokens = asmLine.Text.Split(' ', '\t');
             string[] fixedTokens = ParserCommon.GetTrimmedTokenArray(tokens).ToArray();
 
             // a label should end with a ':' character and should be the first token.

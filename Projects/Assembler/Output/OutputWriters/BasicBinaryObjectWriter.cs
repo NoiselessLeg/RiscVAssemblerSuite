@@ -1,4 +1,5 @@
-﻿using Assembler.Output.ObjFileComponents;
+﻿using Assembler.Common;
+using Assembler.Output.ObjFileComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,11 @@ namespace Assembler.Output.OutputWriters
     /// </summary>
     class BasicBinaryObjectWriter : IObjectFileWriter
     {
+        public BasicBinaryObjectWriter(Endianness targetEndianness)
+        {
+            m_TargetEndianness = targetEndianness;
+        }
+
         /// <summary>
         /// Outputs all data in the BasicObjectFile to the specified format.
         /// </summary>
@@ -42,9 +48,19 @@ namespace Assembler.Output.OutputWriters
             {
                 fs.Write(Encoding.ASCII.GetBytes(elem.LabelName), 0, Encoding.ASCII.GetByteCount(elem.LabelName));
                 byte[] byteRepresentation = BitConverter.GetBytes(elem.Address);
+                // if the architecture we're assembling on is not our desired endianness,
+                // flip the byte array.
+                if (BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.BigEndian ||
+                    !BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.LittleEndian)
+                {
+                    Array.Reverse(byteRepresentation);
+                }
+
                 fs.Write(byteRepresentation, 0, byteRepresentation.Length);
             }
         }
+
+        private readonly Endianness m_TargetEndianness;
         
     }
 }

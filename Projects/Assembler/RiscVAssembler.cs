@@ -86,7 +86,8 @@ namespace Assembler
                     codeGenerator.GenerateCode(reader, objFile);
 
                     // write the object file out.
-                    IObjectFileWriter writer = ObjectFileWriterFactory.GetWriterForObjectType(OutputTypes.DirectBinary);
+                    var writerFac = new ObjectFileWriterFactory(options.Endianness);
+                    IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.DirectBinary);
                     string outputFile = fileNameNoExtension + ".obj";
                     writer.WriteObjectFile(outputFile, objFile);
                 }
