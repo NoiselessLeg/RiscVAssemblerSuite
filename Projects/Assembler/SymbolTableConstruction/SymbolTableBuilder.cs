@@ -100,7 +100,14 @@ namespace Assembler.SymbolTableConstruction
                         {
                             ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
                             var asmLine = new LineData(line, lineNum);
-                            segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                            try
+                            {
+                                segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new AssemblyException(lineNum, ex.Message);
+                            }
                         }
                     }
                 }

@@ -69,8 +69,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         {
             bool foundDataDeclaration = false;
             int dataDeclarationIdx = 0;
-
-
+            
             // scan it for a data size (e.g. .asciiz, .word, etc)
             for (int i = 0; i < tokens.Length && !foundDataDeclaration; ++i)
             {

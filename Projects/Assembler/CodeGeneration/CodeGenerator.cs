@@ -93,7 +93,14 @@ namespace Assembler.CodeGeneration
                         {
                             ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
                             var asmLine = new LineData(line, lineNum);
-                            codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
+                            try
+                            {
+                                codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new AssemblyException(lineNum, ex.Message);
+                            }
                         }
 
                         // otherwise, tthis isn't a directive, and we're seeing stuff that should be under a specified
