@@ -11,7 +11,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             m_SymbolTable = symbolTable;
         }
 
-        public IEnumerable<int> ParseInstruction(int currentTextAddress, string[] args)
+        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -35,7 +35,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
             else
             {
-                returnVal = GenerateInstructionWithSymbolicOffset(currentTextAddress, rs1Reg, rs2Reg, offsetStr); 
+                returnVal = GenerateInstructionWithSymbolicOffset(nextTextAddress, rs1Reg, rs2Reg, offsetStr); 
             }
             
             return returnVal;
@@ -45,16 +45,13 @@ namespace Assembler.CodeGeneration.InstructionGenerators
         /// Generates a BEQ instruction when provided a symbol as the offset. We
         /// easily look it up in our symbol table, if it exists.
         /// </summary>
-        private IEnumerable<int> GenerateInstructionWithSymbolicOffset(int currentAddress, int rs1Reg, int rs2Reg, string labelName)
+        private IEnumerable<int> GenerateInstructionWithSymbolicOffset(int nextTextAddress, int rs1Reg, int rs2Reg, string labelName)
         {
             Symbol symbolLabel = m_SymbolTable.GetSymbol(labelName);
-
-            // calculate the relative offset between where the symbol was found and the next instruction.
-            const int THIS_INSTRUCTION_SIZE = 4;
-            int nextAddress = currentAddress + THIS_INSTRUCTION_SIZE;
             
             // divide the difference by 4 since all instructions must reside on 4-byte aligned address.
-            short offset = (short)((symbolLabel.Address - nextAddress) / 4);
+            // find the difference between the jump-to address and the theoretical next address.
+            short offset = (short)((symbolLabel.Address - nextTextAddress) / 4);
             
             return GenerateInstructionWithNumericOffset(rs1Reg, rs2Reg, offset);
         }

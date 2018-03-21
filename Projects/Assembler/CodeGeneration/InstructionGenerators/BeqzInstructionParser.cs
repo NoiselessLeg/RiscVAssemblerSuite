@@ -14,7 +14,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             m_SymTable = symTbl;
         }
 
-        public IEnumerable<int> ParseInstruction(int currentTextAddress, string[] instructionArgs)
+        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs)
         {
             if (instructionArgs.Length != 2)
             {
@@ -22,7 +22,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
 
             var beqParser = new BeqInstructionParser(m_SymTable);
-            return beqParser.ParseInstruction(currentTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
+            return beqParser.ParseInstruction(nextTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
 
         private readonly SymbolTable m_SymTable;

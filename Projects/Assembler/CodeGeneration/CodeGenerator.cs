@@ -14,7 +14,7 @@ namespace Assembler.CodeGeneration
     {
         public CodeGenerator(SymbolTable symTable)
         {
-
+            m_CodeGenFac = new CodeGeneratorFactory(symTable);
         }
 
         /// <summary>
@@ -51,19 +51,10 @@ namespace Assembler.CodeGeneration
                     {
                         // tokenize the line;
                         string[] tokens = line.Split(' ');
-
-                        // if we see something that's not a directive, and we're not in a valid
-                        // segment type, flag an exception.
-                        if (!SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]) &&
-                            !ParserCommon.IsAlignmentDeclaration(tokens[0]) &&
-                            currSegmentType == SegmentType.Invalid)
-                        {
-                            throw new AssemblyException(lineNum, "Unexpected line \"" + line + "\" found in non-segmented area.");
-                        }
-
+                        
                         // otherwise, if we're looking for a segment definition, and we find one,
                         // then set the current segment type to the segment type.
-                        else if (SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]))
+                        if (SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]))
                         {
                             currSegmentType = SegmentTypeHelper.GetSegmentType(tokens[0]);
                         }
@@ -75,10 +66,10 @@ namespace Assembler.CodeGeneration
                             if (tokens.Length > 1)
                             {
                                 // get the next token, and try to convert it to an alignment parameter.
-                                int tokenizedAlign = 0;
-                                if (int.TryParse(tokens[1], out tokenizedAlign))
+                                int alignmentParam = 0;
+                                if (int.TryParse(tokens[1], out alignmentParam))
                                 {
-                                    currAlignment = ParserCommon.GetNewAlignment(tokenizedAlign);
+                                    currAlignment = ParserCommon.GetNewAlignment(alignmentParam);
                                 }
                                 else
                                 {
@@ -91,11 +82,19 @@ namespace Assembler.CodeGeneration
                             }
                         }
 
-                        else
+                        // if our segment type is valid, then we're processing actual data versus an assembler directive.
+                        else if (currSegmentType != SegmentType.Invalid)
                         {
-                            ISegmentCodeGenerator codeGen = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
+                            ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
                             var asmLine = new LineData(line, lineNum);
                             codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
+                        }
+
+                        // otherwise, tthis isn't a directive, and we're seeing stuff that should be under a specified
+                        // segment type. stop doing what we're doing.
+                        else
+                        {
+                            throw new AssemblyException(lineNum, "Unexpected line \"" + line + "\" found in non-segmented area.");
                         }
                     }
                 }
@@ -115,5 +114,7 @@ namespace Assembler.CodeGeneration
             // reset the StreamReader to the beginning position.
             reader.Seek(0, SeekOrigin.Begin);
         }
+
+        private readonly CodeGeneratorFactory m_CodeGenFac;
     }
 }

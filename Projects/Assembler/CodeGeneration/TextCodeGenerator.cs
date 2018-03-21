@@ -24,6 +24,11 @@ namespace Assembler.CodeGeneration
         {
             m_ParserFac = new InstructionGeneratorFactory(symbolTable);
             m_CurrTextAddress = CommonConstants.BASE_TEXT_ADDRESS;
+
+            // precalculate the nop instruction byte, since this should always be the same.
+            IEnumerable<int> nopVals = new NopInstructionParser().ParseInstruction(0, new string[] { });
+            System.Diagnostics.Debug.Assert(nopVals.Count() == 1);
+            m_PrecalculatedNopInstruction = nopVals.ElementAt(0);
         }
 
         /// <summary>
@@ -66,24 +71,33 @@ namespace Assembler.CodeGeneration
 
                 // first, calculate the address of the next theoretical instruction while factoring in padding.
                 int paddingSize = ParserCommon.GetNumPaddingBytes(CommonConstants.BASE_INSTRUCTION_SIZE_BYTES, currAlignment);
+
+                // padding should always be a multiple of the instruction size.
+                System.Diagnostics.Debug.Assert(paddingSize % CommonConstants.BASE_INSTRUCTION_SIZE_BYTES == 0);
                 int nextInstructionAddress = m_CurrTextAddress + CommonConstants.BASE_INSTRUCTION_SIZE_BYTES + paddingSize;
 
+                // beq instructions should (hopefully) not generate multiple instructions..
                 IEnumerable<int> generatedInstructions = parser.ParseInstruction(nextInstructionAddress, instructionParams.ToArray());
-                
+
                 foreach (int generatedInstruction in generatedInstructions)
                 {
                     objFile.AddInstruction(generatedInstruction);
+                    m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
+
                     // if padding is required at this point, insert a NOP instruction here.
+                    for (int i = 0; i < paddingSize; ++i)
+                    {
+                        objFile.AddInstruction(m_PrecalculatedNopInstruction);
+                        m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
+                    }
 
                 }
-
-                // increment our current instruction address by 4 * generatedInstructions.size()
-                // since each instruction is 4 bytes.
-                m_TextAddress += (generatedInstructions.Count() * CommonConstants.BASE_INSTRUCTION_SIZE_BYTES);
+               
             }
         }
 
         private readonly InstructionGeneratorFactory m_ParserFac;
+        private readonly int m_PrecalculatedNopInstruction;
         private int m_CurrTextAddress;
     }
 }

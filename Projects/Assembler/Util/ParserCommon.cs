@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Assembler.Util
 {
@@ -92,6 +93,48 @@ namespace Assembler.Util
         }
 
         /// <summary>
+        /// Determines if a token declares a null or non-null terminated string.
+        /// </summary>
+        /// <param name="token">The string token to examine.</param>
+        /// <returns>True if the token declares a string type.</returns>
+        public static bool IsStringDeclaration(string token)
+        {
+            return token == ".ascii" || token == ".asciiz";
+        }
+
+        /// <summary>
+        /// Determines if a token declares a variable space allocation
+        /// </summary>
+        /// <param name="token">The string token to examine.</param>
+        /// <returns>True if the token declares a space allocation.</returns>
+        public static bool IsSpaceDeclaration(string token)
+        {
+            return token == ".space";
+        }
+
+        /// <summary>
+        /// Fetches a string that follows a string declaration.
+        /// </summary>
+        /// <param name="assemblyLine">The line of assembly to analyze.</param>
+        /// <returns>The string that follows a string declaration.</returns>
+        public static string GetStringData(string assemblyLine)
+        {
+            if (!assemblyLine.Contains("\""))
+            {
+                throw new ArgumentException("No string found in call to GetStringData.");
+            }
+
+            int firstIdx = assemblyLine.IndexOf('\"');
+            int lastIdx = assemblyLine.LastIndexOf('\"');
+            if (lastIdx - firstIdx <= 0)
+            {
+                throw new ArgumentException("Invalid or malformed string in call to GetStringData");
+            }
+
+            return assemblyLine.Substring(firstIdx, lastIdx - firstIdx);
+        }
+
+        /// <summary>
         /// Determines the size, in bytes, of a .ascii/.asciiz string, or a .space directive.
         /// </summary>
         /// <param name="line">The line number the data type is found on.</param>
@@ -103,15 +146,14 @@ namespace Assembler.Util
         {
             int dataSize = 0;
             // strip the beginning and ending quotations.
-            string fixedString = str.Substring(1, str.LastIndexOf('\"') - 1);
 
             if (dataTypeToken == ".ascii")
             {
-                dataSize = fixedString.Length;
+                dataSize = str.Length;
             }
             else if (dataTypeToken == ".asciiz")
             {
-                dataSize = fixedString.Length + 1;
+                dataSize = str.Length + 1;
             }
             else if (dataTypeToken == ".space")
             {
@@ -142,6 +184,19 @@ namespace Assembler.Util
             }
 
             return dataSize;
+        }
+        
+        /// <summary>
+        /// Returns true if the token is declaring a data type.
+        /// </summary>
+        /// <param name="token">The token to examine.</param>
+        /// <returns>True if the token is a data declaration token, false otherwise.</returns>
+        public static bool IsDataDeclaration(string token)
+        {
+            return  IsTrivialDataType(token) ||
+                    token == ".ascii" ||
+                    token == ".asciiz" ||
+                    token == ".space";
         }
 
         private static readonly Dictionary<string, int> s_DataTypeDictionary;

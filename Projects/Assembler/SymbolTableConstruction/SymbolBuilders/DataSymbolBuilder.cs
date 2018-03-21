@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.Util;
+using System;
 using System.Linq;
 
 namespace Assembler.SymbolTableConstruction.SymbolBuilders
@@ -29,14 +30,14 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             // a label should end with a ':' character and should be the first token.
             if (ParserCommon.ContainsLabel(tokens[0]))
             {
-                ParseLabeledLine(symbolList, asmLine.LineNum, tokens, alignment);
+                ParseLabeledLine(symbolList, asmLine, tokens, alignment);
             }
 
             // if this doesn't have a label, and is not empty or a comment,
             // then this is a data element.
             else
             {
-                ParseUnlabeledLine(asmLine.LineNum, tokens, alignment);
+                ParseUnlabeledLine(asmLine, tokens, alignment);
             }
             
         }
@@ -45,56 +46,85 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// Parses a labeled line for symbols, and calculates the appropriate address of the element (if any).
         /// </summary>
         /// <param name="symTable">The symbol table to add the label to.</param>
-        /// <param name="lineNum">The one-based index of the line that is being parsed.</param>
-        /// <param name="tokens">The string array of tokens.</param>
+        /// <param name="originalLine">The line data being parsed.</param>
+        /// <param name="tokens">The string array of space-separated tokens.</param>
         /// <param name="alignment">The current alignment</param>
-        private void ParseLabeledLine(SymbolTable symTable, int lineNum, string[] tokens, int alignment)
+        private void ParseLabeledLine(SymbolTable symTable, LineData originalLine, string[] tokens, int alignment)
         {
             string labelName = ParserCommon.ExtractLabel(tokens[0]);
             var label = new Symbol(labelName, SegmentType.Text, m_CurrDataAddress);
             symTable.AddSymbol(label);
-            ParseUnlabeledLine(lineNum, tokens, alignment);
+            ParseUnlabeledLine(originalLine, tokens, alignment);
         }
 
         /// <summary>
-        /// Parses an unlabeled line to calculate the appropriate address of an element (if any).
+        /// Parses an unlabeled line to calculate the appropriate address of the next element (if any).
         /// </summary>
-        /// <param name="lineNum">The one-based index of the line that is being parsed.</param>
-        /// <param name="tokens">The string array of tokens.</param>
+        /// <param name="originalLine">The line data being parsed.</param>
+        /// <param name="tokens">The string array of space-separated tokens.</param>
         /// <param name="alignment">The current alignment</param>
-        private void ParseUnlabeledLine(int lineNum, string[] tokens, int alignment)
+        private void ParseUnlabeledLine(LineData originalLine, string[] tokens, int alignment)
         {
-            // take the line that we read originally, and split it by the ':' character.
+            bool foundDataDeclaration = false;
+            int dataDeclarationIdx = 0;
             // scan it for a data size (e.g. .asciiz, .word, etc)
-            for (uint i = 0; i < tokens.Length; ++i)
+            for (int i = 0; i < tokens.Length && !foundDataDeclaration; ++i)
             {
-                if (tokens[i].StartsWith("."))
+                if (ParserCommon.IsDataDeclaration(tokens[i]))
+                {
+                    foundDataDeclaration = true;
+                    dataDeclarationIdx = i;
+                }
+            }
+
+            // we found a data declaration; make sure that there's at least one value following it.
+            if (foundDataDeclaration)
+            {
+                if (dataDeclarationIdx + 1 < tokens.Length)
                 {
                     // if it is a trivial type, use our precomputed map to get the size.
-                    // otherwise, determine the string length.
-                    if (ParserCommon.IsTrivialDataType(tokens[i]))
+                    if (ParserCommon.IsTrivialDataType(tokens[dataDeclarationIdx]))
                     {
-                        int dataSize = ParserCommon.DetermineTrivialDataSize(lineNum, tokens[i]);
+                        int dataSize = ParserCommon.DetermineTrivialDataSize(originalLine.LineNum, tokens[dataDeclarationIdx]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
                         m_CurrDataAddress += (dataSize + paddingSize);
-                        break;
                     }
 
                     // otherwise, we'd expect there to be another token after the data type.
                     // see if we can figure out the string length
-                    else if (i < tokens.Length - 1)
+                    else if (ParserCommon.IsStringDeclaration(tokens[dataDeclarationIdx]))
                     {
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(lineNum, tokens[i], tokens[i + 1]);
+                        // if this is a string declaration, then get the original string data
+                        string dataStr = ParserCommon.GetStringData(originalLine.Text);
+
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum, 
+                                                                                  tokens[dataDeclarationIdx], 
+                                                                                  dataStr);
+
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
                         m_CurrDataAddress += (dataSize + paddingSize);
-                        break;
                     }
 
+                    // otherwise, this must be a .space declaration. just get the size following it.
                     else
                     {
-                        throw new AssemblyException(lineNum, "Unable to ascertain data type from " + tokens[i] + " token.");
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum,
+                                                                                  tokens[dataDeclarationIdx],
+                                                                                  tokens[dataDeclarationIdx + 1]);
+
+                        int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
+                        m_CurrDataAddress += (dataSize + paddingSize);
                     }
                 }
+                else
+                {
+                    throw new AssemblyException(originalLine.LineNum, "Expected data value after token " + tokens[dataDeclarationIdx]);
+                }
+            }
+
+            else
+            {
+                throw new AssemblyException(originalLine.LineNum, "Unable to ascertain data type from line.");
             }
         }
         

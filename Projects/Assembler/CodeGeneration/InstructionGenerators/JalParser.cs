@@ -14,7 +14,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             m_SymbolTable = symbolTable;
         }
 
-        public IEnumerable<int> ParseInstruction(int currentTextAddress, string[] args)
+        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)
