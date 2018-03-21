@@ -88,7 +88,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     // if it is a trivial type, use our precomputed map to get the size.
                     if (ParserCommon.IsTrivialDataType(tokens[dataDeclarationIdx]))
                     {
-                        int dataSize = ParserCommon.DetermineTrivialDataSize(originalLine.LineNum, tokens[dataDeclarationIdx]);
+                        int dataSize = ParserCommon.DetermineTrivialDataSize(tokens[dataDeclarationIdx]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
                         m_CurrDataAddress += (dataSize + paddingSize);
                     }
@@ -100,9 +100,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                         // if this is a string declaration, then get the original string data
                         string dataStr = ParserCommon.GetStringData(originalLine.Text);
 
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum,
-                                                                                  tokens[dataDeclarationIdx], 
-                                                                                  dataStr);
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(tokens[dataDeclarationIdx], dataStr);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
                         m_CurrDataAddress += (dataSize + paddingSize);
@@ -111,9 +109,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     // otherwise, this must be a .space declaration. just get the size following it.
                     else
                     {
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum,
-                                                                                  tokens[dataDeclarationIdx],
-                                                                                  tokens[dataDeclarationIdx + 1]);
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(tokens[dataDeclarationIdx], tokens[dataDeclarationIdx + 1]);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
                         m_CurrDataAddress += (dataSize + paddingSize);

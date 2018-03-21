@@ -137,12 +137,11 @@ namespace Assembler.Util
         /// <summary>
         /// Determines the size, in bytes, of a .ascii/.asciiz string, or a .space directive.
         /// </summary>
-        /// <param name="line">The line number the data type is found on.</param>
         /// <param name="dataTypeToken">The token describing the data type (e.g. ".ascii").</param>
         /// <param name="str">The token that immediately follows the data type, to examine.</param>
         /// <returns>The size of the string, or the size of the string + 1 if the data type is .asciiz (to account
         /// for the implicit 0 byte at the end).</returns>
-        public static int DetermineNonTrivialDataLength(int incrementingLineNum, string dataTypeToken, string str)
+        public static int DetermineNonTrivialDataLength(string dataTypeToken, string str)
         {
             int dataSize = 0;
             // strip the beginning and ending quotations.
@@ -163,7 +162,7 @@ namespace Assembler.Util
             }
             else
             {
-                throw new AssemblyException(incrementingLineNum, "Attempted to find string length of unknown data type " + dataTypeToken);
+                throw new ArgumentException("Attempted to find string length of unknown data type " + dataTypeToken);
             }
 
             return dataSize;
@@ -175,12 +174,12 @@ namespace Assembler.Util
         /// <param name="line">The line the symbol occured on. For error handling usage.</param>
         /// <param name="token">The declaration containing the type.</param>
         /// <returns>The size of the type, in bytes.</returns>
-        public static int DetermineTrivialDataSize(int line, string token)
+        public static int DetermineTrivialDataSize(string token)
         {
             int dataSize = 0;
             if (!s_DataTypeDictionary.TryGetValue(token, out dataSize))
             {
-                throw new AssemblyException(line, "Could not find data size with data type " + token);
+                throw new ArgumentException("Could not find data size with data type " + token);
             }
 
             return dataSize;

@@ -33,7 +33,7 @@ namespace Assembler.CodeGeneration
                     // if it is a trivial type, use our precomputed map to get the size.
                     if (ParserCommon.IsTrivialDataType(fixedTokens[dataDeclarationIdx]))
                     {
-                        int dataSize = ParserCommon.DetermineTrivialDataSize(asmLine.LineNum, fixedTokens[dataDeclarationIdx]);
+                        int dataSize = ParserCommon.DetermineTrivialDataSize(fixedTokens[dataDeclarationIdx]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
                         AddTrivialDataElementToObjectFile(objFile, dataSize, fixedTokens[dataDeclarationIdx + 1]);
@@ -53,11 +53,9 @@ namespace Assembler.CodeGeneration
                         string dataStr = ParserCommon.GetStringData(asmLine.Text);
 
                         // add the string data to the object file.
-                        AddNonTrivialDataElementToObjectFile(objFile, fixedTokens[dataDeclarationIdx], dataStr, asmLine.LineNum);
+                        AddNonTrivialDataElementToObjectFile(objFile, fixedTokens[dataDeclarationIdx], dataStr);
 
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(asmLine.LineNum,
-                                                                                  fixedTokens[dataDeclarationIdx],
-                                                                                  dataStr);
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(fixedTokens[dataDeclarationIdx], dataStr);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
@@ -71,9 +69,7 @@ namespace Assembler.CodeGeneration
                     // otherwise, this must be a .space declaration. just get the size following it.
                     else
                     {
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(asmLine.LineNum,
-                                                                                  fixedTokens[dataDeclarationIdx],
-                                                                                  fixedTokens[dataDeclarationIdx + 1]);
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(fixedTokens[dataDeclarationIdx], fixedTokens[dataDeclarationIdx + 1]);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
@@ -175,7 +171,7 @@ namespace Assembler.CodeGeneration
         /// <param name="dataType">The string token declaring the data type</param>
         /// <param name="elemValue">The string</param>
         /// <param name="lineNum"></param>
-        private void AddNonTrivialDataElementToObjectFile(BasicObjectFile objFile, string dataType, string elemValue, int lineNum)
+        private void AddNonTrivialDataElementToObjectFile(BasicObjectFile objFile, string dataType, string elemValue)
         {
             if (dataType == ".ascii")
             {
@@ -189,7 +185,7 @@ namespace Assembler.CodeGeneration
 
             else if (dataType == ".space")
             {
-                int numReservedSpace = ParserCommon.DetermineNonTrivialDataLength(lineNum, dataType, elemValue);
+                int numReservedSpace = ParserCommon.DetermineNonTrivialDataLength(dataType, elemValue);
                 for (int i = 0; i < numReservedSpace; ++i)
                 {
                     objFile.AddDataElement((byte)0);
