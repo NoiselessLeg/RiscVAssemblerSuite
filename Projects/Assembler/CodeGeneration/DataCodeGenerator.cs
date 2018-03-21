@@ -18,7 +18,7 @@ namespace Assembler.CodeGeneration
         /// <param name="currAlignment">The current specified alignment of the file.</param>
         public void GenerateCodeForSegment(LineData asmLine, BasicObjectFile objFile, int currAlignment)
         {
-            string[] tokens = asmLine.Text.Split(' ');
+            string[] tokens = asmLine.Text.Split(' ', '\t');
             string[] fixedTokens = ParserCommon.GetTrimmedTokenArray(tokens).ToArray();
             bool foundDataDeclaration = false;
             int dataDeclarationIdx = 0;
