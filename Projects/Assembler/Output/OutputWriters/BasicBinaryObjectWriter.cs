@@ -8,9 +8,17 @@ using System.Threading.Tasks;
 
 namespace Assembler.Output.OutputWriters
 {
+    /// <summary>
+    /// A class that represents a very basic output writer. This writes the data with no formatting,
+    /// other than prefixing the type of data it is writing. This should be used for debugging purposes.
+    /// </summary>
     class BasicBinaryObjectWriter : IObjectFileWriter
     {
-
+        /// <summary>
+        /// Outputs all data in the BasicObjectFile to the specified format.
+        /// </summary>
+        /// <param name="fileName">The file path to generate the output at.</param>
+        /// <param name="file">The data that will be written to the file.</param>
         public void WriteObjectFile(string fileName, BasicObjectFile file)
         {
             FileStream fs = File.Open(fileName, FileMode.Create);

@@ -4,14 +4,12 @@ using Assembler.Output;
 using Assembler.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Assembler.CodeGeneration
 {
     /// <summary>
-    /// Class that generates the code.
+    /// Class that generates the code for a .text segment instruction
     /// </summary>
     class TextCodeGenerator : ISegmentCodeGenerator
     {
@@ -32,10 +30,11 @@ namespace Assembler.CodeGeneration
         }
 
         /// <summary>
-        /// Reads the file, and generates code for all instructions in the file.
+        /// Generates code for a .text instruction in the file.
         /// </summary>
-        /// <param name="reader">A StreamReader instance that will read the input assembly file.</param>
-        /// <returns>An IEnumerable of integers representing binary instructions.</returns>
+        /// <param name="asmLine">The line to parse.</param>
+        /// <param name="objFile">The object file that will be written to.</param>
+        /// <param name="currAlignment">The current specified alignment of the file.</param>
         public void GenerateCodeForSegment(LineData asmLine, BasicObjectFile objFile, int currAlignment)
         {
             // scan to the first instruction.

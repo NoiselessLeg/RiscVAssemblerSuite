@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Assembler.SymbolTableConstruction.SymbolBuilders
 {
+    /// <summary>
+    /// Parses a line from the .text segment for symbols, and calculates the appropriate address
+    /// of the next instruction.
+    /// </summary>
     class TextSymbolBuilder : ISymbolTableBuilder
     {
         /// <summary>

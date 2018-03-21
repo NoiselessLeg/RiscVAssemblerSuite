@@ -1,12 +1,12 @@
 ﻿using Assembler.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Output.OutputWriters
 {
+    /// <summary>
+    /// Provides an easy way to access file writers for supported object formats.
+    /// </summary>
     static class ObjectFileWriterFactory
     {
         static ObjectFileWriterFactory()
@@ -17,6 +17,11 @@ namespace Assembler.Output.OutputWriters
             };
         }
 
+        /// <summary>
+        /// Fetches the appropriate object file writer for the specified object type.
+        /// </summary>
+        /// <param name="outType">The type of file to output.</param>
+        /// <returns>A data writer for that file type.</returns>
         public static IObjectFileWriter GetWriterForObjectType(OutputTypes outType)
         {
             IObjectFileWriter writer = default(IObjectFileWriter);

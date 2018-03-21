@@ -1,15 +1,17 @@
 ﻿using Assembler.Output.ObjFileComponents;
-using Assembler.Util;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Output
 {
+    /// <summary>
+    /// Represents the data that will be stored in any form of output file.
+    /// </summary>
     class BasicObjectFile
     {
+        /// <summary>
+        /// Creates an instance of the basic object file.
+        /// </summary>
+        /// <param name="symTable">The symbol table that will be stored away.</param>
         public BasicObjectFile(SymbolTable symTable)
         {
             m_SymTable = symTable;

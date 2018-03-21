@@ -1,15 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assembler.Output;
 using Assembler.Util;
 
 namespace Assembler.CodeGeneration
 {
+    /// <summary>
+    /// Generates code for a .data segment line of an assembly file.
+    /// </summary>
     class DataCodeGenerator : ISegmentCodeGenerator
     {
+        /// <summary>
+        /// Generates the byte representation of an instruction from a line of assembly code.
+        /// </summary>
+        /// <param name="asmLine">The line to parse.</param>
+        /// <param name="objFile">The object file that will be written to.</param>
+        /// <param name="currAlignment">The current specified alignment of the file.</param>
         public void GenerateCodeForSegment(LineData asmLine, BasicObjectFile objFile, int currAlignment)
         {
             string[] tokens = asmLine.Text.Split(' ');
