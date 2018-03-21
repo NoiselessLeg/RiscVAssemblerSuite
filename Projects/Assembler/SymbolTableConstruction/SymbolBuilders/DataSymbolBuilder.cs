@@ -39,7 +39,12 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             // then this is a data element.
             else
             {
-                ParseUnlabeledLine(asmLine, fixedTokens, alignment);
+                // try to make sure this isn't garbage.
+                bool foundData = ParseUnlabeledLine(asmLine, fixedTokens, alignment);
+                if (!foundData)
+                {
+                    throw new AssemblyException(asmLine.LineNum, "Expected data declaration, received \"" + asmLine.Text + '\"');
+                }
             }
             
         }
@@ -65,7 +70,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// <param name="originalLine">The line data being parsed.</param>
         /// <param name="tokens">The string array of space-separated tokens.</param>
         /// <param name="alignment">The current alignment</param>
-        private void ParseUnlabeledLine(LineData originalLine, string[] tokens, int alignment)
+        private bool ParseUnlabeledLine(LineData originalLine, string[] tokens, int alignment)
         {
             bool foundDataDeclaration = false;
             int dataDeclarationIdx = 0;
@@ -120,6 +125,8 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     throw new AssemblyException(originalLine.LineNum, "Expected data value after token " + tokens[dataDeclarationIdx]);
                 }
             }
+
+            return foundDataDeclaration;
         }
 
         
