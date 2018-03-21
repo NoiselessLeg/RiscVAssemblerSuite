@@ -206,6 +206,10 @@ namespace Assembler.SymbolTableConstruction
                             {
                                 segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
                             }
+                            catch (AssemblyException)
+                            {
+                                throw;
+                            }
                             catch (Exception ex)
                             {
                                 throw new AssemblyException(lineNum, ex.Message);

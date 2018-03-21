@@ -40,10 +40,9 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             else
             {
                 // try to make sure this isn't garbage.
-                bool foundData = ParseUnlabeledLine(asmLine, fixedTokens, alignment);
-                if (!foundData)
+                if (!ParseUnlabeledLine(asmLine, fixedTokens, alignment))
                 {
-                    throw new AssemblyException(asmLine.LineNum, "Expected data declaration, received \"" + asmLine.Text + '\"');
+                    throw new AssemblyException(asmLine.LineNum, "Expected size declaration, received \"" + asmLine.Text + '\"');
                 }
             }
             
@@ -70,6 +69,9 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// <param name="originalLine">The line data being parsed.</param>
         /// <param name="tokens">The string array of space-separated tokens.</param>
         /// <param name="alignment">The current alignment</param>
+        /// <returns>A boolean determining if anything of use was parsed. If this is false,
+        /// the line should be examined to make sure a symbol was at least parsed. Otherwise,
+        /// this could indicate that garbage was on the line.</returns>
         private bool ParseUnlabeledLine(LineData originalLine, string[] tokens, int alignment)
         {
             bool foundDataDeclaration = false;

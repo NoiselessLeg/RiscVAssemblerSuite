@@ -94,6 +94,10 @@ namespace Assembler.CodeGeneration
                             {
                                 codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
                             }
+                            catch (AssemblyException)
+                            {
+                                throw;
+                            }
                             catch (Exception ex)
                             {
                                 throw new AssemblyException(lineNum, ex.Message);
