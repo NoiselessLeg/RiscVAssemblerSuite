@@ -37,29 +37,33 @@ namespace Assembler.CodeGeneration
                         AddTrivialDataElementToObjectFile(objFile, dataSize, tokens[dataDeclarationIdx + 1]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
-                        // if our padding size is greater than 0, add padding to 
+                        // if our padding size is greater than 0, add padding bytes to meet the next alignment boundary.
                         for (int i = 0; i < paddingSize; ++i)
                         {
-
+                            objFile.AddDataElement((byte)0);
                         }
-                        
                     }
                 }
 
                 // otherwise, we'd expect there to be another token after the data type.
                 // see if we can figure out the string length
-                else if (i < tokens.Length - 1)
-                {
-                    int dataSize = ParserCommon.DetermineNonTrivialDataLength(lineNum, tokens[i], tokens[i + 1]);
-                    int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
-                    m_CurrDataAddress += (dataSize + paddingSize);
-                    break;
-                }
-
                 else
                 {
-                    throw new AssemblyException(lineNum, "Unable to ascertain data type from " + tokens[i] + " token.");
+                    // we'd expect there to be another token after the data size declaration.
+                    if (tokens.Length > dataDeclarationIdx)
+                    {
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(asmLine.LineNum, 
+                                                                                  tokens[dataDeclarationIdx], 
+                                                                                  tokens[dataDeclarationIdx + 1]);
+
+                        int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
+                    }
                 }
+            }
+
+            else
+            {
+                throw new AssemblyException(asmLine.LineNum, "Unable to ascertain data type from line " + asmLine.Text);
             }
         }
 
