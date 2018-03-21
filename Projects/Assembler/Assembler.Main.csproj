@@ -81,7 +81,6 @@
     <Compile Include="SymbolTableConstruction\SymbolBuilders\ISymbolTableBuilder.cs" />
     <Compile Include="Util\LineData.cs" />
     <Compile Include="SymbolTableConstruction\SymbolTableBuilder.cs" />
-    <Compile Include="Util\LineParseResults.cs" />
     <Compile Include="Util\ParserCommon.cs" />
     <Compile Include="SymbolTableConstruction\SegmentSymbolParserFactory.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\TextSymbolBuilder.cs" />
