@@ -44,8 +44,7 @@ namespace Assembler.CodeGeneration
                             objFile.AddDataElement((byte)0);
                         }
                     }
-
-                    // otherwise, we'd expect there to be another token after the data type.
+                    
                     // see if we can figure out the string length
                     else if (ParserCommon.IsStringDeclaration(fixedTokens[dataDeclarationIdx]))
                     {
