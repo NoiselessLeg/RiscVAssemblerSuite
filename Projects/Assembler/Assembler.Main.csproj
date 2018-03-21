@@ -44,37 +44,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Output\BasicBinaryOutputWriter.cs" />
-    <Compile Include="Parsers\AddImmediateInstructionParser.cs" />
-    <Compile Include="Parsers\AddInstructionParser.cs" />
-    <Compile Include="Parsers\AuipcInstructionParser.cs" />
-    <Compile Include="Parsers\BeqInstructionParser.cs" />
-    <Compile Include="Parsers\BeqzInstructionParser.cs" />
-    <Compile Include="Parsers\JalParser.cs" />
-    <Compile Include="Parsers\LuiInstructionParser.cs" />
-    <Compile Include="Parsers\NopInstructionParser.cs" />
+    <Compile Include="CodeGeneration\CodeGenerator.cs" />
+    <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\DataCodeGenerator.cs" />
+    <Compile Include="CodeGeneration\ISegmentCodeGenerator.cs" />
+    <Compile Include="Output\OutputWriters\BasicBinaryObjectWriter.cs" />
+    <Compile Include="Output\BasicObjectFile.cs" />
+    <Compile Include="Output\ObjFileComponents\AsciiDataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\AsciizDataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\ByteDataElement.cs" />
+    <Compile Include="Output\ObjFileComponents\GenericObjectFileComponent.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GenericObjectFileComponent.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Output\ObjFileComponents\IObjectFileComponent.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\AddImmediateInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\AddInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\AuipcInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\BeqInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\BeqzInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\JalParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\LuiInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\NopInstructionParser.cs" />
+    <Compile Include="Output\OutputWriters\IObjectFileWriter.cs" />
+    <Compile Include="Output\OutputWriters\ObjectFileWriterFactory.cs" />
     <Compile Include="RiscVAssembler.cs" />
     <Compile Include="AssemblyException.cs" />
-    <Compile Include="FirstPassAssembler.cs" />
-    <Compile Include="Label.cs" />
-    <Compile Include="Parsers\AndImmediateInstructionParser.cs" />
-    <Compile Include="Parsers\AndInstructionParser.cs" />
-    <Compile Include="Parsers\IParser.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\AndImmediateInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\AndInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\IParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecondPassAssembler.cs" />
-    <Compile Include="FirstPassSegmentParsing\DataSegmentParser.cs" />
-    <Compile Include="FirstPassSegmentParsing\InstructionByteSizes\BaseInstructionByteMeasure.cs" />
-    <Compile Include="FirstPassSegmentParsing\InstructionByteSizes\IInstructionByteMeasure.cs" />
-    <Compile Include="FirstPassSegmentParsing\ISegmentParser.cs" />
-    <Compile Include="FirstPassSegmentParsing\LineData.cs" />
+    <Compile Include="CodeGeneration\TextCodeGenerator.cs" />
+    <Compile Include="SymbolTableConstruction\SymbolBuilders\DataSymbolBuilder.cs" />
+    <Compile Include="SymbolTableConstruction\SymbolBuilders\ISymbolTableBuilder.cs" />
+    <Compile Include="Util\LineData.cs" />
+    <Compile Include="SymbolTableConstruction\SymbolTableBuilder.cs" />
+    <Compile Include="Util\LineParseResults.cs" />
     <Compile Include="Util\ParserCommon.cs" />
-    <Compile Include="FirstPassSegmentParsing\SegmentTypes.cs" />
-    <Compile Include="FirstPassSegmentParsing\TextSegmentParser.cs" />
+    <Compile Include="SymbolTableConstruction\SegmentSymbolParserFactory.cs" />
+    <Compile Include="SymbolTableConstruction\SymbolBuilders\TextSymbolBuilder.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
-    <Compile Include="Util\InstructionParserFactory.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\InstructionGeneratorFactory.cs" />
     <Compile Include="Util\RegisterMap.cs" />
+    <Compile Include="Util\SegmentTypeHelper.cs" />
     <Compile Include="Util\StreamReaderUtils.cs" />
-    <Compile Include="Util\SymbolTable.cs" />
+    <Compile Include="SymbolTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
@@ -84,6 +100,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Output\ObjFileComponents\GenericObjectFileComponent.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GenericObjectFileComponent.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

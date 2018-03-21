@@ -1,5 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.Output;
+using Assembler.Output.OutputWriters;
+using Assembler.SymbolTableConstruction;
 using Assembler.Util;
 using System;
 using System.Collections.Generic;
@@ -27,8 +29,7 @@ namespace Assembler
             stopwatch.Start();
             foreach (string file in options.InputFileNames)
             {
-                var task = new Task<bool>(() => AssembleFile(file, options.BaseTextAddress, 
-                                                             options.BaseDataAddress, logger));
+                var task = new Task<bool>(() => AssembleFile(file, logger, options));
                 tasks.Add(task);
                 task.Start();
             }
@@ -44,32 +45,36 @@ namespace Assembler
         /// Task for assembling one individual file.
         /// </summary>
         /// <param name="inputFile">The input file to assemble.</param>
-        /// <param name="baseTextAddress">The base .text segment address.</param>
-        /// <param name="baseDataAddress">The base .data segment address.</param>
         /// <param name="logger">The logging implementation to log errors/info to.</param>
+        /// <param name="options">The options to use while assembling.</param>
         /// <returns>True if the assembler could successfully generate code for the file; otherwise returns false.</returns>
-        public bool AssembleFile(string inputFile, int baseTextAddress, 
-                                 int baseDataAddress, ILogger logger)
+        public bool AssembleFile(string inputFile, ILogger logger, AssemblerOptions options)
         {
             bool success = true;
             logger.Log(LogLevel.Info, "Invoking assembler for file " + inputFile);
             try
             {
+                // get the file name with no extension, in case we want intermediate files,
+                // or for our output.
+                string fileNameNoExtension = inputFile;
+                if (inputFile.Contains("."))
+                {
+                    fileNameNoExtension = inputFile.Substring(0, inputFile.LastIndexOf('.'));
+                }
+
                 using (var reader = new StreamReader(File.OpenRead(inputFile)))
                 {
-                    var fp = new FirstPassAssembler(baseTextAddress, baseDataAddress);
-                    SymbolTable symbolList = fp.GenerateSymbolTable(reader);
-                    var spa = new SecondPassAssembler(symbolList, baseTextAddress);
-                    logger.Log(LogLevel.DebugFine, "Found " + symbolList.NumSymbols + " symbols in file " + inputFile +'.');
-                    logger.Log(LogLevel.Info, "Generating code for file " + inputFile + '.');
-                    IEnumerable<int> instructions = spa.GenerateCode(reader);
+                    var symTable = new SymbolTable();
+                    var symTableBuilder = new SymbolTableBuilder();
+                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
+                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
-                    // For now, we're going to be extremely dumb and dump the code with no formatting to
-                    // a file, with the same name, but a .obj extension.
-                    // TODO: not be dumb and do this intelligently.
-                    string outputFileName = inputFile.Substring(0, inputFile.LastIndexOf('.')) + ".obj";
-                    var outputGenerator = new BasicBinaryOutputWriter();
-                    outputGenerator.CreateObjFile(instructions, outputFileName);
+                    var objFile = new BasicObjectFile(symTable);
+
+
+                    IObjectFileWriter writer = ObjectFileWriterFactory.GetWriterForObjectType(OutputTypes.DirectBinary);
+                    string outputFile = fileNameNoExtension + ".obj";
+                    writer.WriteObjectFile(outputFile, objFile);
                 }
             }
             catch (AggregateException ex)
@@ -85,6 +90,7 @@ namespace Assembler
             {
                 logger.Log(LogLevel.Critical, ex.Message);
                 logger.Log(LogLevel.Critical, ex.InnerException?.Message);
+                success = false;
             }
 
             return success;
