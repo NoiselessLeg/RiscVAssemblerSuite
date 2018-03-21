@@ -13,11 +13,12 @@ namespace Assembler.CodeGeneration
         public void GenerateCodeForSegment(LineData asmLine, BasicObjectFile objFile, int currAlignment)
         {
             string[] tokens = asmLine.Text.Split(' ');
+            string[] fixedTokens = ParserCommon.GetTrimmedTokenArray(tokens).ToArray();
             bool foundDataDeclaration = false;
             int dataDeclarationIdx = 0;
-            for (int i = 0; i < tokens.Length && !foundDataDeclaration; ++i)
+            for (int i = 0; i < fixedTokens.Length && !foundDataDeclaration; ++i)
             {
-                if (ParserCommon.IsDataDeclaration(tokens[i]))
+                if (ParserCommon.IsDataDeclaration(fixedTokens[i]))
                 {
                     foundDataDeclaration = true;
                     dataDeclarationIdx = i;
@@ -27,29 +28,35 @@ namespace Assembler.CodeGeneration
             // we found a data declaration; make sure that there's at least one value following it.
             if (foundDataDeclaration)
             {
-                if (dataDeclarationIdx + 1 < tokens.Length)
+                if (dataDeclarationIdx + 1 < fixedTokens.Length)
                 {
                     // if it is a trivial type, use our precomputed map to get the size.
-                    if (ParserCommon.IsTrivialDataType(tokens[dataDeclarationIdx]))
+                    if (ParserCommon.IsTrivialDataType(fixedTokens[dataDeclarationIdx]))
                     {
-                        int dataSize = ParserCommon.DetermineTrivialDataSize(asmLine.LineNum, tokens[dataDeclarationIdx]);
+                        int dataSize = ParserCommon.DetermineTrivialDataSize(asmLine.LineNum, fixedTokens[dataDeclarationIdx]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
-                        AddTrivialDataElementToObjectFile(objFile, dataSize, tokens[dataDeclarationIdx + 1]);
+                        AddTrivialDataElementToObjectFile(objFile, dataSize, fixedTokens[dataDeclarationIdx + 1]);
+
+                        // add as much padding as we need to reach the next alignment boundary.
+                        for (int i = 0; i < paddingSize; ++i)
+                        {
+                            objFile.AddDataElement((byte)0);
+                        }
                     }
 
                     // otherwise, we'd expect there to be another token after the data type.
                     // see if we can figure out the string length
-                    else if (ParserCommon.IsStringDeclaration(tokens[dataDeclarationIdx]))
+                    else if (ParserCommon.IsStringDeclaration(fixedTokens[dataDeclarationIdx]))
                     {
                         // if this is a string declaration, then get the original string data
                         string dataStr = ParserCommon.GetStringData(asmLine.Text);
 
                         // add the string data to the object file.
-                        AddNonTrivialDataElementToObjectFile(objFile, tokens[dataDeclarationIdx], dataStr, asmLine.LineNum);
+                        AddNonTrivialDataElementToObjectFile(objFile, fixedTokens[dataDeclarationIdx], dataStr, asmLine.LineNum);
 
                         int dataSize = ParserCommon.DetermineNonTrivialDataLength(asmLine.LineNum,
-                                                                                  tokens[dataDeclarationIdx],
+                                                                                  fixedTokens[dataDeclarationIdx],
                                                                                   dataStr);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
@@ -65,8 +72,8 @@ namespace Assembler.CodeGeneration
                     else
                     {
                         int dataSize = ParserCommon.DetermineNonTrivialDataLength(asmLine.LineNum,
-                                                                                  tokens[dataDeclarationIdx],
-                                                                                  tokens[dataDeclarationIdx + 1]);
+                                                                                  fixedTokens[dataDeclarationIdx],
+                                                                                  fixedTokens[dataDeclarationIdx + 1]);
 
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
@@ -79,11 +86,13 @@ namespace Assembler.CodeGeneration
                 }
                 else
                 {
-                    throw new AssemblyException(asmLine.LineNum, "Expected data value after token " + tokens[dataDeclarationIdx]);
+                    throw new AssemblyException(asmLine.LineNum, "Expected data value after token " + fixedTokens[dataDeclarationIdx]);
                 }
             }
 
-            else
+            // check to see if this is just a label.
+            // otherwise, it is probably garbage that we should throw.
+            else if (!ParserCommon.ContainsLabel(asmLine.Text))
             {
                 throw new AssemblyException(asmLine.LineNum, "Unable to ascertain data type from line " + asmLine.Text);
             }
@@ -170,14 +179,12 @@ namespace Assembler.CodeGeneration
         {
             if (dataType == ".ascii")
             {
-                string fixedString = elemValue.Substring(1, elemValue.LastIndexOf('\"') - 1);
-                objFile.AddAsciiString(fixedString);
+                objFile.AddAsciiString(elemValue);
             }
 
             else if (dataType == ".asciiz")
             {
-                string fixedString = elemValue.Substring(1, elemValue.LastIndexOf('\"') - 1);
-                objFile.AddNullTerminatedAsciiString(fixedString);
+                objFile.AddNullTerminatedAsciiString(elemValue);
             }
 
             else if (dataType == ".space")

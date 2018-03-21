@@ -45,7 +45,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 if (isShort)
                 {
                     var immediateParser = new AndImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(currentTextAddress, args);
+                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
                 }
                 else
                 {

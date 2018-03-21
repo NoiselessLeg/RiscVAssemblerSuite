@@ -85,7 +85,7 @@ namespace Assembler.CodeGeneration
                     m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
 
                     // if padding is required at this point, insert a NOP instruction here.
-                    for (int i = 0; i < paddingSize; ++i)
+                    for (int i = 0; i < paddingSize; i += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES)
                     {
                         objFile.AddInstruction(m_PrecalculatedNopInstruction);
                         m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;

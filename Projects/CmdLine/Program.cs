@@ -35,7 +35,7 @@ namespace Assembler.CmdLine
             }
 
             RiscVAssembler assembler = new RiscVAssembler();
-            var asmOptions = new AssemblerOptions(options.InputFiles, options.BaseTextAddress, options.BaseDataAddress);
+            var asmOptions = new AssemblerOptions(options.InputFiles);
             assembler.Assemble(asmOptions, logger);
         }
     }

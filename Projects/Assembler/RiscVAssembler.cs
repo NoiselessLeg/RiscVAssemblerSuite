@@ -1,4 +1,5 @@
-﻿using Assembler.Common;
+﻿using Assembler.CodeGeneration;
+using Assembler.Common;
 using Assembler.Output;
 using Assembler.Output.OutputWriters;
 using Assembler.SymbolTableConstruction;
@@ -65,13 +66,18 @@ namespace Assembler
                 using (var reader = new StreamReader(File.OpenRead(inputFile)))
                 {
                     var symTable = new SymbolTable();
+
+                    // build the symbol table
                     var symTableBuilder = new SymbolTableBuilder();
                     symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
                     symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
+                    // use the symbol table to generate code with references resolved.
                     var objFile = new BasicObjectFile(symTable);
+                    var codeGenerator = new CodeGenerator(symTable);
+                    codeGenerator.GenerateCode(reader, objFile);
 
-
+                    // write the object file out.
                     IObjectFileWriter writer = ObjectFileWriterFactory.GetWriterForObjectType(OutputTypes.DirectBinary);
                     string outputFile = fileNameNoExtension + ".obj";
                     writer.WriteObjectFile(outputFile, objFile);

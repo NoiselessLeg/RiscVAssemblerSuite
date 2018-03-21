@@ -10,20 +10,26 @@ using System.Threading.Tasks;
 
 namespace Assembler.CodeGeneration
 {
+    /// <summary>
+    /// Class that generates code for an assembly file.
+    /// </summary>
     class CodeGenerator
     {
+        /// <summary>
+        /// Creates a new instance of a CodeGenerator.
+        /// </summary>
+        /// <param name="symTable">The symbol table to use to resolve references with.</param>
         public CodeGenerator(SymbolTable symTable)
         {
             m_CodeGenFac = new CodeGeneratorFactory(symTable);
         }
 
         /// <summary>
-        /// Populates an existing symbol table with symbols parsed from the desired segment.
+        /// Generates code for the given assembly file.
         /// </summary>
         /// <param name="reader">A StreamReader instance that will read the input assembly file.</param>
-        /// <param name="desiredSegment">The program segment to parse symbols from.</param>
-        /// <param name="symTable">The SymbolTable instance to populate.</param>
-        public void GenerateCode(StreamReader reader, SymbolTable symTable, BasicObjectFile objFile)
+        /// <param name="objFile">The basic object file that will be written to.</param>
+        public void GenerateCode(StreamReader reader, BasicObjectFile objFile)
         {
             SegmentType currSegmentType = SegmentType.Invalid;
             int currAlignment = CommonConstants.DEFAULT_ALIGNMENT;

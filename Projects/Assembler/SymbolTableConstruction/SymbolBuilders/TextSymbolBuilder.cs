@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.Util;
+using System;
 using System.Linq;
 
 namespace Assembler.SymbolTableConstruction.SymbolBuilders
@@ -36,7 +37,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                 symbolList.AddSymbol(label);
 
                 // determine if there are any instructions on this line.
-                string[] subTokens = tokens[0].Split(':');
+                string[] subTokens = tokens[0].Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                 // if we have more than one subtoken, then there is more than just a label on this line.
                 // increment the number of words in the segment (since we're assuming whatever is on the right-hand side

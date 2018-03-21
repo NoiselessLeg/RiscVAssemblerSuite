@@ -6,7 +6,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
 {
     class AddImmediateInstructionParser : IParser
     {
-        public IEnumerable<int> ParseInstruction(int currentTextAddress, string[] args)
+        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)

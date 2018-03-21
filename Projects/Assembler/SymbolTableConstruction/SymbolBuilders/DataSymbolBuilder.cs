@@ -1,6 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.Util;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assembler.SymbolTableConstruction.SymbolBuilders
@@ -26,18 +27,19 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         public void ParseSymbolsInLine(LineData asmLine, SymbolTable symbolList, int alignment)
         {
             string[] tokens = asmLine.Text.Split(' ');
+            string[] fixedTokens = ParserCommon.GetTrimmedTokenArray(tokens).ToArray();
 
             // a label should end with a ':' character and should be the first token.
-            if (ParserCommon.ContainsLabel(tokens[0]))
+            if (ParserCommon.ContainsLabel(fixedTokens[0]))
             {
-                ParseLabeledLine(symbolList, asmLine, tokens, alignment);
+                ParseLabeledLine(symbolList, asmLine, fixedTokens, alignment);
             }
 
             // if this doesn't have a label, and is not empty or a comment,
             // then this is a data element.
             else
             {
-                ParseUnlabeledLine(asmLine, tokens, alignment);
+                ParseUnlabeledLine(asmLine, fixedTokens, alignment);
             }
             
         }
@@ -67,6 +69,8 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         {
             bool foundDataDeclaration = false;
             int dataDeclarationIdx = 0;
+
+
             // scan it for a data size (e.g. .asciiz, .word, etc)
             for (int i = 0; i < tokens.Length && !foundDataDeclaration; ++i)
             {
@@ -97,7 +101,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                         // if this is a string declaration, then get the original string data
                         string dataStr = ParserCommon.GetStringData(originalLine.Text);
 
-                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum, 
+                        int dataSize = ParserCommon.DetermineNonTrivialDataLength(originalLine.LineNum,
                                                                                   tokens[dataDeclarationIdx], 
                                                                                   dataStr);
 
@@ -121,12 +125,9 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     throw new AssemblyException(originalLine.LineNum, "Expected data value after token " + tokens[dataDeclarationIdx]);
                 }
             }
-
-            else
-            {
-                throw new AssemblyException(originalLine.LineNum, "Unable to ascertain data type from line.");
-            }
         }
+
+        
         
         private int m_CurrDataAddress;
     }

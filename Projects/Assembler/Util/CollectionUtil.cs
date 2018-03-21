@@ -27,5 +27,23 @@ namespace Assembler.Util
 
             return default(T);
         }
+
+        /// <summary>
+        /// Applies a function across all elements of the enumerable.
+        /// </summary>
+        /// <typeparam name="T">The type of elements stored in this enumerable.</typeparam>
+        /// <param name="enumerable">The IEnumerable object to operate on.</param>
+        /// <param name="func">The function to apply to each element. Must return that type of element.</param>
+        /// <returns>An IEnumerable instance with the function applied to each element of the original IEnumerable.</returns>
+        public static IEnumerable<T> Apply<T>(this IEnumerable<T> enumerable, Func<T, T> func)
+        {
+            var fixedElems = new List<T>();
+            foreach (T elem in enumerable)
+            {
+                fixedElems.Add(func(elem));
+            }
+
+            return fixedElems;
+        }
     }
 }

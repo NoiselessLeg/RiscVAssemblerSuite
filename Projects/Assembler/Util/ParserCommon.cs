@@ -124,7 +124,7 @@ namespace Assembler.Util
                 throw new ArgumentException("No string found in call to GetStringData.");
             }
 
-            int firstIdx = assemblyLine.IndexOf('\"');
+            int firstIdx = assemblyLine.IndexOf('\"') + 1;
             int lastIdx = assemblyLine.LastIndexOf('\"');
             if (lastIdx - firstIdx <= 0)
             {
@@ -197,6 +197,28 @@ namespace Assembler.Util
                     token == ".ascii" ||
                     token == ".asciiz" ||
                     token == ".space";
+        }
+
+        /// <summary>
+        /// Gets an array of tokens, where each token is trimmed on the left/right for any whitespace.
+        /// </summary>
+        /// <param name="tokenizedLine">The original tokenized line (split by spaces).</param>
+        /// <returns>A list of tokens with no whitespace on the right/left.</returns>
+        public static IEnumerable<string> GetTrimmedTokenArray(string[] tokenizedLine)
+        {
+            IEnumerable<string> trimmedTokens = tokenizedLine.Apply((str) => str.Trim());
+            var finalList = new List<string>();
+
+            // remove any empty entries from the list.
+            foreach (string token in trimmedTokens)
+            {
+                if (!string.IsNullOrEmpty(token))
+                {
+                    finalList.Add(token);
+                }
+            }
+
+            return finalList;
         }
 
         private static readonly Dictionary<string, int> s_DataTypeDictionary;
