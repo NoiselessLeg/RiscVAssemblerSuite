@@ -50,6 +50,15 @@ namespace Assembler
         {
             get { return m_Table.Count; }
         }
+
+        /// <summary>
+        /// Returns an IEnumerable of all stored symbols in this table.
+        /// </summary>
+        public IEnumerable<Symbol> Symbols
+        {
+            get { return m_Table.Values; }
+        }
+
         private readonly Dictionary<string, Symbol> m_Table;
     }
 }

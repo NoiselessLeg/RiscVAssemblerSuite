@@ -27,6 +27,16 @@ namespace Assembler.Output.OutputWriters
             {
                 elem.WriteDataToFile(fs);
             }
+
+            // write the symbol table
+            fs.Write(Encoding.ASCII.GetBytes(".symtbl"), 0, Encoding.ASCII.GetByteCount(".symtbl"));
+            foreach (Symbol elem in file.SymbolTable.Symbols)
+            {
+                fs.Write(Encoding.ASCII.GetBytes(elem.LabelName), 0, Encoding.ASCII.GetByteCount(elem.LabelName));
+                byte[] byteRepresentation = BitConverter.GetBytes(elem.Address);
+                fs.Write(byteRepresentation, 0, byteRepresentation.Length);
+            }
         }
+        
     }
 }
