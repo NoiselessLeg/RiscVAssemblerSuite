@@ -149,12 +149,9 @@ namespace Assembler.SymbolTableConstruction
                     ++lineNum;
                     // trim the whitespace from any read-in line.
                     string line = reader.ReadLine().Trim();
-
-                    // get a substring up until the commented line.
-                    if (line.Contains('#'))
-                    {
-                        line = line.Substring(0, line.IndexOf('#'));
-                    }
+                    
+                    // get a substring up until the commented line, ignoring those in user quotes.
+                    line = ParserCommon.GetSanitizedString(line);
 
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assembler.Util
 {
@@ -184,7 +185,7 @@ namespace Assembler.Util
 
             return dataSize;
         }
-        
+
         /// <summary>
         /// Returns true if the token is declaring a data type.
         /// </summary>
@@ -192,7 +193,7 @@ namespace Assembler.Util
         /// <returns>True if the token is a data declaration token, false otherwise.</returns>
         public static bool IsDataDeclaration(string token)
         {
-            return  IsTrivialDataType(token) ||
+            return IsTrivialDataType(token) ||
                     token == ".ascii" ||
                     token == ".asciiz" ||
                     token == ".space";
@@ -218,6 +219,56 @@ namespace Assembler.Util
             }
 
             return finalList;
+        }
+
+        /// <summary>
+        /// Generates a substring of a line until the first comment.
+        /// </summary>
+        /// <param name="line">The line to examine and sanitize.</param>
+        /// <returns>A string that contains no comments inline.</returns>
+        public static string GetSanitizedString(string line)
+        {
+            string ret = string.Empty;
+            // first, detect if our line contains a comment.
+            if (line.Contains("#"))
+            {
+                // now get the index of the comment token.
+                // we need to ensure it doesn't fall within a user string.
+                if (line.Contains("\""))
+                {
+                    int commentIdx = line.IndexOf('#');
+                    int firstQuoteIdx = line.IndexOf('\"');
+                    int secondQuoteIdx = line.LastIndexOf('\"');
+
+                    // check for any comments after the second quote.
+                    if (firstQuoteIdx < commentIdx && commentIdx < secondQuoteIdx)
+                    {
+                        int secondCommentIdx = line.IndexOf('#', secondQuoteIdx);
+                        if (secondCommentIdx > 0)
+                        {
+                            ret = line.Substring(0, secondCommentIdx);
+                        }
+                    }
+
+                    // the comment appears before or after the quotes; we need to comment
+                    // out the string.
+                    else
+                    {
+                        ret = line.Substring(0, line.IndexOf('#'));
+                    }
+                }
+                else
+                {
+                    // otherwise, there's no string. just substring up to the comment token.
+                    ret = line.Substring(0, line.IndexOf('#'));
+                }
+            }
+            else
+            {
+                ret = line;
+            }
+
+            return ret;
         }
 
         private static readonly Dictionary<string, int> s_DataTypeDictionary;
