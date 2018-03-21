@@ -39,6 +39,7 @@ namespace Assembler.CodeGeneration
                     // if it is a trivial type, use our precomputed map to get the size.
                     if (ParserCommon.IsTrivialDataType(fixedTokens[dataDeclarationIdx]))
                     {
+
                         int dataSize = ParserCommon.DetermineTrivialDataSize(fixedTokens[dataDeclarationIdx]);
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
@@ -48,6 +49,12 @@ namespace Assembler.CodeGeneration
                         for (int i = 0; i < paddingSize; ++i)
                         {
                             objFile.AddDataElement((byte)0);
+                        }
+
+                        // we expect one token after this word.
+                        if (fixedTokens.Length > dataDeclarationIdx + 2)
+                        {
+                            throw new AssemblyException(asmLine.LineNum, "Unknown token \"" + fixedTokens[dataDeclarationIdx + 2] + "\" found.");
                         }
                     }
                     
@@ -75,13 +82,19 @@ namespace Assembler.CodeGeneration
                     else
                     {
                         int dataSize = ParserCommon.DetermineNonTrivialDataLength(fixedTokens[dataDeclarationIdx], fixedTokens[dataDeclarationIdx + 1]);
-
                         int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
 
                         // fill the space and padding with zeroes.
                         for (int i = 0; i < dataSize + paddingSize; ++i)
                         {
                             objFile.AddDataElement((byte)0);
+                        }
+
+                        // we expect one token after this word.
+                        // otherwise, it may be garbage that we should detect.
+                        if (fixedTokens.Length > dataDeclarationIdx + 2)
+                        {
+                            throw new AssemblyException(asmLine.LineNum, "Unknown token \"" + fixedTokens[dataDeclarationIdx + 2] + "\" found.");
                         }
                     }
                 }
