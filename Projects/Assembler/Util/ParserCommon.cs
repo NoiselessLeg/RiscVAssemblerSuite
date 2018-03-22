@@ -248,10 +248,16 @@ namespace Assembler.Util
                         {
                             ret = line.Substring(0, secondCommentIdx);
                         }
+
+                        // no comment found after the second quote, just use the whole line.
+                        else
+                        {
+                            ret = line;
+                        }
                     }
 
-                    // the comment appears before or after the quotes; we need to comment
-                    // out the string.
+                    // the comment appears before or after the quotes; in which case,
+                    // comment out the string, or grab everything until the comment token.
                     else
                     {
                         ret = line.Substring(0, line.IndexOf('#'));
