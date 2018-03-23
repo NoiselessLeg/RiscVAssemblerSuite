@@ -4,9 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Assembler.Gui"
-        xmlns:commands="clr-namespace:Assembler.Gui.Commands"
-        xmlns:vm="clr-namespace:Assembler.Gui.ViewModel"
         mc:Ignorable="d"
+        xmlns:vm="clr-namespace:Assembler.Gui.ViewModel" 
         Title="rASM" Height="600" Width="800">
     <Window.CommandBindings>
         <!--<CommandBinding Command="AssembleCommand" CanExecute="AssembleCommand_CanExecute" Executed="AssembleCommand_Executed" />-->
@@ -25,15 +24,21 @@
                 <MenuItem Header="_Assemble Project" />
             </MenuItem>
         </Menu>
-        <TabControl DockPanel.Dock="Top" ItemsSource="{Binding Evm.FileTabs}">
-
-        </TabControl>
         <TreeView Name="ProjectHierarchy" DockPanel.Dock="Right" Width="300">
         </TreeView>
-        <TextBox DockPanel.Dock="Top" Height="400">
-            
-        </TextBox>
-        <TextBox IsReadOnly="True">
-        </TextBox>
+        <TabControl x:Name="m_OpenFilesTabCtrl" DockPanel.Dock="Top" ItemsSource="{Binding}" Height="425">
+            <TabControl.Resources>
+                <DataTemplate x:Key="TabHeader" DataType="TabItem">
+                    <DockPanel>
+                        <Button Name="TabDeleteBtn" DockPanel.Dock="Right" Margin="5, 0, 0, 0" Padding="0" Click="TabDeleteBtn_Click" 
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}">
+
+                        </Button>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}" />
+                    </DockPanel>
+                </DataTemplate>
+            </TabControl.Resources>
+        </TabControl>
+        <TextBox x:Name="m_LoggerTxtBox" IsReadOnly="True"/>
     </DockPanel>
 </Window>

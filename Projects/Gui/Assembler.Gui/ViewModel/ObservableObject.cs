@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,13 @@ namespace Assembler.Gui.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent(string propertyName)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

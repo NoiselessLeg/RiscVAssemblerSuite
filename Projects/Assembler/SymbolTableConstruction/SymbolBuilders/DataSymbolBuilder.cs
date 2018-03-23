@@ -40,6 +40,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             else
             {
                 // try to make sure this isn't garbage.
+                // this will return false if no data was parsed, 
                 if (!ParseUnlabeledLine(asmLine, fixedTokens, alignment))
                 {
                     throw new AssemblyException(asmLine.LineNum, "Expected size declaration, received \"" + asmLine.Text + '\"');

@@ -14,25 +14,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Assembler.Gui
+namespace Assembler.Gui.Views
 {
     /// <summary>
-    /// Interaction logic for EditorWindow.xaml
+    /// Interaction logic for TextEditor.xaml
     /// </summary>
-    public partial class EditorWindow : Window
+    public partial class TextEditor : UserControl
     {
-        public EditorWindow()
+        public TextEditor()
         {
-            m_EditorPaneVm = new EditorPaneViewModel();
+            m_File = new FileViewModel();
             InitializeComponent();
         }
 
-
-        private void TabDeleteBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private readonly EditorPaneViewModel m_EditorPaneVm;
+        private readonly FileViewModel m_File;
     }
 }

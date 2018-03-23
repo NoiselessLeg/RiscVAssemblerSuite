@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,13 +57,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\TreeViewFolder.cs" />
+    <Compile Include="Controls\ITreeViewItemViewModel.cs" />
     <Compile Include="Model\AssemblyFile.cs" />
-    <Compile Include="Controls\AssemblyFileTab.cs" />
-    <Compile Include="Model\Logger.cs" />
-    <Compile Include="Util\ILogStorage.cs" />
-    <Compile Include="ViewModel\EditorViewModel.cs" />
+    <Compile Include="Util\RelayCommand.cs" />
+    <Compile Include="Util\XmlOutputWriter.cs" />
+    <Compile Include="ViewModel\EditorPaneViewModel.cs" />
+    <Compile Include="ViewModel\FileViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
+    <Compile Include="Views\TextEditor.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="EditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,11 +75,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\AssembleCommand.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\TextEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\AssemblyProject.cs" />
@@ -114,7 +122,9 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

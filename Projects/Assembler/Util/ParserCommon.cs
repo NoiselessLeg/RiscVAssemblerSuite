@@ -257,7 +257,7 @@ namespace Assembler.Util
                     }
 
                     // the comment appears before or after the quotes; in which case,
-                    // comment out the string, or grab everything until the comment token.
+                    // comment out the string, or grab everything since there's not a comment token that needs trimmed.
                     else
                     {
                         ret = line.Substring(0, line.IndexOf('#'));
