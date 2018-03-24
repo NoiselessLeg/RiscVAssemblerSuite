@@ -49,7 +49,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "sll", new NopInstructionParser() },
                 { "slt", new NopInstructionParser() },
                 { "sltu", new NopInstructionParser() },
-                { "xor", new NopInstructionParser() },
+                { "xor", new XOrInstructionParser() },
                 { "srl", new NopInstructionParser() },
                 { "sra", new NopInstructionParser() },
                 { "or", new NopInstructionParser() },
