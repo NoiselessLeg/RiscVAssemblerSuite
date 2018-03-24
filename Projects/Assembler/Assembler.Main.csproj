@@ -91,6 +91,7 @@
     <Compile Include="Util\StreamReaderUtils.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Util\StringUtils.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\OrImmediateInstructionParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
