@@ -92,6 +92,7 @@
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Util\StringUtils.cs" />
     <Compile Include="CodeGeneration\InstructionGenerators\OrImmediateInstructionParser.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\OrInstructionParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">

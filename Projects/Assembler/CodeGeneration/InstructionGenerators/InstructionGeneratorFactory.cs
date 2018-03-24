@@ -52,7 +52,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "xor", new NopInstructionParser() },
                 { "srl", new NopInstructionParser() },
                 { "sra", new NopInstructionParser() },
-                { "or", new NopInstructionParser() },
+                { "or", new OrInstructionParser() },
                 { "and", new AndInstructionParser() },
                 { "nop", new NopInstructionParser() },
 
