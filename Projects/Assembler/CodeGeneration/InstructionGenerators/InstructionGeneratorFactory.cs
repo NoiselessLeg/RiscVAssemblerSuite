@@ -38,7 +38,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "addi", new AddImmediateInstructionParser() },
                 { "slti", new NopInstructionParser() },
                 { "sltiu", new NopInstructionParser() },
-                { "xori", new NopInstructionParser() },
+                { "xori", new XOrImmediateInstructionParser() },
                 { "ori", new NopInstructionParser() },
                 { "andi", new AndImmediateInstructionParser() },
                 { "slli", new NopInstructionParser() },
