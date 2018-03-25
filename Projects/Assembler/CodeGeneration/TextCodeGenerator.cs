@@ -41,13 +41,11 @@ namespace Assembler.CodeGeneration
             // this could share the same line as a label, so split on ':' and ','
             string[] tokenizedStr = asmLine.Text.Split(new char[] { ',', ':', ' ' }, StringSplitOptions.RemoveEmptyEntries);
             bool foundInstruction = false;
-
-            var instructionParams = new List<string>();
+            
             string instructionToken = string.Empty;
             for (int i = 0; i < tokenizedStr.Length && !foundInstruction; ++i)
             {
                 string token = tokenizedStr[i].Trim();
-
                 // we found our instruction. build a string from this token
                 // to the end of the array.
                 if (m_ParserFac.IsInstruction(token))
@@ -59,9 +57,17 @@ namespace Assembler.CodeGeneration
 
             if (foundInstruction)
             {
-                // parse parameters
-                // get the substring starting at the index of the next token after the instruction
-                string instSubstring = asmLine.Text.Substring(asmLine.Text.IndexOf(instructionToken) + instructionToken.Length);
+
+                // first, validate that the instruction is not the last token in the string.
+                string instSubstring = string.Empty;
+                if (asmLine.Text.IndexOf(instructionToken) + instructionToken.Length + 1 >= asmLine.Text.Length)
+                {
+                    throw new ArgumentException("Expected arguments after instruction token \"" + instructionToken + '\"');
+                }
+
+                // try to parse the instruction parameters
+                // get the substring starting at the index of the next character after the instruction
+                instSubstring = asmLine.Text.Substring(asmLine.Text.IndexOf(instructionToken) + instructionToken.Length);
 
                 //split the substring at the comma to get the instruction parameters.
                 string[] argTokens = instSubstring.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
