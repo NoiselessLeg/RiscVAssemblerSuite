@@ -39,7 +39,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "slti", new PlaceholderParser("slti") },
                 { "sltiu", new PlaceholderParser("sltiu") },
                 { "xori", new PlaceholderParser("xori") },
-                { "ori", new PlaceholderParser("ori") },
+                { "ori", new OrImmediateInstructionParser() },
                 { "andi", new AndImmediateInstructionParser() },
                 { "slli", new PlaceholderParser("slli") },
                 { "srli", new PlaceholderParser("srli") },
@@ -52,7 +52,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "xor", new PlaceholderParser("xor") },
                 { "srl", new PlaceholderParser("srl") },
                 { "sra", new PlaceholderParser("sra") },
-                { "or", new PlaceholderParser("or") },
+                { "or", new OrInstructionParser() },
                 { "and", new AndInstructionParser() },
                 { "nop", new NopInstructionParser() },
 
