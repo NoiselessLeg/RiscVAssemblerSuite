@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assembler.CodeGeneration.InstructionGenerators
 {
@@ -9,7 +10,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             m_InstName = instName;
         }
 
-        public int ParseInstruction(int nextTextAddress, string[] instructionArgs)
+        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs)
         {
             throw new NotImplementedException(m_InstName + " instruction is not yet implemented.");
         }
