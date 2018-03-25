@@ -54,17 +54,21 @@ namespace Assembler.CodeGeneration
                 {
                     foundInstruction = true;
                     instructionToken = token;
-
-                    // read to the end of our string and append the operands of the instruction.
-                    for (int k = i + 1; k < tokenizedStr.Length; ++k)
-                    {
-                        instructionParams.Add(tokenizedStr[k].Trim());
-                    }
                 }
             }
 
             if (foundInstruction)
             {
+                // parse parameters
+                // get the substring starting at the index of the next token after the instruction
+                string instSubstring = asmLine.Text.Substring(asmLine.Text.IndexOf(instructionToken) + instructionToken.Length);
+
+                //split the substring at the comma to get the instruction parameters.
+                string[] argTokens = instSubstring.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // trim whitespace from the beginning and end of each token.
+                argTokens = argTokens.Apply((str) => str.Trim()).ToArray();
+
                 // find the parser for the instruction.
                 IParser parser = m_ParserFac.GetParserForInstruction(instructionToken);
 
@@ -76,7 +80,7 @@ namespace Assembler.CodeGeneration
                 int nextInstructionAddress = m_CurrTextAddress + CommonConstants.BASE_INSTRUCTION_SIZE_BYTES + paddingSize;
 
                 // beq instructions should (hopefully) not generate multiple instructions..
-                IEnumerable<int> generatedInstructions = parser.ParseInstruction(nextInstructionAddress, instructionParams.ToArray());
+                IEnumerable<int> generatedInstructions = parser.ParseInstruction(nextInstructionAddress, argTokens);
 
                 foreach (int generatedInstruction in generatedInstructions)
                 {

@@ -24,7 +24,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
 
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
-            int bitShiftedImm = immediate << 12;
+            int bitShiftedImm = immediate >> 12;
 
             int instruction = 0;
             instruction |= bitShiftedImm;
