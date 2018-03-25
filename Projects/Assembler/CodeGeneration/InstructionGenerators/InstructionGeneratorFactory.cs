@@ -39,7 +39,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "slti", new NopInstructionParser() },
                 { "sltiu", new NopInstructionParser() },
                 { "xori", new NopInstructionParser() },
-                { "ori", new NopInstructionParser() },
+                { "ori", new OrImmediateInstructionParser() },
                 { "andi", new AndImmediateInstructionParser() },
                 { "slli", new NopInstructionParser() },
                 { "srli", new NopInstructionParser() },
@@ -52,7 +52,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 { "xor", new NopInstructionParser() },
                 { "srl", new NopInstructionParser() },
                 { "sra", new NopInstructionParser() },
-                { "or", new NopInstructionParser() },
+                { "or", new OrInstructionParser() },
                 { "and", new AndInstructionParser() },
                 { "nop", new NopInstructionParser() },
 
