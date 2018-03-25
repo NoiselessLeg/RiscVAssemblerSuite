@@ -47,6 +47,7 @@
     <Compile Include="CodeGeneration\CodeGenerator.cs" />
     <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneration\DataCodeGenerator.cs" />
+    <Compile Include="CodeGeneration\InstructionGenerators\PlaceholderParser.cs" />
     <Compile Include="CodeGeneration\ISegmentCodeGenerator.cs" />
     <Compile Include="Output\OutputWriters\BasicBinaryObjectWriter.cs" />
     <Compile Include="Output\BasicObjectFile.cs" />
