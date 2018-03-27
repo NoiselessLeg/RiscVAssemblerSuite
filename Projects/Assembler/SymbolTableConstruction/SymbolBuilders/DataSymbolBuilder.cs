@@ -97,8 +97,11 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     if (ParserCommon.IsTrivialDataType(tokens[dataDeclarationIdx]))
                     {
                         int dataSize = ParserCommon.DetermineTrivialDataSize(tokens[dataDeclarationIdx]);
-                        int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
-                        m_CurrDataAddress += (dataSize + paddingSize);
+                        int numElementsToStore = ParserCommon.GetArraySize(originalLine.Text, tokens[dataDeclarationIdx]);
+                        int reservedSize = numElementsToStore * dataSize;
+                        int paddingSize = ParserCommon.GetNumPaddingBytes(reservedSize, alignment);
+
+                        m_CurrDataAddress += (reservedSize + paddingSize);
                     }
 
                     // otherwise, we'd expect there to be another token after the data type.
@@ -131,8 +134,6 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
 
             return foundDataDeclaration;
         }
-
-        
         
         private int m_CurrDataAddress;
     }
