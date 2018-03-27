@@ -277,6 +277,53 @@ namespace Assembler.Util
             return ret;
         }
 
+        /// <summary>
+        /// Gets the size of an array or single element declaration.
+        /// </summary>
+        /// <param name="fullLine">The full line of assembly.</param>
+        /// <param name="sizeDeclaration">The token specifying the data size (e.g. .byte, .word, etc.)</param>
+        /// <returns>An integer representing how many elements to store contiguously starting at the base address of the line.</returns>
+        public static int GetArraySize(string fullLine, string sizeDeclaration)
+        {
+            // find the token directly after the size directive
+            int substrBeginIdx = fullLine.IndexOf(sizeDeclaration) + sizeDeclaration.Length;
+            string arguments = fullLine.Substring(substrBeginIdx);
+
+            // split by commas.
+            string[] tokenizedArgs = arguments.Split(new[] { ',' });
+            tokenizedArgs = tokenizedArgs.Apply((str) => str.Trim()).ToArray();
+
+            // the array should at least have one element.
+            int arrSize = 0;
+            foreach (string token in tokenizedArgs)
+            {
+                // if it contains a ':' character, then this itself is an array of the initialized token.
+                if (token.Contains(':'))
+                {
+                    string[] subtokens = token.Split(new[] { ':' }).Apply((str) => str.Trim()).ToArray();
+                    if (subtokens.Length == 2)
+                    {
+                        arrSize += int.Parse(subtokens[1]);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected size parameter after ':' token.");
+                    }
+                }
+                else
+                {
+                    ++arrSize;
+                }
+            }
+
+            if (arrSize < 1)
+            {
+                throw new ArgumentException("Expected at least one value for declaration.");
+            }
+
+            return arrSize;
+        }
+
         private static readonly Dictionary<string, int> s_DataTypeDictionary;
     }
 }

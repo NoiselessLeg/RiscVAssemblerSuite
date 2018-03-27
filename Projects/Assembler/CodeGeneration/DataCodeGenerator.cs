@@ -46,20 +46,17 @@ namespace Assembler.CodeGeneration
                     {
 
                         int dataSize = ParserCommon.DetermineTrivialDataSize(fixedTokens[dataDeclarationIdx]);
-                        int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, currAlignment);
+                        int numElements = ParserCommon.GetArraySize(asmLine.Text, fixedTokens[dataDeclarationIdx]);
 
-                        AddTrivialDataElementToObjectFile(objFile, dataSize, fixedTokens[dataDeclarationIdx + 1]);
+                        int totalReservedSize = dataSize * numElements;
+                        int paddingSize = ParserCommon.GetNumPaddingBytes(totalReservedSize, currAlignment);
+
+                        AddTrivialDataElementsToFile(objFile, dataSize, asmLine.Text, fixedTokens[dataDeclarationIdx]);
 
                         // add as much padding as we need to reach the next alignment boundary.
                         for (int i = 0; i < paddingSize; ++i)
                         {
                             objFile.AddDataElement((byte)0);
-                        }
-
-                        // we expect one token after this word.
-                        if (fixedTokens.Length > dataDeclarationIdx + 2)
-                        {
-                            throw new AssemblyException(asmLine.LineNum, "Unknown token \"" + fixedTokens[dataDeclarationIdx + 2] + "\" found.");
                         }
                     }
                     
@@ -118,12 +115,318 @@ namespace Assembler.CodeGeneration
         }
 
         /// <summary>
+        /// Adds either one or multiple trivially sized data elements to the object file.
+        /// </summary>
+        /// <param name="objFile">The object file to add to.</param>
+        /// <param name="dataSize">The data size of the element to add.</param>
+        /// <param name="fullText">The full text of the assembly line.</param>
+        /// <param name="declarationToken">The token declaring the size of the data.</param>
+        private void AddTrivialDataElementsToFile(BasicObjectFile objFile, int dataSize, string fullText, string declarationToken)
+        {
+            const int BYTE_DATA_SIZE = 1;
+            const int SHORT_DATA_SIZE = 2;
+            const int WORD_DATA_SIZE = 4;
+            const int DWORD_DATA_SIZE = 8;
+
+            switch (dataSize)
+            {
+                case BYTE_DATA_SIZE:
+                {
+                    AddByteElementToFile(objFile, fullText, declarationToken);
+                    break;
+                }
+
+                case SHORT_DATA_SIZE:
+                {
+                    AddShortElementToFile(objFile, fullText, declarationToken);
+                    break;
+                }
+
+                case WORD_DATA_SIZE:
+                {
+                    AddIntElementToFile(objFile, fullText, declarationToken);
+                    break;
+                }
+
+                case DWORD_DATA_SIZE:
+                {
+                    AddLongElementToFile(objFile, fullText, declarationToken);
+                    break;
+                }
+
+                default:
+                {
+                    throw new ArgumentException("Unknown data size passed to AddTrivialDataElementToObjectFile");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a byte element to the object file.
+        /// </summary>
+        /// <param name="objFile">The object file to add to.</param>
+        /// <param name="fullText">The full text of the assembly line.</param>
+        /// <param name="declarationToken">The token specifying the declaration of the size parameter.</param>
+        private void AddByteElementToFile(BasicObjectFile objFile, string fullText, string declarationToken)
+        {
+            // find the token directly after the size directive
+            int substrBeginIdx = fullText.IndexOf(declarationToken) + declarationToken.Length;
+            string arguments = fullText.Substring(substrBeginIdx);
+
+            // split by commas.
+            string[] tokenizedArgs = arguments.Split(new[] { ',' });
+            tokenizedArgs = tokenizedArgs.Apply((str) => str.Trim()).ToArray();
+
+            // iterate through each element in the "array".
+            foreach (string token in tokenizedArgs)
+            {
+                // if it contains a ':' character, then this itself is an array of the initialized token.
+                if (token.Contains(':'))
+                {
+                    string[] subtokens = token.Split(new[] { ':' }).Apply((str) => str.Trim()).ToArray();
+                    if (subtokens.Length == 2)
+                    {
+                        int numElems = int.Parse(subtokens[1]);
+
+                        byte byteElem = 0;
+                        // first, try to get the value as a byte.
+                        if (!byte.TryParse(subtokens[0], out byteElem))
+                        {
+                            // if we fail, then try parsing the character as a literal.
+                            if (!StringUtils.TryParseCharacterLiteralAsByte(subtokens[0], out byteElem))
+                            {
+                                // as a fallback, see if we can resolve the string as a symbol.
+                                Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
+                                byteElem = (byte)sym.Address;
+                            }
+                        }
+
+                        for (int i = 0; i < numElems; ++i)
+                        {
+                            objFile.AddDataElement(byteElem);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected size parameter after ':' token.");
+                    }
+                }
+                else
+                {
+                    // otherwise, it should just be an element (without any size modifiers).
+                    // just parse it and add it.
+                    byte byteElem = 0;
+                    // first, try to get the value as a byte.
+                    if (!byte.TryParse(token, out byteElem))
+                    {
+                        // if we fail, then try parsing the character as a literal.
+                        if (!StringUtils.TryParseCharacterLiteralAsByte(token, out byteElem))
+                        {
+                            // as a fallback, see if we can resolve the string as a symbol.
+                            Symbol sym = m_SymTbl.GetSymbol(token);
+                            byteElem = (byte)sym.Address;
+                        }
+                    }
+
+                    objFile.AddDataElement(byteElem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a half element to the object file.
+        /// </summary>
+        /// <param name="objFile">The object file to add to.</param>
+        /// <param name="fullText">The full text of the assembly line.</param>
+        /// <param name="declarationToken">The token specifying the declaration of the size parameter.</param>
+        private void AddShortElementToFile(BasicObjectFile objFile, string fullText, string declarationToken)
+        {
+            // find the token directly after the size directive
+            int substrBeginIdx = fullText.IndexOf(declarationToken) + declarationToken.Length;
+            string arguments = fullText.Substring(substrBeginIdx);
+
+            // split by commas.
+            string[] tokenizedArgs = arguments.Split(new[] { ',' });
+            tokenizedArgs = tokenizedArgs.Apply((str) => str.Trim()).ToArray();
+
+            // iterate through each element in the "array".
+            foreach (string token in tokenizedArgs)
+            {
+                // if it contains a ':' character, then this itself is an array of the initialized token.
+                if (token.Contains(':'))
+                {
+                    string[] subtokens = token.Split(new[] { ':' }).Apply((str) => str.Trim()).ToArray();
+                    if (subtokens.Length == 2)
+                    {
+                        int numElems = int.Parse(subtokens[1]);
+
+                        // this syntax is wonky; we're trying to parse literal char elements
+                        // as well as normal bytes here.
+                        short elemToAdd = 0;
+                        if (!short.TryParse(subtokens[0], out elemToAdd))
+                        {
+                            // see if we can resolve the string as a symbol.
+                            Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
+                            elemToAdd = (short)sym.Address;
+                        }
+                        for (int i = 0; i < numElems; ++i)
+                        {
+                            objFile.AddDataElement(elemToAdd);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected size parameter after ':' token.");
+                    }
+                }
+                else
+                {
+                    // otherwise, it should just be an element (without any size modifiers).
+                    // just parse it and add it.
+                    short elemToAdd = 0;
+                    if (!short.TryParse(token, out elemToAdd))
+                    {
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(token);
+                        elemToAdd = (short)sym.Address;
+                    }
+
+                    objFile.AddDataElement(elemToAdd);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a word element to the object file.
+        /// </summary>
+        /// <param name="objFile">The object file to add to.</param>
+        /// <param name="fullText">The full text of the assembly line.</param>
+        /// <param name="declarationToken">The token specifying the declaration of the size parameter.</param>
+        private void AddIntElementToFile(BasicObjectFile objFile, string fullText, string declarationToken)
+        {
+            // find the token directly after the size directive
+            int substrBeginIdx = fullText.IndexOf(declarationToken) + declarationToken.Length;
+            string arguments = fullText.Substring(substrBeginIdx);
+
+            // split by commas.
+            string[] tokenizedArgs = arguments.Split(new[] { ',' });
+            tokenizedArgs = tokenizedArgs.Apply((str) => str.Trim()).ToArray();
+
+            // iterate through each element in the "array".
+            foreach (string token in tokenizedArgs)
+            {
+                // if it contains a ':' character, then this itself is an array of the initialized token.
+                if (token.Contains(':'))
+                {
+                    string[] subtokens = token.Split(new[] { ':' }).Apply((str) => str.Trim()).ToArray();
+                    if (subtokens.Length == 2)
+                    {
+                        int numElems = int.Parse(subtokens[1]);
+
+                        // this syntax is wonky; we're trying to parse literal char elements
+                        // as well as normal bytes here.
+                        int elemToAdd = 0;
+                        if (!int.TryParse(subtokens[0], out elemToAdd))
+                        {
+                            // see if we can resolve the string as a symbol.
+                            Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
+                            elemToAdd = sym.Address;
+                        }
+                        for (int i = 0; i < numElems; ++i)
+                        {
+                            objFile.AddDataElement(elemToAdd);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected size parameter after ':' token.");
+                    }
+                }
+                else
+                {
+                    // otherwise, it should just be an element (without any size modifiers).
+                    // just parse it and add it.
+                    int elemToAdd = 0;
+                    if (!int.TryParse(token, out elemToAdd))
+                    {
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(token);
+                        elemToAdd = sym.Address;
+                    }
+                    objFile.AddDataElement(elemToAdd);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a dword element to the object file.
+        /// </summary>
+        /// <param name="objFile">The object file to add to.</param>
+        /// <param name="fullText">The full text of the assembly line.</param>
+        /// <param name="declarationToken">The token specifying the declaration of the size parameter.</param>
+        private void AddLongElementToFile(BasicObjectFile objFile, string fullText, string declarationToken)
+        {
+            // find the token directly after the size directive
+            int substrBeginIdx = fullText.IndexOf(declarationToken) + declarationToken.Length;
+            string arguments = fullText.Substring(substrBeginIdx);
+
+            // split by commas.
+            string[] tokenizedArgs = arguments.Split(new[] { ',' });
+            tokenizedArgs = tokenizedArgs.Apply((str) => str.Trim()).ToArray();
+
+            // iterate through each element in the "array".
+            foreach (string token in tokenizedArgs)
+            {
+                // if it contains a ':' character, then this itself is an array of the initialized token.
+                if (token.Contains(':'))
+                {
+                    string[] subtokens = token.Split(new[] { ':' }).Apply((str) => str.Trim()).ToArray();
+                    if (subtokens.Length == 2)
+                    {
+                        int numElems = int.Parse(subtokens[1]);
+
+                        long elemToAdd = 0;
+                        if (!long.TryParse(subtokens[0], out elemToAdd))
+                        {
+                            // see if we can resolve the string as a symbol.
+                            Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
+                            elemToAdd = sym.Address;
+                        }
+
+                        for (int i = 0; i < numElems; ++i)
+                        {
+                            objFile.AddDataElement(elemToAdd);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Expected size parameter after ':' token.");
+                    }
+                }
+                else
+                {
+                    // otherwise, it should just be an element (without any size modifiers).
+                    // just parse it and add it.
+                    long elemToAdd = 0;
+                    if (!long.TryParse(token, out elemToAdd))
+                    {
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(token);
+                        elemToAdd = sym.Address;
+                    }
+                    objFile.AddDataElement(elemToAdd);
+                }
+            }
+        }
+
+#if false
+        /// <summary>
         /// Adds a trivially sized element to the object file.
         /// </summary>
         /// <param name="objFile">The object file to add to.</param>
         /// <param name="dataSize">The data size of the element to add.</param>
         /// <param name="elemValue">The value to add, as a string.</param>
-        private void AddTrivialDataElementToObjectFile(BasicObjectFile objFile, int dataSize, string elemValue)
+        private void AddTrivialDataElementsToObjectFile(BasicObjectFile objFile, int dataSize, string elemValue)
         {
             const int BYTE_DATA_SIZE = 1;
             const int SHORT_DATA_SIZE = 2;
@@ -194,6 +497,7 @@ namespace Assembler.CodeGeneration
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Adds a non-trivial data size element to the object file.
