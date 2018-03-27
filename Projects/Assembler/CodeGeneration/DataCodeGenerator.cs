@@ -10,6 +10,11 @@ namespace Assembler.CodeGeneration
     /// </summary>
     class DataCodeGenerator : ISegmentCodeGenerator
     {
+        public DataCodeGenerator(SymbolTable symTable)
+        {
+            m_SymTbl = symTable;
+        }
+
         /// <summary>
         /// Generates the byte representation of an instruction from a line of assembly code.
         /// </summary>
@@ -132,7 +137,9 @@ namespace Assembler.CodeGeneration
                     byte val = 0;
                     if (!byte.TryParse(elemValue, out val))
                     {
-                        throw new ArgumentException("Expected 8-bit value, received " + elemValue);
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(elemValue);
+                        val = (byte) sym.Address;
                     }
 
                     objFile.AddDataElement(val);
@@ -144,7 +151,9 @@ namespace Assembler.CodeGeneration
                     short val = 0;
                     if (!short.TryParse(elemValue, out val))
                     {
-                        throw new ArgumentException("Expected 16-bit value, received " + elemValue);
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(elemValue);
+                        val = (short)sym.Address;
                     }
 
                     objFile.AddDataElement(val);
@@ -156,7 +165,9 @@ namespace Assembler.CodeGeneration
                     int val = 0;
                     if (!int.TryParse(elemValue, out val))
                     {
-                        throw new ArgumentException("Expected 32-bit value, received " + elemValue);
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(elemValue);
+                        val = sym.Address;
                     }
 
                     objFile.AddDataElement(val);
@@ -168,7 +179,9 @@ namespace Assembler.CodeGeneration
                     long val = 0;
                     if (!long.TryParse(elemValue, out val))
                     {
-                        throw new ArgumentException("Expected 64-bit value, received " + elemValue);
+                        // see if we can resolve the string as a symbol.
+                        Symbol sym = m_SymTbl.GetSymbol(elemValue);
+                        val = sym.Address;
                     }
 
                     objFile.AddDataElement(val);
@@ -214,5 +227,7 @@ namespace Assembler.CodeGeneration
                 throw new ArgumentException("Unknown data type " + dataType + " passed as non-trivial data type.");
             }
         }
+
+        private readonly SymbolTable m_SymTbl;
     }
 }

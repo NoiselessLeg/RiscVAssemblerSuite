@@ -17,7 +17,7 @@ namespace Assembler.CodeGeneration
         {
             m_CodeGeneratorTable = new Dictionary<SegmentType, ISegmentCodeGenerator>()
             {
-                { SegmentType.Data, new DataCodeGenerator() },
+                { SegmentType.Data, new DataCodeGenerator(symTable) },
                 { SegmentType.Text, new TextCodeGenerator(symTable) }
             };
         }
