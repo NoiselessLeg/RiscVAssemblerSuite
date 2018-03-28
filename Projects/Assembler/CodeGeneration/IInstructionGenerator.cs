@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.CodeGeneration
 {
     /// <summary>
-    /// General interface to parse an instruction.
+    /// General interface that describes a class that generates one or more assembly 
+    /// instructions for a given .text segment line.
     /// </summary>
-    interface IParser
+    interface IInstructionGenerator
     {
         /// <summary>
         /// Parses an instruction and generates the binary code for it.
@@ -14,6 +15,6 @@ namespace Assembler.CodeGeneration.InstructionGenerators
         /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
         /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
         /// for a pseudo-instruction, this may return more than one instruction value.</returns>
-        IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs);
+        IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs);
     }
 }

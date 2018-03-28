@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
     class AuipcInstructionParser : IParser
     {

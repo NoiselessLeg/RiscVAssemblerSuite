@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class PlaceholderParser : IParser
+    class PlaceholderParser : BaseInstructionProcessor
     {
         public PlaceholderParser(string instName)
         {
             m_InstName = instName;
         }
 
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs)
+        public override IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs)
         {
             throw new NotImplementedException(m_InstName + " instruction is not yet implemented.");
         }

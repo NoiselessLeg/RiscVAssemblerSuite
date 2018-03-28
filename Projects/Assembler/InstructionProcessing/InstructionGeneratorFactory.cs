@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Assembler.CodeGeneration;
+using Assembler.SymbolTableConstruction;
+using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
     class InstructionGeneratorFactory
     {
         /// <summary>
-        /// Creates an instance of the InstructionParserFactory, and the IParser
+        /// Creates an instance of the InstructionParserFactory, and the BaseInstructionProcessor
         /// implementations.
         /// </summary>
         /// <param name="symbolTable">The filled-out symbol table that parsers can utilize for symbol lookup.</param>
         public InstructionGeneratorFactory(SymbolTable symbolTable)
         {
             //TODO: Add instructions here as they are generated!
-            m_InstructionList = new Dictionary<string, IParser>()
+            m_InstructionList = new Dictionary<string, BaseInstructionProcessor>()
             {
                 //RV32I
                 { "lui", new LuiInstructionParser() }, 
@@ -70,16 +72,16 @@ namespace Assembler.CodeGeneration.InstructionGenerators
         }
 
         /// <summary>
-        /// Retrieves a parser for a given instruction. The string should be
+        /// Retrieves a code generator for a given instruction. The string should be
         /// checked to determine if it is a supported instruction by calling IsInstruction
         /// before passing it to this function; if the instruction cannot be found, an
         /// ArgumentException will be thrown.
         /// </summary>
         /// <param name="instruction">The instruction to retrieve a parser for.</param>
         /// <returns>The parser implementation for this instruction.</returns>
-        public IParser GetParserForInstruction(string instruction)
+        public IInstructionGenerator GetParserForInstruction(string instruction)
         {
-            IParser parserImpl = null;
+            BaseInstructionProcessor parserImpl = null;
 
             // precondition should that IsInstruction is called prior to retriving a parser.
             // if we can't find a parser, throw an exception.
@@ -101,6 +103,6 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             return m_InstructionList.ContainsKey(token);
         }
 
-        private readonly Dictionary<string, IParser> m_InstructionList;
+        private readonly Dictionary<string, BaseInstructionProcessor> m_InstructionList;
     }
 }

@@ -1,10 +1,13 @@
 ﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class AddImmediateInstructionParser : IParser
+    class AndImmediateInstructionParser : IParser
     {
         public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
         {
@@ -24,14 +27,14 @@ namespace Assembler.CodeGeneration.InstructionGenerators
 
             if (isValidImmediate)
             {
-                // TODO: need to check if our immediate causes us to generate more instructions.
+                // TODO: need to change this to generate instructions
+                // for immediates larger than 12 bits.
                 var instructionList = new List<int>();
-
-                // take the first 12 bits of the immediate value.
                 immVal &= 0xFFF;
                 int instruction = 0;
                 instruction |= (immVal << 20);
                 instruction |= (rs1Reg << 15);
+                instruction |= (0x7 << 12);
                 instruction |= (rdReg << 7);
                 instruction |= 0x13;
                 instructionList.Add(instruction);

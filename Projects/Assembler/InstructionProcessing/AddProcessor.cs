@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
     class AddInstructionParser : IParser
     {
@@ -46,7 +46,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 if (isShort)
                 {
                     var immediateParser = new AddImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else
                 {
