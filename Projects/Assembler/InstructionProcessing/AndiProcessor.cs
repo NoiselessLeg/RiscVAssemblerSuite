@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class AndImmediateInstructionParser : IParser
+    class AndiProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)

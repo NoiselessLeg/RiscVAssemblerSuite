@@ -47,7 +47,9 @@
     <Compile Include="CodeGeneration\CodeGenerator.cs" />
     <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneration\DataCodeGenerator.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\PlaceholderParser.cs" />
+    <Compile Include="CodeGeneration\IInstructionGenerator.cs" />
+    <Compile Include="InstructionProcessing\BaseInstructionProcessor.cs" />
+    <Compile Include="InstructionProcessing\PlaceholderProcessor.cs" />
     <Compile Include="CodeGeneration\ISegmentCodeGenerator.cs" />
     <Compile Include="Output\OutputWriters\BasicBinaryObjectWriter.cs" />
     <Compile Include="Output\BasicObjectFile.cs" />
@@ -60,24 +62,25 @@
       <DependentUpon>GenericObjectFileComponent.tt</DependentUpon>
     </Compile>
     <Compile Include="Output\ObjFileComponents\IObjectFileComponent.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\AddImmediateInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\AddInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\AuipcInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\BeqInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\BeqzInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\JalParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\LuiInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\NopInstructionParser.cs" />
+    <Compile Include="InstructionProcessing\AddiProcessor.cs" />
+    <Compile Include="InstructionProcessing\AddProcessor.cs" />
+    <Compile Include="InstructionProcessing\AuipcProcessor.cs" />
+    <Compile Include="InstructionProcessing\BeqProcessor.cs" />
+    <Compile Include="InstructionProcessing\BeqzProcessor.cs" />
+    <Compile Include="InstructionProcessing\JalProcessor.cs" />
+    <Compile Include="InstructionProcessing\LuiProcessor.cs" />
+    <Compile Include="InstructionProcessing\NopProcessor.cs" />
     <Compile Include="Output\OutputWriters\IObjectFileWriter.cs" />
     <Compile Include="Output\OutputWriters\ObjectFileWriterFactory.cs" />
     <Compile Include="RiscVAssembler.cs" />
     <Compile Include="AssemblyException.cs" />
     <Compile Include="Symbol.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\AndImmediateInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\AndInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\IParser.cs" />
+    <Compile Include="InstructionProcessing\AndiProcessor.cs" />
+    <Compile Include="InstructionProcessing\AndProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeGeneration\TextCodeGenerator.cs" />
+    <Compile Include="SymbolTableConstruction\IInstructionSizeEstimator.cs" />
+    <Compile Include="SymbolTableConstruction\DirectiveParseResults.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\DataSymbolBuilder.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\ISymbolTableBuilder.cs" />
     <Compile Include="Util\LineData.cs" />
@@ -86,14 +89,14 @@
     <Compile Include="SymbolTableConstruction\SegmentSymbolParserFactory.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\TextSymbolBuilder.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\InstructionGeneratorFactory.cs" />
+    <Compile Include="InstructionProcessing\InstructionGeneratorFactory.cs" />
     <Compile Include="Util\RegisterMap.cs" />
     <Compile Include="Util\SegmentTypeHelper.cs" />
     <Compile Include="Util\StreamReaderUtils.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Util\StringUtils.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\OrImmediateInstructionParser.cs" />
-    <Compile Include="CodeGeneration\InstructionGenerators\OrInstructionParser.cs" />
+    <Compile Include="InstructionProcessing\OriProcessor.cs" />
+    <Compile Include="InstructionProcessing\OrProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">

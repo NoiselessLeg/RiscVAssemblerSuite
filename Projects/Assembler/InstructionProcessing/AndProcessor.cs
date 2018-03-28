@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Assembler.InstructionProcessing
 {
-    class AndInstructionParser : IParser
+    class AndProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -45,7 +45,7 @@ namespace Assembler.InstructionProcessing
                 if (isShort)
                 {
                     var immediateParser = new AndImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else
                 {

@@ -46,7 +46,6 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                     throw new AssemblyException(asmLine.LineNum, "Expected size declaration, received \"" + asmLine.Text + '\"');
                 }
             }
-            
         }
 
         /// <summary>

@@ -2,19 +2,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
     /// <summary>
     /// Psuedo-instruction for beq x0, rs, label
     /// </summary>
-    class BeqzInstructionParser : IParser
+    class BeqzProcessor : BaseInstructionProcessor
     {
-        public BeqzInstructionParser(SymbolTable symTbl)
+        public BeqzProcessor(SymbolTable symTbl)
         {
             m_SymTable = symTbl;
         }
 
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] instructionArgs)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs)
         {
             if (instructionArgs.Length != 2)
             {
@@ -22,7 +22,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
 
             var beqParser = new BeqInstructionParser(m_SymTable);
-            return beqParser.ParseInstruction(nextTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
+            return beqParser.GenerateCodeForInstruction(nextTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
 
         private readonly SymbolTable m_SymTable;

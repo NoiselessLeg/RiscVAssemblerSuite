@@ -2,7 +2,7 @@
 using Assembler.Util;
 using System.Collections.Generic;
 
-namespace Assembler.SymbolTableConstruction
+namespace Assembler.Util
 {
 
     /// <summary>

@@ -2,16 +2,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class BeqInstructionParser : IParser
+    class BeqProcessor : BaseInstructionProcessor
     {
-        public BeqInstructionParser(SymbolTable symbolTable)
+        public BeqProcessor(SymbolTable symbolTable)
         {
             m_SymbolTable = symbolTable;
         }
 
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)

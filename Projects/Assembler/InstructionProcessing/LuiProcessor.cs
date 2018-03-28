@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class LuiInstructionParser : IParser
+    class LuiProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)

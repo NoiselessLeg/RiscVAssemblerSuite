@@ -27,6 +27,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// </summary>
         /// <param name="asmLine">The line of assembly code to parse.</param>
         /// <param name="symbolList">The list of symbols that will be added to.</param>
+        /// <param name="alignment">Unused. Alignment is always on word boundaries in the text segment.</param>
         public void ParseSymbolsInLine(LineData asmLine, SymbolTable symbolList, int alignment)
         {
             string[] tokens = asmLine.Text.Split(' ');
@@ -48,8 +49,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                 // is an instruction) by however many bytes the instruction is
                 if (subTokens.Length > 1)
                 {
-                    int numPaddingBytes = ParserCommon.GetNumPaddingBytes(CommonConstants.BASE_INSTRUCTION_SIZE_BYTES, alignment);
-                    m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES + numPaddingBytes;
+                    m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
                 }
             }
                 
@@ -57,8 +57,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             // then this is an instruction. increment the counter.
             else
             {
-                int numPaddingBytes = ParserCommon.GetNumPaddingBytes(CommonConstants.BASE_INSTRUCTION_SIZE_BYTES, alignment);
-                m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES + numPaddingBytes;
+                m_CurrTextAddress += CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
             }
             
         }

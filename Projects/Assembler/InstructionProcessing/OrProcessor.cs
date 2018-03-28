@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class OrInstructionParser : IParser
+    class OrProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             if (args.Length != 3)
             {
@@ -45,7 +45,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 if (isShort)
                 {
                     var immediateParser = new OrImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else
                 {

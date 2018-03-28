@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    class AuipcInstructionParser : IParser
+    class AuipcProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)

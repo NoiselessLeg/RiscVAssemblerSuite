@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class AddInstructionParser : IParser
+    class AddProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -56,6 +56,11 @@ namespace Assembler.InstructionProcessing
             }
 
             return returnVal;
+        }
+
+        public override int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
+        {
+            return base.GetNumGeneratedInstructions(nextTextAddress, instructionArgs);
         }
     }
 }
