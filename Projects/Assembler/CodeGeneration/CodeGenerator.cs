@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.InstructionProcessing;
 using Assembler.Output;
 using Assembler.Util;
 using System;
@@ -19,9 +20,10 @@ namespace Assembler.CodeGeneration
         /// Creates a new instance of a CodeGenerator.
         /// </summary>
         /// <param name="symTable">The symbol table to use to resolve references with.</param>
-        public CodeGenerator(SymbolTable symTable)
+        /// <param name="procFactory">The instruction processor factory to retrieve code generator implementations from.</param>
+        public CodeGenerator(SymbolTable symTable, InstructionProcessorFactory procFac)
         {
-            m_CodeGenFac = new CodeGeneratorFactory(symTable);
+            m_CodeGenFac = new CodeGeneratorFactory(symTable, procFac);
         }
 
         /// <summary>
@@ -52,41 +54,12 @@ namespace Assembler.CodeGeneration
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        // tokenize the line;
-                        string[] tokens = line.Split(' ');
-                        
-                        // otherwise, if we're looking for a segment definition, and we find one,
-                        // then set the current segment type to the segment type.
-                        if (SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]))
-                        {
-                            currSegmentType = SegmentTypeHelper.GetSegmentType(tokens[0]);
-                        }
-
-                        // if this segment is declaring a new alignment, get that and return to caller.
-                        else if (ParserCommon.IsAlignmentDeclaration(tokens[0]))
-                        {
-                            // we'd expect there to be multiple tokens.
-                            if (tokens.Length > 1)
-                            {
-                                // get the next token, and try to convert it to an alignment parameter.
-                                int alignmentParam = 0;
-                                if (int.TryParse(tokens[1], out alignmentParam))
-                                {
-                                    currAlignment = ParserCommon.GetNewAlignment(alignmentParam);
-                                }
-                                else
-                                {
-                                    throw new AssemblyException(lineNum, "Expected integer token after .align declaration.");
-                                }
-                            }
-                            else
-                            {
-                                throw new AssemblyException(lineNum, "Expected integer token after .align declaration.");
-                            }
-                        }
+                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        currAlignment = directiveResults.NewAlignment;
+                        currSegmentType = directiveResults.NewSegment;
 
                         // if our segment type is valid, then we're processing actual data versus an assembler directive.
-                        else if (currSegmentType != SegmentType.Invalid)
+                        if (currSegmentType != SegmentType.Invalid)
                         {
                             ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
                             var asmLine = new LineData(line, lineNum);
@@ -102,13 +75,6 @@ namespace Assembler.CodeGeneration
                             {
                                 throw new AssemblyException(lineNum, ex.Message);
                             }
-                        }
-
-                        // otherwise, tthis isn't a directive, and we're seeing stuff that should be under a specified
-                        // segment type. stop doing what we're doing.
-                        else
-                        {
-                            throw new AssemblyException(lineNum, "Unexpected line \"" + line + "\" found in non-segmented area.");
                         }
                     }
                 }

@@ -19,24 +19,17 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
 
+
             string rs1 = args[0].Trim();
             string rs2 = args[1].Trim();
             string offsetStr = args[2].Trim();
 
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
             int rs2Reg = RegisterMap.GetNumericRegisterValue(rs2);
-            short offset = 0;
 
             IEnumerable<int> returnVal = null;
-            bool isNumericOffset = short.TryParse(offsetStr, out offset);
-            if (isNumericOffset)
-            {
-                returnVal = GenerateInstructionWithNumericOffset(rs1Reg, rs2Reg, offset);
-            }
-            else
-            {
-                returnVal = GenerateInstructionWithSymbolicOffset(nextTextAddress, rs1Reg, rs2Reg, offsetStr); 
-            }
+            
+            returnVal = GenerateInstructionWithSymbolicOffset(nextTextAddress, rs1Reg, rs2Reg, offsetStr); 
             
             return returnVal;
         }
@@ -48,10 +41,13 @@ namespace Assembler.InstructionProcessing
         private IEnumerable<int> GenerateInstructionWithSymbolicOffset(int nextTextAddress, int rs1Reg, int rs2Reg, string labelName)
         {
             Symbol symbolLabel = m_SymbolTable.GetSymbol(labelName);
-            
+
+            // the instruction should always have a last two bits of 0, since they're word aligned.
+            System.Diagnostics.Debug.Assert((symbolLabel.Address & 0x3) == 0);
+
             // divide the difference by 4 since all instructions must reside on 4-byte aligned address.
             // find the difference between the jump-to address and the theoretical next address.
-            short offset = (short)((symbolLabel.Address - nextTextAddress) / 4);
+            int offset = ((symbolLabel.Address - nextTextAddress) / 4);
             
             return GenerateInstructionWithNumericOffset(rs1Reg, rs2Reg, offset);
         }
@@ -61,9 +57,10 @@ namespace Assembler.InstructionProcessing
         /// assume our user isn't a masochist, but if it is provided a numeric address, we can 
         /// resolve it. This can be also be used when the symbol is resolved in GenerateInstructionWithSymbolicOffset.
         /// </summary>
-        private IEnumerable<int> GenerateInstructionWithNumericOffset(int rs1Reg, int rs2Reg, short offset)
+        private IEnumerable<int> GenerateInstructionWithNumericOffset(int rs1Reg, int rs2Reg, int offset)
         {
             var instructionList = new List<int>();
+
             int instruction = 0;
 
             // this is a B-type instruction, so bits go all over the place.

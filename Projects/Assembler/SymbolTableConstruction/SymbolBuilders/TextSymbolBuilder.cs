@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.InstructionProcessing;
 using Assembler.Util;
 using System;
 using System.Linq;
@@ -16,9 +17,11 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         /// TODO: determine if signedness/unsignedness has any tangible effect
         /// on code generation.
         /// </summary>
-        public TextSymbolBuilder()
+        /// <param name="procFactory">The instruction processor factory to retrieve instruction size estimator implementations from.</param>
+        public TextSymbolBuilder(InstructionProcessorFactory procFac)
         {
             m_CurrTextAddress = CommonConstants.BASE_TEXT_ADDRESS;
+            m_SizeEstimatorFac = procFac;
         }
 
         /// <summary>
@@ -63,5 +66,6 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         }
         
         private int m_CurrTextAddress;
+        private readonly InstructionProcessorFactory m_SizeEstimatorFac;
     }
 }

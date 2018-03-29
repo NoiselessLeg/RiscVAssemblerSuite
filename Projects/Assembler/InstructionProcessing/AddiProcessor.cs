@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Assembler.InstructionProcessing
 {
-    class AddImmediateInstructionParser : BaseInstructionProcessor
+    class AddiProcessor : BaseInstructionProcessor
     {
         /// <summary>
         /// Parses an instruction and generates the binary code for it.
@@ -16,29 +16,6 @@ namespace Assembler.InstructionProcessing
         /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
         /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
-        {
-            return GenerateInstructionList(nextTextAddress, args);
-        }
-
-        /// <summary>
-        /// Determines how many instructions are generated via a pseudo-instruction. The default implementation assumes
-        /// that only one instruction will be returned.
-        /// </summary>
-        /// <param name="nextTextAddress">The address of the theoretical next instruction being parsed in the .text segment.</param>
-        /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
-        /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
-        public override int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
-        {
-            return GenerateInstructionList(nextTextAddress, instructionArgs).Count();
-        }
-
-        /// <summary>
-        /// Generates a list of one or more instructions based on the provided arguments.
-        /// </summary>
-        /// <param name="nextTextAddress"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private IEnumerable<int> GenerateInstructionList(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -76,7 +53,7 @@ namespace Assembler.InstructionProcessing
                     int instruction = GenerateUnexpandedInstruction(immVal, rs1Reg, rdReg);
                     instructionList.Add(instruction);
                 }
-                
+
                 return instructionList;
             }
             else
@@ -86,7 +63,7 @@ namespace Assembler.InstructionProcessing
         }
 
         /// <summary>
-        /// Generates a list of instructions for an instruction, given that the immediate argument
+        /// Generates a list of instructions for the ADDI instruction, given that the immediate argument
         /// is larger than 11 bits (neglecting the sign bit).
         /// </summary>
         /// <param name="nextTextAddress">The next address in the .text segment.</param>

@@ -1,5 +1,7 @@
 ﻿using Assembler.CodeGeneration;
+using Assembler.SymbolTableConstruction;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assembler.InstructionProcessing
 {
@@ -23,7 +25,7 @@ namespace Assembler.InstructionProcessing
         /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
         public virtual int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
         {
-            return 1;
+            return GenerateCodeForInstruction(nextTextAddress, instructionArgs).Count();
         }
     }
 }

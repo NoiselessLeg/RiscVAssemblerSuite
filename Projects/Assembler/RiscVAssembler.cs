@@ -1,5 +1,6 @@
 ﻿using Assembler.CodeGeneration;
 using Assembler.Common;
+using Assembler.InstructionProcessing;
 using Assembler.Output;
 using Assembler.Output.OutputWriters;
 using Assembler.SymbolTableConstruction;
@@ -77,12 +78,14 @@ namespace Assembler
                     var symTable = new SymbolTable();
 
                     // build the symbol table
-                    var symTableBuilder = new SymbolTableBuilder();
+                    var instructionProcFac = new InstructionProcessorFactory(symTable);
+                    var symTableBuilder = new SymbolTableBuilder(instructionProcFac);
                     symTableBuilder.GenerateSymbolTable(reader, symTable);
 
                     // use the symbol table to generate code with references resolved.
                     var objFile = new BasicObjectFile(symTable, options.Endianness);
-                    var codeGenerator = new CodeGenerator(symTable);
+
+                    var codeGenerator = new CodeGenerator(symTable, instructionProcFac);
                     codeGenerator.GenerateCode(reader, objFile);
 
                     // write the object file out.

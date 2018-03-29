@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Assembler.CodeGeneration
+﻿namespace Assembler.SymbolTableConstruction
 {
     /// <summary>
     /// General interface that describes a class that generates one or more assembly 

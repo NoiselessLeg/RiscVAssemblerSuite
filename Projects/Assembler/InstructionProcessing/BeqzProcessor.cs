@@ -21,7 +21,7 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + instructionArgs.Length + '.');
             }
 
-            var beqParser = new BeqInstructionParser(m_SymTable);
+            var beqParser = new BeqProcessor(m_SymTable);
             return beqParser.GenerateCodeForInstruction(nextTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
 

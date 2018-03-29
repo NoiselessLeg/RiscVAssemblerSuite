@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.InstructionProcessing;
 using Assembler.SymbolTableConstruction.SymbolBuilders;
 using Assembler.Util;
 using System;
@@ -17,9 +18,10 @@ namespace Assembler.SymbolTableConstruction
         /// Creates an instance of the first pass assembler, which determines
         /// the locations of labels and generates a symbol table.
         /// </summary>
-        public SymbolTableBuilder()
+        /// <param name="procFactory">The instruction processor factory to retrieve instruction size estimator implementations from.</param>
+        public SymbolTableBuilder(InstructionProcessorFactory procFac)
         {
-            m_SymbolBuilderFac = new SegmentSymbolParserFactory();
+            m_SymbolBuilderFac = new SegmentSymbolParserFactory(procFac);
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace Assembler.SymbolTableConstruction
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        LineParseResults directiveResults = HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
                         currAlignment = directiveResults.NewAlignment;
                         currSegmentType = directiveResults.NewSegment;
 
@@ -118,7 +120,7 @@ namespace Assembler.SymbolTableConstruction
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        LineParseResults directiveResults = HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
                         currAlignment = directiveResults.NewAlignment;
                         currSegmentType = directiveResults.NewSegment;
 
@@ -159,71 +161,7 @@ namespace Assembler.SymbolTableConstruction
             reader.Seek(0, SeekOrigin.Begin);
         }
 
-        /// <summary>
-        /// Handles processing of any preprocessor directive in the line, if any.
-        /// </summary>
-        /// <param name="trimmedLine">The line with leading/trailing whitespace removed.</param>
-        /// <param name="lineNum">The current line number.</param>
-        /// <param name="segType">The current segment type.</param>
-        /// <param name="currAlignment">The current boundary alignment.</param>
-        /// <returns>A structure representing the new alignment (if any), the new segment type (if any), and a boolean representing
-        /// if any preprocessor directive was parsed at all</returns>
-        private LineParseResults HandlePreprocessorDeclarations(string trimmedLine, int lineNum, SegmentType segType, int currAlignment)
-        {
-            // tokenize the line;
-            string[] tokens = trimmedLine.Split(' ');
-            int alignment = currAlignment;
-            SegmentType newSegType = segType;
-            bool isDirective = false;
-
-            // if we see something that's not a directive, and we're not in a valid
-            // segment type, flag an exception.
-            if (!SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]) &&
-                !ParserCommon.IsAlignmentDeclaration(tokens[0]) &&
-                segType == SegmentType.Invalid)
-            {
-                throw new AssemblyException(lineNum, "Unexpected line \"" + trimmedLine + "\" found in non-segmented area.");
-            }
-
-            // otherwise, if we're looking for a segment definition, and we find one,
-            // then set the current segment type to the segment type.
-            else if (SegmentTypeHelper.IsSegmentDeclarationToken(tokens[0]))
-            {
-                newSegType = SegmentTypeHelper.GetSegmentType(tokens[0]);
-                isDirective = true;
-            }
-
-            // if this segment is declaring a new alignment, get that and return to caller.
-            else if (ParserCommon.IsAlignmentDeclaration(tokens[0]))
-            {
-                if (segType == SegmentType.Text)
-                {
-                    throw new AssemblyException(lineNum, ".align declaration is forbidden in .text segment.");
-                }
-
-                // we'd expect there to be multiple tokens.
-                if (tokens.Length > 1)
-                {
-                    // get the next token, and try to convert it to an alignment parameter.
-                    int tokenizedAlign = 0;
-                    if (int.TryParse(tokens[1], out tokenizedAlign))
-                    {
-                        alignment = ParserCommon.GetNewAlignment(tokenizedAlign);
-                        isDirective = true;
-                    }
-                    else
-                    {
-                        throw new AssemblyException(lineNum, "Expected integer token after .align declaration.");
-                    }
-                }
-                else
-                {
-                    throw new AssemblyException(lineNum, "Expected integer token after .align declaration.");
-                }
-            }
-
-            return new LineParseResults(isDirective, alignment, newSegType);
-        }
+        
 
         private readonly SegmentSymbolParserFactory m_SymbolBuilderFac;
     }
