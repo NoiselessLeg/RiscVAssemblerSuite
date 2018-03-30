@@ -50,10 +50,15 @@
     <Compile Include="CodeGeneration\IInstructionGenerator.cs" />
     <Compile Include="InstructionProcessing\BaseInstructionProcessor.cs" />
     <Compile Include="InstructionProcessing\InstructionProcessorFactory.cs" />
+    <Compile Include="InstructionProcessing\LbProcessor.cs" />
+    <Compile Include="InstructionProcessing\LhProcessor.cs" />
     <Compile Include="InstructionProcessing\LiProcessor.cs" />
     <Compile Include="InstructionProcessing\LwProcessor.cs" />
     <Compile Include="InstructionProcessing\PlaceholderProcessor.cs" />
     <Compile Include="CodeGeneration\ISegmentCodeGenerator.cs" />
+    <Compile Include="InstructionProcessing\SbProcessor.cs" />
+    <Compile Include="InstructionProcessing\ShProcessor.cs" />
+    <Compile Include="InstructionProcessing\SwProcessor.cs" />
     <Compile Include="Output\OutputWriters\BasicBinaryObjectWriter.cs" />
     <Compile Include="Output\BasicObjectFile.cs" />
     <Compile Include="Output\ObjFileComponents\AsciiDataSegmentElement.cs" />

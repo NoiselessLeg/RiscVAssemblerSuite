@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class LbProcessing : BaseInstructionProcessor
+    class LbProcessor : BaseInstructionProcessor
     {
         public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
