@@ -59,7 +59,8 @@ namespace Assembler.CodeGeneration
                         currSegmentType = directiveResults.NewSegment;
 
                         // if our segment type is valid, then we're processing actual data versus an assembler directive.
-                        if (currSegmentType != SegmentType.Invalid)
+                        if (!directiveResults.IsLineAssemblerDirective &&
+                            currSegmentType != SegmentType.Invalid)
                         {
                             ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
                             var asmLine = new LineData(line, lineNum);

@@ -26,7 +26,7 @@ namespace Assembler.InstructionProcessing
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
 
             // fetch the upper 12 bits of the immediate.
-            int bitShiftedImm = immediate >> 12;
+            int bitShiftedImm = (int)(immediate & 0xFFFFF000);
 
             int instruction = 0;
             instruction |= bitShiftedImm;

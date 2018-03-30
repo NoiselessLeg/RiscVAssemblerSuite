@@ -12,7 +12,7 @@ namespace Assembler.InstructionProcessing
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 0, received " + instructionArgs.Length + '.');
             }
-            var delegateParser = new AddImmediateInstructionParser();
+            var delegateParser = new AndiProcessor();
             return delegateParser.GenerateCodeForInstruction(nextTextAddress, new string[] { "x0", "x0", "0" });
         }
     }

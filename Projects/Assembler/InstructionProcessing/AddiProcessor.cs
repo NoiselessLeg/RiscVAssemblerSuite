@@ -72,9 +72,14 @@ namespace Assembler.InstructionProcessing
         /// <returns></returns>
         private List<int> GenerateExpandedInstruction(int nextTextAddress, int immediate, string[] args)
         {
-            IEnumerable<int> backingLuiInstructions = new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { "x1", args[2] });
-            IEnumerable<int> backingOriInstructions = new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { "x1", "x1", (immediate & 0x7FF).ToString() });
-            IEnumerable<int> backingAddInstructions = new AddProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[1], "x1" });
+            // load the upper 20 bits of the immediate into the destination register
+            IEnumerable<int> backingLuiInstructions = new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[2] });
+
+            // or that with the lower 12 bits of that immediate.
+            IEnumerable<int> backingOriInstructions = new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[0], (immediate & 0x7FF).ToString() });
+
+            // add the value of what we have in our register with the rs1 register.
+            IEnumerable<int> backingAddInstructions = new AddProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[0], args[1] });
 
             var instructionList = new List<int>();
             instructionList.AddRange(backingLuiInstructions);

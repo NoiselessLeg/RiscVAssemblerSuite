@@ -44,7 +44,7 @@ namespace Assembler.InstructionProcessing
                 bool isShort = short.TryParse(rs2, out immediate);
                 if (isShort)
                 {
-                    var immediateParser = new AndImmediateInstructionParser();
+                    var immediateParser = new AndiProcessor();
                     returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else

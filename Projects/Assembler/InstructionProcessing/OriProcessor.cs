@@ -18,8 +18,8 @@ namespace Assembler.InstructionProcessing
             string imm = args[2].Trim();
             int rdReg = RegisterMap.GetNumericRegisterValue(rd);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
-            short immVal = 0;
-            bool isValidImmediate = short.TryParse(imm, out immVal);
+            int immVal = 0;
+            bool isValidImmediate = int.TryParse(imm, out immVal);
 
             if (isValidImmediate)
             {
