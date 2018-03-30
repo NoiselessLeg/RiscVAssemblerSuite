@@ -61,7 +61,7 @@ namespace Assembler.InstructionProcessing
                 string[] parameterizedArgs = trimmedArgToken.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries).Apply((str) => str.Trim()).ToArray();
 
                 // we should expect one or two arguments.
-                if (parameterizedArgs.Length != 1 || parameterizedArgs.Length != 2)
+                if (parameterizedArgs.Length != 1 && parameterizedArgs.Length != 2)
                 {
                     throw new ArgumentException(trimmedArgToken + " was not in a valid format.");
                 }

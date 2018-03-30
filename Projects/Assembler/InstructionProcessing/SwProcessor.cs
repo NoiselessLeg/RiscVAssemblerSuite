@@ -13,7 +13,7 @@ namespace Assembler.InstructionProcessing
         {
             if (args.Length != 2)
             {
-                throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
+                throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + args.Length + '.');
             }
 
             int rs2 = RegisterMap.GetNumericRegisterValue(args[0]);
