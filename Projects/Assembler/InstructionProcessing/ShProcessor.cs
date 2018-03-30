@@ -1,10 +1,13 @@
 ﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class LwProcessor : BaseInstructionProcessor
+    class ShProcessor : BaseInstructionProcessor
     {
         public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
@@ -12,19 +15,23 @@ namespace Assembler.InstructionProcessing
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
-            
-            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+
+            int rs2 = RegisterMap.GetNumericRegisterValue(args[0]);
 
             ParameterizedInstructionArg arg = ParameterizedInstructionArg.ParameterizeArgument(args[1]);
 
             var retList = new List<int>();
 
             int instruction = 0;
-            instruction |= ((arg.Offset & 0xFFF) << 20);
+            int upperOffset = (arg.Offset & 0xFE0);
+            int lowerOffset = (arg.Offset & 0x1F);
+
+            instruction |= (upperOffset << 20);
+            instruction |= (rs2 << 20);
             instruction |= (arg.Register << 15);
-            instruction |= (0x10 << 12);
-            instruction |= (rdReg << 7);
-            instruction |= 0x3;
+            instruction |= (0x1 << 12);
+            instruction |= (lowerOffset << 7);
+            instruction |= 0x23;
             retList.Add(instruction);
 
             return retList;
