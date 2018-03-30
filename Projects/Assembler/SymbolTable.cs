@@ -27,6 +27,16 @@ namespace Assembler
         }
 
         /// <summary>
+        /// Returns a value determining if the label exists in the symbol table.
+        /// </summary>
+        /// <param name="label">The label to look up.</param>
+        /// <returns>True if the label exists as a symbol in the symbol table; otherwise returns false.</returns>
+        public bool ContainsSymbol(string label)
+        {
+            return m_Table.ContainsKey(label);
+        }
+
+        /// <summary>
         /// Fetches a symbol with a given name from the symbol table. If the symbol does not exist,
         /// this will throw an ArgumentException.
         /// </summary>

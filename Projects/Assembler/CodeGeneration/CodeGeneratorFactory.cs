@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.InstructionProcessing;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,13 @@ namespace Assembler.CodeGeneration
         /// Creates an instance of the CodeGeneratorFactory.
         /// </summary>
         /// <param name="symTable">The populated symbol table.</param>
-        public CodeGeneratorFactory(SymbolTable symTable)
+        /// <param name="procFactory">The instruction processor factory to retrieve code generator implementations from.</param>
+        public CodeGeneratorFactory(SymbolTable symTable, InstructionProcessorFactory procFactory)
         {
             m_CodeGeneratorTable = new Dictionary<SegmentType, ISegmentCodeGenerator>()
             {
                 { SegmentType.Data, new DataCodeGenerator(symTable) },
-                { SegmentType.Text, new TextCodeGenerator(symTable) }
+                { SegmentType.Text, new TextCodeGenerator(symTable, procFactory) }
             };
         }
 

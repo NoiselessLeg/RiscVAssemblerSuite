@@ -1,13 +1,17 @@
 ﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class OrImmediateInstructionParser : IParser
+    class AndiProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
+            // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
@@ -23,20 +27,16 @@ namespace Assembler.CodeGeneration.InstructionGenerators
 
             if (isValidImmediate)
             {
-                // TODO: check if instruction expansion is required
+                // TODO: need to change this to generate instructions
+                // for immediates larger than 12 bits.
                 var instructionList = new List<int>();
-                int instruction = 0;
-
-                // first 12 bits of immediate
                 immVal &= 0xFFF;
+                int instruction = 0;
                 instruction |= (immVal << 20);
                 instruction |= (rs1Reg << 15);
+                instruction |= (0x7 << 12);
                 instruction |= (rdReg << 7);
-
-                // ori opcode/funct3 = 0x13/0x6
                 instruction |= 0x13;
-                instruction |= (0x6 << 12);
-
                 instructionList.Add(instruction);
                 return instructionList;
             }

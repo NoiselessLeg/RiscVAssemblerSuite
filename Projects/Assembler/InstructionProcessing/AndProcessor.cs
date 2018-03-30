@@ -1,13 +1,15 @@
 ﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class OrInstructionParser : IParser
+    class AndProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
+            // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
@@ -29,9 +31,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 List<int> instructionList = new List<int>();
                 instruction |= (rs2Reg << 20);
                 instruction |= (rs1Reg << 15);
-
-                // or opcode/funt3/funct7 = 0x33/0x6/0x0
-                instruction |= (0x6 << 12);
+                instruction |= (0x7 << 12);
                 instruction |= (rdReg << 7);
                 instruction |= 0x33;
                 instructionList.Add(instruction);
@@ -39,20 +39,21 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
             catch (ArgumentException)
             {
-                // try parsing as ori instruction
+                // try to parse the string as a number; maybe the user meant andi?
                 short immediate = 0;
                 bool isShort = short.TryParse(rs2, out immediate);
                 if (isShort)
                 {
-                    var immediateParser = new OrImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
+                    var immediateParser = new AndiProcessor();
+                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else
                 {
+                    // otherwise, this is garbage; rethrow the value.
                     throw;
                 }
             }
-
+            
             return returnVal;
         }
     }

@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class AddImmediateInstructionParser : IParser
+    class OriProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
-            // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
@@ -19,21 +18,25 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             string imm = args[2].Trim();
             int rdReg = RegisterMap.GetNumericRegisterValue(rd);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
-            short immVal = 0;
-            bool isValidImmediate = short.TryParse(imm, out immVal);
+            int immVal = 0;
+            bool isValidImmediate = int.TryParse(imm, out immVal);
 
             if (isValidImmediate)
             {
-                // TODO: need to check if our immediate causes us to generate more instructions.
+                // TODO: check if instruction expansion is required
                 var instructionList = new List<int>();
-
-                // take the first 12 bits of the immediate value.
-                immVal &= 0xFFF;
                 int instruction = 0;
+
+                // first 12 bits of immediate
+                immVal &= 0xFFF;
                 instruction |= (immVal << 20);
                 instruction |= (rs1Reg << 15);
                 instruction |= (rdReg << 7);
+
+                // ori opcode/funct3 = 0x13/0x6
                 instruction |= 0x13;
+                instruction |= (0x6 << 12);
+
                 instructionList.Add(instruction);
                 return instructionList;
             }

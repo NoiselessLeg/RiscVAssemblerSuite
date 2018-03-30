@@ -1,4 +1,5 @@
-﻿using Assembler.SymbolTableConstruction.SymbolBuilders;
+﻿using Assembler.InstructionProcessing;
+using Assembler.SymbolTableConstruction.SymbolBuilders;
 using Assembler.Util;
 using System.Collections.Generic;
 
@@ -15,16 +16,15 @@ namespace Assembler.SymbolTableConstruction
         /// Creates a mapping to segment types to their declarations.
         /// Add future supported segment types here.
         /// </summary>
-        public SegmentSymbolParserFactory()
+        /// <param name="procFactory">The instruction processor factory to retrieve instruction size estimator implementations from.</param>
+        public SegmentSymbolParserFactory(InstructionProcessorFactory procFac)
         {
             m_ParserTable = new Dictionary<SegmentType, ISymbolTableBuilder>()
             {
                 { SegmentType.Data, new DataSymbolBuilder() },
-                { SegmentType.Text, new TextSymbolBuilder() }
+                { SegmentType.Text, new TextSymbolBuilder(procFac) }
             };
         }
-
-        
         
         /// <summary>
         /// Retrieves a segment parser implementation for a specific segment type.

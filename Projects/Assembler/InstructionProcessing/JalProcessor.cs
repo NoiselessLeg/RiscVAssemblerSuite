@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class JalParser 
+    class JalProcessor : BaseInstructionProcessor 
     {
-        public JalParser(SymbolTable symbolTable)
+        public JalProcessor(SymbolTable symbolTable)
         {
             m_SymbolTable = symbolTable;
         }
 
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)

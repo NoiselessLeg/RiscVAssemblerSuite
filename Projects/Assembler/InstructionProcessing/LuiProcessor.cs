@@ -1,12 +1,15 @@
 ﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class AuipcInstructionParser : IParser
+    class LuiProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)
@@ -14,7 +17,7 @@ namespace Assembler.CodeGeneration.InstructionGenerators
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + args.Length + '.');
             }
 
-            string rs1 = args[0].Trim();
+            string rd = args[0].Trim();
             string immediateStr = args[1].Trim();
 
             int immediate = 0;
@@ -22,14 +25,14 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             {
                 throw new ArgumentException("Lui - argument 2 was non-integer immediate value.");
             }
-
-            int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
-            int bitShiftedImm = immediate >> 12;
+            
+            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
+            int bitShiftedImm = (int)(immediate & 0xFFFFF000);
 
             int instruction = 0;
             instruction |= bitShiftedImm;
-            instruction |= (rs1Reg << 7);
-            instruction |= 0x17;
+            instruction |= (rdReg << 7);
+            instruction |= 0x37;
             var inList = new List<int>();
             inList.Add(instruction);
             return inList;

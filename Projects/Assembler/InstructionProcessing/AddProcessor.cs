@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.CodeGeneration.InstructionGenerators
+namespace Assembler.InstructionProcessing
 {
-    class AddInstructionParser : IParser
+    class AddProcessor : BaseInstructionProcessor
     {
-        public IEnumerable<int> ParseInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -41,12 +41,12 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             catch (ArgumentException)
             {
                 // try to parse the string as a number; maybe the user meant addi?
-                short immediate = 0;
-                bool isShort = short.TryParse(rs2, out immediate);
+                int immediate = 0;
+                bool isShort = int.TryParse(rs2, out immediate);
                 if (isShort)
                 {
-                    var immediateParser = new AddImmediateInstructionParser();
-                    returnVal = immediateParser.ParseInstruction(nextTextAddress, args);
+                    var immediateParser = new AddiProcessor();
+                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
                 }
                 else
                 {
@@ -56,6 +56,33 @@ namespace Assembler.CodeGeneration.InstructionGenerators
             }
 
             return returnVal;
+        }
+
+        public override int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
+        {
+            // we expect three arguments. if not, throw an ArgumentException
+            if (instructionArgs.Length != 3)
+            {
+                throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + instructionArgs.Length + '.');
+            }
+
+            // try to parse the string as a number; maybe the user meant addi?
+            int numInstructions = 0;
+
+            int immediate = 0;
+            bool isShort = int.TryParse(instructionArgs[2], out immediate);
+            if (isShort)
+            {
+                var immediateParser = new AddiProcessor();
+                numInstructions = immediateParser.GetNumGeneratedInstructions(nextTextAddress, instructionArgs);
+            }
+            else
+            {
+                // otherwise, this is garbage; rethrow the value.
+                numInstructions = 1;
+            }
+
+            return numInstructions;
         }
     }
 }
