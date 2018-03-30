@@ -54,15 +54,9 @@ namespace Assembler.CodeGeneration
             if (foundInstruction)
             {
                 // first, validate that the instruction is not the last token in the string.
-                string instSubstring = string.Empty;
-                if (asmLine.Text.IndexOf(instructionToken) + instructionToken.Length + 1 >= asmLine.Text.Length)
-                {
-                    throw new ArgumentException("Expected arguments after instruction token \"" + instructionToken + '\"');
-                }
-
                 // try to parse the instruction parameters
                 // get the substring starting at the index of the next character after the instruction
-                instSubstring = asmLine.Text.Substring(asmLine.Text.IndexOf(instructionToken) + instructionToken.Length);
+                string instSubstring = asmLine.Text.Substring(asmLine.Text.IndexOf(instructionToken) + instructionToken.Length);
 
                 //split the substring at the comma to get the instruction parameters.
                 string[] argTokens = instSubstring.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);

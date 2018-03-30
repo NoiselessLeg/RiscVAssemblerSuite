@@ -93,15 +93,9 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             if (foundInstruction)
             {
                 // first, validate that the instruction is not the last token in the string.
-                string instSubstring = string.Empty;
-                if (originalLine.Text.IndexOf(instructionToken) + instructionToken.Length + 1 >= originalLine.Text.Length)
-                {
-                    throw new ArgumentException("Expected arguments after instruction token \"" + instructionToken + '\"');
-                }
-
                 // try to parse the instruction parameters
                 // get the substring starting at the index of the next character after the instruction
-                instSubstring = originalLine.Text.Substring(originalLine.Text.IndexOf(instructionToken) + instructionToken.Length);
+                string instSubstring = originalLine.Text.Substring(originalLine.Text.IndexOf(instructionToken) + instructionToken.Length);
 
                 //split the substring at the comma to get the instruction parameters.
                 string[] argTokens = instSubstring.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
