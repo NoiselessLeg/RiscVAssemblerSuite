@@ -105,10 +105,9 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
 
                 // find the parser for the instruction.
                 IInstructionSizeEstimator parser = m_SizeEstimatorFac.GetEstimatorForInstruction(instructionToken);
-                int nextInstructionAddress = m_CurrTextAddress + CommonConstants.BASE_INSTRUCTION_SIZE_BYTES;
 
                 // beq instructions should (hopefully) not generate multiple instructions..
-                int numGeneratedInstructions = parser.GetNumGeneratedInstructions(nextInstructionAddress, argTokens);
+                int numGeneratedInstructions = parser.GetNumGeneratedInstructions(m_CurrTextAddress, argTokens);
                 m_CurrTextAddress += (CommonConstants.BASE_INSTRUCTION_SIZE_BYTES * numGeneratedInstructions);
             }
         }

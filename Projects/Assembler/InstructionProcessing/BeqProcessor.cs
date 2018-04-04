@@ -4,22 +4,21 @@ using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    class BeqProcessor : BaseInstructionProcessor
+    class BeqProcessor : SymbolicInstructionProcessor
     {
-        public BeqProcessor(SymbolTable symbolTable)
+        public BeqProcessor(SymbolTable symbolTable) :
+            base(symbolTable)
         {
-            m_SymbolTable = symbolTable;
         }
 
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
-
-
+            
             string rs1 = args[0].Trim();
             string rs2 = args[1].Trim();
             string offsetStr = args[2].Trim();
@@ -27,45 +26,31 @@ namespace Assembler.InstructionProcessing
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
             int rs2Reg = RegisterMap.GetNumericRegisterValue(rs2);
 
-            IEnumerable<int> returnVal = null;
-            
-            returnVal = GenerateInstructionWithSymbolicOffset(nextTextAddress, rs1Reg, rs2Reg, offsetStr); 
-            
-            return returnVal;
-        }
-
-        /// <summary>
-        /// Generates a BEQ instruction when provided a symbol as the offset. We
-        /// easily look it up in our symbol table, if it exists.
-        /// </summary>
-        private IEnumerable<int> GenerateInstructionWithSymbolicOffset(int nextTextAddress, int rs1Reg, int rs2Reg, string labelName)
-        {
-            Symbol symbolLabel = m_SymbolTable.GetSymbol(labelName);
+            Symbol symbolLabel = SymbolTable.GetSymbol(offsetStr);
 
             // the instruction should always have a last two bits of 0, since they're word aligned.
             System.Diagnostics.Debug.Assert((symbolLabel.Address & 0x3) == 0);
-
-            // divide the difference by 4 since all instructions must reside on 4-byte aligned address.
-            // find the difference between the jump-to address and the theoretical next address.
-            int offset = ((symbolLabel.Address - nextTextAddress) / 4);
             
-            return GenerateInstructionWithNumericOffset(rs1Reg, rs2Reg, offset);
-        }
-
-        /// <summary>
-        /// Generates a BEQ instruction if given a numeric offset. This is unlikely, as we can
-        /// assume our user isn't a masochist, but if it is provided a numeric address, we can 
-        /// resolve it. This can be also be used when the symbol is resolved in GenerateInstructionWithSymbolicOffset.
-        /// </summary>
-        private IEnumerable<int> GenerateInstructionWithNumericOffset(int rs1Reg, int rs2Reg, int offset)
-        {
-            var instructionList = new List<int>();
+            // find the difference between the jump-to address and the theoretical next address.
+            // note that the processor internally doubles this value, so we halve it here.
+            int offset = (symbolLabel.Address - address) / 2;
 
             int instruction = 0;
 
+            var instructionList = new List<int>();
+
+            // if the offset is greater than the 12 bit immediate,
+            // throw an error so that bad code isn't silently generated.
+            if (offset > 2047 || offset < -2048)
+            {
+                throw new ArgumentException("beq - the offset between the address of \"" + symbolLabel.LabelName + "\"" +
+                    " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +
+                    address.ToString("X") + ") exceeds the 12 bit immediate limit.");
+            }
+
             // this is a B-type instruction, so bits go all over the place.
             // last bit is ignored, since it would be zero anyway.
-            
+
             // get the thirteenth (offset 12) bit of the immediate (counting from zero), and shift it to the end.
             int offset0 = offset & 0x1000;
             instruction |= (offset0 << 19);
@@ -92,6 +77,9 @@ namespace Assembler.InstructionProcessing
             return instructionList;
         }
 
-        private readonly SymbolTable m_SymbolTable;
+        protected override int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args)
+        {
+            return 1;
+        }
     }
 }

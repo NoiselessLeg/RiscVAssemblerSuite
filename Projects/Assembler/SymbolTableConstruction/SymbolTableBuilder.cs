@@ -18,9 +18,11 @@ namespace Assembler.SymbolTableConstruction
         /// Creates an instance of the first pass assembler, which determines
         /// the locations of labels and generates a symbol table.
         /// </summary>
+        /// <param name="logger">The logging implementation to use.</param>
         /// <param name="procFactory">The instruction processor factory to retrieve instruction size estimator implementations from.</param>
-        public SymbolTableBuilder(InstructionProcessorFactory procFac)
+        public SymbolTableBuilder(ILogger logger, InstructionProcessorFactory procFac)
         {
+            m_Logger = logger;
             m_SymbolBuilderFac = new SegmentSymbolParserFactory(procFac);
         }
 
@@ -161,8 +163,8 @@ namespace Assembler.SymbolTableConstruction
             reader.Seek(0, SeekOrigin.Begin);
         }
 
-        
 
+        private readonly ILogger m_Logger;
         private readonly SegmentSymbolParserFactory m_SymbolBuilderFac;
     }
 

@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ namespace Assembler.InstructionProcessing
 {
     class AndProcessor : BaseInstructionProcessor
     {
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
@@ -45,7 +46,7 @@ namespace Assembler.InstructionProcessing
                 if (isShort)
                 {
                     var immediateParser = new AndiProcessor();
-                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(address, args);
                 }
                 else
                 {

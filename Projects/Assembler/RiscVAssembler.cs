@@ -79,7 +79,7 @@ namespace Assembler
 
                     // build the symbol table
                     var instructionProcFac = new InstructionProcessorFactory(symTable);
-                    var symTableBuilder = new SymbolTableBuilder(instructionProcFac);
+                    var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
 
                     symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
                     symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
@@ -87,7 +87,7 @@ namespace Assembler
                     // use the symbol table to generate code with references resolved.
                     var objFile = new BasicObjectFile(symTable, options.Endianness);
 
-                    var codeGenerator = new CodeGenerator(symTable, instructionProcFac);
+                    var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
                     codeGenerator.GenerateCode(reader, objFile);
 
                     // write the object file out.

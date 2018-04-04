@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class JalProcessor : BaseInstructionProcessor 
+    class JalProcessor : SymbolicInstructionProcessor 
     {
-        public JalProcessor(SymbolTable symbolTable)
+        public JalProcessor(SymbolTable symbolTable):
+            base(symbolTable)
         {
-            m_SymbolTable = symbolTable;
         }
 
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)
@@ -22,51 +23,23 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + args.Length + '.');
             }
 
-            string rd = args[0].Trim();
-            string offsetStr = args[1].Trim();
-
-            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int offset = 0;
-
-            IEnumerable<int> returnVal = null;
-            bool isNumericOffset = int.TryParse(offsetStr, out offset);
-            if (isNumericOffset)
-            {
-                returnVal = GenerateInstructionWithNumericOffset(rdReg, offset);
-            }
-            else
-            {
-                returnVal = GenerateInstructionWithSymbolicOffset(rdReg, offsetStr);
-            }
-
-            return returnVal;
-        }
-
-        /// <summary>
-        /// Generates a BEQ instruction when provided a symbol as the offset. This is acceptable, as we can
-        /// easily look it up in our symbol table if it exists.
-        /// </summary>
-        private IEnumerable<int> GenerateInstructionWithSymbolicOffset(int rdReg, string labelName)
-        {
-            Symbol symbolLabel = m_SymbolTable.GetSymbol(labelName);
-
-            //TODO: do we need to do anything with this address?
-            int offset = symbolLabel.Address;
-            return GenerateInstructionWithNumericOffset(rdReg, offset);
-            
-        }
-
-        /// <summary>
-        /// Generates a JAL instruction if given a numeric offset. This is unlikely, as we can
-        /// assume our user isn't a masochist, but if it is provided a numeric address, we can 
-        /// resolve it. This can be also be used when the symbol is resolved in GenerateInstructionWithSymbolicOffset.
-        /// </summary>
-        private IEnumerable<int> GenerateInstructionWithNumericOffset(int rdReg, int offset)
-        {
+            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+            Symbol symbolLabel = SymbolTable.GetSymbol(args[1]);
             var instructionList = new List<int>();
 
+            int offset = (symbolLabel.Address - address) / 2;
+
+            // this should rarely happen, but if the halved immediate exceeds the 21 bit boundary,
+            // error out and notify the user.
+            if (offset > 1048575 || offset < -1048576)
+            {
+                throw new ArgumentException("jal - the offset between the address of \"" + symbolLabel.LabelName + "\"" +
+                    " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +
+                    address.ToString("X") + ") exceeds the 21 bit immediate limit. Use jalr instead.");
+            }
+
             int instruction = 0;
-            
+
             // get the twentieth bit offset (21st bit) of the offset value
             // and shift it to the 31st bit offset.
             instruction |= ((offset & 0x100000) << 11);
@@ -85,10 +58,14 @@ namespace Assembler.InstructionProcessing
 
             instruction |= 0x6F;
             instructionList.Add(instruction);
-        
+
             return instructionList;
         }
 
-        private readonly SymbolTable m_SymbolTable;
+        protected override int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args)
+        {
+            // always should return one instruction.
+            return 1;
+        }
     }
 }

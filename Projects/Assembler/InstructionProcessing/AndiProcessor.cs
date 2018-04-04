@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +10,18 @@ namespace Assembler.InstructionProcessing
 {
     class AndiProcessor : BaseInstructionProcessor
     {
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
             if (args.Length != 3)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
-
-            string rd = args[0].Trim();
-            string rs1 = args[1].Trim();
-            string imm = args[2].Trim();
-            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
+            
+            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+            int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
             short immVal = 0;
-            bool isValidImmediate = short.TryParse(imm, out immVal);
+            bool isValidImmediate = short.TryParse(args[2], out immVal);
 
             if (isValidImmediate)
             {
@@ -42,7 +40,7 @@ namespace Assembler.InstructionProcessing
             }
             else
             {
-                throw new ArgumentException(imm + " is not a valid immediate value.");
+                throw new ArgumentException(args[2] + " is not a valid immediate value.");
             }
         }
     }

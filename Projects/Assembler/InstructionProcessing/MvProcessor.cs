@@ -1,5 +1,4 @@
-﻿using Assembler.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class LiProcessor : BaseInstructionProcessor
+    class MvProcessor : BaseInstructionProcessor
     {
         public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs)
         {
@@ -16,7 +15,7 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + instructionArgs.Length + '.');
             }
 
-            return new AddiProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], "x0", instructionArgs[1] });
+            return new AddProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { instructionArgs[0], instructionArgs[1], "x0" });
         }
     }
 }

@@ -19,11 +19,12 @@ namespace Assembler.CodeGeneration
         /// <summary>
         /// Creates a new instance of a CodeGenerator.
         /// </summary>
+        /// <param name="logger">The logging implementation to use for logging warnings/information.</param>
         /// <param name="symTable">The symbol table to use to resolve references with.</param>
         /// <param name="procFactory">The instruction processor factory to retrieve code generator implementations from.</param>
-        public CodeGenerator(SymbolTable symTable, InstructionProcessorFactory procFac)
+        public CodeGenerator(ILogger logger, SymbolTable symTable, InstructionProcessorFactory procFac)
         {
-            m_CodeGenFac = new CodeGeneratorFactory(symTable, procFac);
+            m_CodeGenFac = new CodeGeneratorFactory(logger, symTable, procFac);
         }
 
         /// <summary>

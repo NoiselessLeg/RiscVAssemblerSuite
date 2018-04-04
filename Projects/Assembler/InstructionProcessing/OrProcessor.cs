@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 
@@ -45,7 +46,7 @@ namespace Assembler.InstructionProcessing
                 if (isShort)
                 {
                     var immediateParser = new OriProcessor();
-                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(logger, nextTextAddress, args);
                 }
                 else
                 {

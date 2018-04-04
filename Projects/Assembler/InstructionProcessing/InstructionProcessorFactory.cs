@@ -63,7 +63,8 @@ namespace Assembler.InstructionProcessing
                 { "and", new AndProcessor() },
                 { "nop", new NopProcessor() },
                 { "li", new LiProcessor() },
-                { "mv", new PlaceholderProcessor("mv") },
+                { "la", new LaProcessor(symbolTable) },
+                { "mv", new MvProcessor() },
 
                 //RV32M Integer multiply / divide
                 { "mul", new PlaceholderProcessor("mul") },

@@ -1,11 +1,17 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    class LwProcessor : BaseInstructionProcessor
+    class LwProcessor : SymbolicInstructionProcessor
     {
+        public LwProcessor(SymbolTable symTable) :
+            base(symTable)
+        {
+        }
+
         public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
         {
             if (args.Length != 2)
@@ -15,19 +21,56 @@ namespace Assembler.InstructionProcessing
             
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
 
-            ParameterizedInstructionArg arg = ParameterizedInstructionArg.ParameterizeArgument(args[1]);
-
             var retList = new List<int>();
-
-            int instruction = 0;
-            instruction |= ((arg.Offset & 0xFFF) << 20);
-            instruction |= (arg.Register << 15);
-            instruction |= (0x10 << 12);
-            instruction |= (rdReg << 7);
-            instruction |= 0x3;
-            retList.Add(instruction);
+            if (IsParameterizedToken(args[1]))
+            {
+                ParameterizedInstructionArg arg = ParameterizedInstructionArg.ParameterizeArgument(args[1]);
+                int instruction = 0;
+                instruction |= ((arg.Offset & 0xFFF) << 20);
+                instruction |= (arg.Register << 15);
+                instruction |= (0x10 << 12);
+                instruction |= (rdReg << 7);
+                instruction |= 0x3;
+                retList.Add(instruction);
+            }
+            else
+            {
+                Symbol sym = m_SymTbl.GetSymbol(args[1]);
+                retList.AddRange(new AuipcProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], sym.Address.ToString() }));
+                int numericOffset = sym.Address & 0xFFF;
+                int instruction = 0;
+                instruction |= (numericOffset << 20);
+                instruction |= (rdReg << 15);
+                instruction |= (0x10 << 12);
+                instruction |= (rdReg << 7);
+                instruction |= 0x3;
+                retList.Add(instruction);
+            }
 
             return retList;
+        }
+
+        protected override int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args)
+        {
+            if (args.Length != 2)
+            {
+                throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + args.Length + '.');
+            }
+
+            int numInstructions = 0;
+
+            // if it is a parameterized token, then this will generate one instruction.
+            if (IsParameterizedToken(args[1]))
+            {
+                numInstructions = 1;
+            }
+            else
+            {
+                // otherwise, this will generate 2 instructions (an auipc instruction, and the actual lw instruction)
+                numInstructions = 2;
+            }
+
+            return numInstructions;
         }
     }
 }

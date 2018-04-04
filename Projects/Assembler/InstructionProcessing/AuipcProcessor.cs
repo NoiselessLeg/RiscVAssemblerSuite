@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Assembler.InstructionProcessing
 {
     class AuipcProcessor : BaseInstructionProcessor
     {
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] args)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
             if (args.Length != 2)
@@ -20,7 +21,7 @@ namespace Assembler.InstructionProcessing
             int immediate = 0;
             if (!int.TryParse(immediateStr, out immediate))
             {
-                throw new ArgumentException("Lui - argument 2 was non-integer immediate value.");
+                throw new ArgumentException("auipc - argument 2 was non-integer immediate value.");
             }
 
             int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);

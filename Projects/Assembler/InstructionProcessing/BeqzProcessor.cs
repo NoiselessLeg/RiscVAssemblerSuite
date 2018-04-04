@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace Assembler.InstructionProcessing
             m_SymTable = symTbl;
         }
 
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs)
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] instructionArgs)
         {
             if (instructionArgs.Length != 2)
             {
@@ -22,7 +23,7 @@ namespace Assembler.InstructionProcessing
             }
 
             var beqParser = new BeqProcessor(m_SymTable);
-            return beqParser.GenerateCodeForInstruction(nextTextAddress, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
+            return beqParser.GenerateCodeForInstruction(address, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
 
         private readonly SymbolTable m_SymTable;

@@ -1,4 +1,5 @@
 ﻿using Assembler.CodeGeneration;
+using Assembler.Common;
 using Assembler.Util;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ namespace Assembler.InstructionProcessing
 {
     class AddiProcessor : BaseInstructionProcessor
     {
+
+
         /// <summary>
         /// Parses an instruction and generates the binary code for it.
         /// </summary>
@@ -28,13 +31,10 @@ namespace Assembler.InstructionProcessing
             {
                 throw new ArgumentException("Addi: Immediate \"" + args[2] + "\" was not a valid 32-bit integer");
             }
-
-            string rd = args[0].Trim();
-            string rs1 = args[1].Trim();
-            string imm = args[2].Trim();
-            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
-            bool isValidImmediate = int.TryParse(imm, out immVal);
+            
+            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+            int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
+            bool isValidImmediate = int.TryParse(args[2], out immVal);
 
             if (isValidImmediate)
             {
@@ -58,7 +58,7 @@ namespace Assembler.InstructionProcessing
             }
             else
             {
-                throw new ArgumentException(imm + " is not a valid immediate value.");
+                throw new ArgumentException(args[2] + " is not a valid immediate value.");
             }
         }
 
@@ -66,20 +66,20 @@ namespace Assembler.InstructionProcessing
         /// Generates a list of instructions for the ADDI instruction, given that the immediate argument
         /// is larger than 11 bits (neglecting the sign bit).
         /// </summary>
-        /// <param name="nextTextAddress">The next address in the .text segment.</param>
+        /// <param name="address">The next address in the .text segment.</param>
         /// <param name="immediate"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        private List<int> GenerateExpandedInstruction(int nextTextAddress, int immediate, string[] args)
+        private List<int> GenerateExpandedInstruction(int address, int immediate, string[] args)
         {
             // load the upper 20 bits of the immediate into the destination register
-            IEnumerable<int> backingLuiInstructions = new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[2] });
+            IEnumerable<int> backingLuiInstructions = new LuiProcessor().GenerateCodeForInstruction(address, new[] { args[0], args[2] });
 
             // or that with the lower 12 bits of that immediate.
-            IEnumerable<int> backingOriInstructions = new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[0], (immediate & 0x7FF).ToString() });
+            IEnumerable<int> backingOriInstructions = new OriProcessor().GenerateCodeForInstruction(address, new[] { args[0], args[0], (immediate & 0x7FF).ToString() });
 
             // add the value of what we have in our register with the rs1 register.
-            IEnumerable<int> backingAddInstructions = new AddProcessor().GenerateCodeForInstruction(nextTextAddress, new[] { args[0], args[0], args[1] });
+            IEnumerable<int> backingAddInstructions = new AddProcessor().GenerateCodeForInstruction(address, new[] { args[0], args[0], args[1] });
 
             var instructionList = new List<int>();
             instructionList.AddRange(backingLuiInstructions);

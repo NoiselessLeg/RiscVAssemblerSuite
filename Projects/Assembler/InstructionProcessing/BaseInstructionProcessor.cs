@@ -1,4 +1,5 @@
 ﻿using Assembler.CodeGeneration;
+using Assembler.Common;
 using Assembler.SymbolTableConstruction;
 using Assembler.Util;
 using System;
@@ -12,7 +13,7 @@ namespace Assembler.InstructionProcessing
         /// <summary>
         /// Parses an instruction and generates the binary code for it.
         /// </summary>
-        /// <param name="nextTextAddress">The address of the theoretical next instruction being parsed in the .text segment.</param>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
         /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
         /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
         /// for a pseudo-instruction, this may return more than one instruction value.</returns>
@@ -22,12 +23,12 @@ namespace Assembler.InstructionProcessing
         /// Determines how many instructions are generated via a pseudo-instruction. The default implementation assumes
         /// that only one instruction will be returned.
         /// </summary>
-        /// <param name="nextTextAddress">The address of the theoretical next instruction being parsed in the .text segment.</param>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
         /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
         /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
-        public virtual int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
+        public virtual int GetNumGeneratedInstructions(int address, string[] instructionArgs)
         {
-            return GenerateCodeForInstruction(nextTextAddress, instructionArgs).Count();
+            return GenerateCodeForInstruction(address, instructionArgs).Count();
         }
 
         /// <summary>
@@ -119,5 +120,6 @@ namespace Assembler.InstructionProcessing
             private readonly short m_Offset;
             private readonly int m_Register;
         }
+        
     }
 }
