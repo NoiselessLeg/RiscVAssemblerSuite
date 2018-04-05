@@ -28,7 +28,7 @@ namespace Assembler.InstructionProcessing
             }
             
             int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int bitShiftedImm = (int)(immediate & 0xFFFFF000);
+            int bitShiftedImm = immediate << 12;
 
             int instruction = 0;
             instruction |= bitShiftedImm;

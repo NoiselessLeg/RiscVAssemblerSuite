@@ -3,12 +3,9 @@ using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    /// <summary>
-    /// Psuedo-instruction for beq x0, rs, label
-    /// </summary>
-    class BeqzProcessor : BeqProcessor
+    class BgezProcessor : BgeProcessor
     {
-        public BeqzProcessor(SymbolTable symTbl) :
+        public BgezProcessor(SymbolTable symTbl) :
             base(symTbl)
         {
         }
@@ -19,9 +16,8 @@ namespace Assembler.InstructionProcessing
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + instructionArgs.Length + '.');
             }
-            
+
             return base.GenerateCodeForInstruction(address, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
-        
     }
 }

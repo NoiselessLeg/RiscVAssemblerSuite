@@ -1,20 +1,19 @@
-﻿using Assembler.Common;
-using Assembler.Util;
+﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    class LwProcessor : LoadInstructionBase
+    class BneProcessor : BranchInstructionBase
     {
-        public LwProcessor(SymbolTable symTable) :
-            base(symTable)
+        public BneProcessor(SymbolTable symTbl):
+            base(symTbl)
         {
         }
 
         protected override byte GetFunctionCode()
         {
-            return 0x2;
+            return 0x1;
         }
     }
 }

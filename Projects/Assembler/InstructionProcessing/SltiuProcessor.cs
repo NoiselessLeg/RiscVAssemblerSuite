@@ -1,13 +1,13 @@
-﻿using Assembler.CodeGeneration;
-using Assembler.Common;
-using Assembler.Util;
+﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class AddiProcessor : BaseInstructionProcessor
+    class SltiuProcessor : BaseInstructionProcessor
     {
         /// <summary>
         /// Parses an instruction and generates the binary code for it.
@@ -24,11 +24,13 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
 
+
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
 
-            int immVal = 0;
-            bool isValidImmediate = int.TryParse(args[2], out immVal);
+            short immVal = 0;
+            bool isValidImmediate = short.TryParse(args[2], out immVal);
+            isValidImmediate = isValidImmediate && (immVal <= 2047) && (immVal >= -2048);
 
             if (isValidImmediate)
             {
@@ -37,55 +39,20 @@ namespace Assembler.InstructionProcessing
                 // if greater than 0x7FF (2047) or less than 0xFFF, then help the user by trying to expand out the instruction
                 // so that it effectively does the same thing.
                 // TODO: do we need to use another mask for negative numbers?
-                if (immVal > 2047 || immVal < -2048)
-                {
-                    instructionList = GenerateExpandedInstruction(address, immVal, args);
-                }
-                else
-                {
-                    instructionList = new List<int>();
-                    int instruction = GenerateUnexpandedInstruction(immVal, rs1Reg, rdReg);
-                    instructionList.Add(instruction);
-                }
+                instructionList = new List<int>();
+                int instruction = GenerateUnexpandedInstruction(immVal, rs1Reg, rdReg);
+                instructionList.Add(instruction);
 
                 return instructionList;
             }
             else
             {
-                throw new ArgumentException(args[2] + " is not a valid immediate value.");
+                throw new ArgumentException(args[2] + " is not a valid 12-bit immediate value.");
             }
         }
 
         /// <summary>
-        /// Generates a list of instructions for the ADDI instruction, given that the immediate argument
-        /// is larger than 11 bits (neglecting the sign bit).
-        /// </summary>
-        /// <param name="address">The next address in the .text segment.</param>
-        /// <param name="immediate"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        private List<int> GenerateExpandedInstruction(int address, int immediate, string[] args)
-        {
-            // load the upper 20 bits of the immediate into the destination register
-            int shiftedImm = immediate >> 12;
-
-            IEnumerable<int> backingLuiInstructions = new LuiProcessor().GenerateCodeForInstruction(address, new[] { args[0], shiftedImm.ToString() });
-
-            // or that with the lower 12 bits of that immediate.
-            IEnumerable<int> backingOriInstructions = new OriProcessor().GenerateCodeForInstruction(address, new[] { args[0], args[0], (immediate & 0xFFF).ToString() });
-
-            // add the value of what we have in our register with the rs1 register.
-            IEnumerable<int> backingAddInstructions = new AddProcessor().GenerateCodeForInstruction(address, new[] { args[0], args[0], args[1] });
-
-            var instructionList = new List<int>();
-            instructionList.AddRange(backingLuiInstructions);
-            instructionList.AddRange(backingOriInstructions);
-            instructionList.AddRange(backingAddInstructions);
-            return instructionList;
-        }
-
-        /// <summary>
-        /// Generates the single addi instruction, which is useable in the case
+        /// Generates the single sltiu instruction, which is useable in the case
         /// that the immediate is 11 bits (sans the sign bit).
         /// </summary>
         /// <param name="immediate">The immediate value.</param>
@@ -99,6 +66,7 @@ namespace Assembler.InstructionProcessing
             int instruction = 0;
             instruction |= (immediate << 20);
             instruction |= (rs1Reg << 15);
+            instruction |= (0x3 << 12);
             instruction |= (rdReg << 7);
             instruction |= 0x13;
             return instruction;

@@ -1,5 +1,4 @@
-﻿using Assembler.Common;
-using Assembler.Util;
+﻿using Assembler.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    class SbProcessor : StoreInstructionBase
+    class BgeProcessor : BranchInstructionBase
     {
+        public BgeProcessor(SymbolTable symTbl):
+            base(symTbl)
+        {
+        }
+
         protected override byte GetFunctionCode()
         {
-            return 0x0;
+            return 0x5;
         }
     }
 }

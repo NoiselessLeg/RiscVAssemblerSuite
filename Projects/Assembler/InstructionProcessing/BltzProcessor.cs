@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-    /// <summary>
-    /// Psuedo-instruction for beq x0, rs, label
-    /// </summary>
-    class BeqzProcessor : BeqProcessor
+    class BltzProcessor : BltProcessor
     {
-        public BeqzProcessor(SymbolTable symTbl) :
+        public BltzProcessor(SymbolTable symTbl) :
             base(symTbl)
         {
         }
@@ -19,9 +19,8 @@ namespace Assembler.InstructionProcessing
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 2, received " + instructionArgs.Length + '.');
             }
-            
+
             return base.GenerateCodeForInstruction(address, new string[] { "x0", instructionArgs[0], instructionArgs[1] });
         }
-        
     }
 }

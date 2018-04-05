@@ -17,7 +17,7 @@ namespace Assembler.InstructionProcessing
         /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
         /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
         /// for a pseudo-instruction, this may return more than one instruction value.</returns>
-        public abstract IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs);
+        public abstract IEnumerable<int> GenerateCodeForInstruction(int address, string[] instructionArgs);
 
         /// <summary>
         /// Determines how many instructions are generated via a pseudo-instruction. The default implementation assumes

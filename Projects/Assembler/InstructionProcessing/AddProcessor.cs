@@ -18,18 +18,14 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
 
-            string rd = args[0].Trim();
-            string rs1 = args[1].Trim();
-            string rs2 = args[2].Trim();
-
             IEnumerable<int> returnVal = null;
             int instruction = 0;
-            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
+            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+            int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
             int rs2Reg = 0;
             try
             {
-                rs2Reg = RegisterMap.GetNumericRegisterValue(rs2);
+                rs2Reg = RegisterMap.GetNumericRegisterValue(args[2]);
 
                 List<int> instructionList = new List<int>();
                 instruction |= (rs2Reg << 20);
@@ -43,11 +39,11 @@ namespace Assembler.InstructionProcessing
             {
                 // try to parse the string as a number; maybe the user meant addi?
                 int immediate = 0;
-                bool isShort = int.TryParse(rs2, out immediate);
-                if (isShort)
+                bool isInt = int.TryParse(args[2], out immediate);
+                if (isInt)
                 {
                     var immediateParser = new AddiProcessor();
-                    returnVal = immediateParser.GenerateCodeForInstruction(nextTextAddress, args);
+                    returnVal = immediateParser.GenerateCodeForInstruction(address, args);
                 }
                 else
                 {
@@ -57,33 +53,6 @@ namespace Assembler.InstructionProcessing
             }
 
             return returnVal;
-        }
-
-        public override int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
-        {
-            // we expect three arguments. if not, throw an ArgumentException
-            if (instructionArgs.Length != 3)
-            {
-                throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + instructionArgs.Length + '.');
-            }
-
-            // try to parse the string as a number; maybe the user meant addi?
-            int numInstructions = 0;
-
-            int immediate = 0;
-            bool isShort = int.TryParse(instructionArgs[2], out immediate);
-            if (isShort)
-            {
-                var immediateParser = new AddiProcessor();
-                numInstructions = immediateParser.GetNumGeneratedInstructions(nextTextAddress, instructionArgs);
-            }
-            else
-            {
-                // otherwise, this is garbage; rethrow the value.
-                numInstructions = 1;
-            }
-
-            return numInstructions;
         }
     }
 }

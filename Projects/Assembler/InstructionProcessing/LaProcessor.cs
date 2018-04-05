@@ -34,8 +34,12 @@ namespace Assembler.InstructionProcessing
             }
             else
             {
-                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], sym.Address.ToString() }));
-                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], instructionArgs[0], sym.Address.ToString() }));
+                int shiftedAddress = sym.Address >> 12;
+                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], shiftedAddress.ToString() }));
+
+                // need to do something if this value is less 
+                int orImmVal = sym.Address & 0xFFF;
+                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], instructionArgs[0], orImmVal.ToString() }));
             }
 
             return instructionList;
