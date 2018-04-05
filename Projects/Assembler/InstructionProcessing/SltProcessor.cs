@@ -58,32 +58,5 @@ namespace Assembler.InstructionProcessing
 
             return returnVal;
         }
-
-        public override int GetNumGeneratedInstructions(int nextTextAddress, string[] instructionArgs)
-        {
-            // we expect three arguments. if not, throw an ArgumentException
-            if (instructionArgs.Length != 3)
-            {
-                throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + instructionArgs.Length + '.');
-            }
-
-            // try to parse the string as a number; maybe the user meant addi?
-            int numInstructions = 0;
-
-            int immediate = 0;
-            bool isInt = int.TryParse(instructionArgs[2], out immediate);
-            if (isInt)
-            {
-                var immediateParser = new SltiProcessor();
-                numInstructions = immediateParser.GetNumGeneratedInstructions(nextTextAddress, instructionArgs);
-            }
-            else
-            {
-                // otherwise, this is garbage; rethrow the value.
-                numInstructions = 1;
-            }
-
-            return numInstructions;
-        }
     }
 }

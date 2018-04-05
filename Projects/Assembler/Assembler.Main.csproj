@@ -79,6 +79,7 @@
     <Compile Include="InstructionProcessing\SltiProcessor.cs" />
     <Compile Include="InstructionProcessing\SltiuProcessor.cs" />
     <Compile Include="InstructionProcessing\SltProcessor.cs" />
+    <Compile Include="InstructionProcessing\SltuProcessor.cs" />
     <Compile Include="InstructionProcessing\SraiProcessor.cs" />
     <Compile Include="InstructionProcessing\SraProcessor.cs" />
     <Compile Include="InstructionProcessing\SrliProcessor.cs" />
