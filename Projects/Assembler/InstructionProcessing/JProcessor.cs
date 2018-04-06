@@ -23,7 +23,7 @@ namespace Assembler.InstructionProcessing
         /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
-            // we expect two arguments. if not, throw an ArgumentException
+            // we expect one argument. if not, throw an ArgumentException
             if (args.Length != 1)
             {
                 throw new ArgumentException("Invalid number of arguments provided. Expected 1, received " + args.Length + '.');
