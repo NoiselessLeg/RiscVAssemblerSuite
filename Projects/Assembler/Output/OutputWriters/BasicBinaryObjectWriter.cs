@@ -28,6 +28,14 @@ namespace Assembler.Output.OutputWriters
         public void WriteObjectFile(string fileName, BasicObjectFile file)
         {
             FileStream fs = File.Open(fileName, FileMode.Create);
+
+            // write the .extern preamble
+            fs.Write(Encoding.ASCII.GetBytes(".extern"), 0, Encoding.ASCII.GetByteCount(".extern"));
+            foreach (IObjectFileComponent elem in file.ExternElements)
+            {
+                elem.WriteDataToFile(fs);
+            }
+
             // write the .data preamble
             fs.Write(Encoding.ASCII.GetBytes(".data"), 0, Encoding.ASCII.GetByteCount(".data"));
             foreach (IObjectFileComponent elem in file.DataElements)
