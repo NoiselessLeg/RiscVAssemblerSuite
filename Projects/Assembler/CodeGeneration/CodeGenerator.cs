@@ -63,19 +63,22 @@ namespace Assembler.CodeGeneration
                         if (!directiveResults.IsLineAssemblerDirective &&
                             currSegmentType != SegmentType.Invalid)
                         {
-                            ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
-                            var asmLine = new LineData(line, lineNum);
-                            try
+                            if (!TryHandlingLinkageDeclaration(line, lineNum, objFile))
                             {
-                                codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
-                            }
-                            catch (AssemblyException)
-                            {
-                                throw;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new AssemblyException(lineNum, ex.Message);
+                                ISegmentCodeGenerator codeGen = m_CodeGenFac.GetCodeGeneratorForSegment(currSegmentType);
+                                var asmLine = new LineData(line, lineNum);
+                                try
+                                {
+                                    codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
+                                }
+                                catch (AssemblyException)
+                                {
+                                    throw;
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new AssemblyException(lineNum, ex.Message);
+                                }
                             }
                         }
                     }

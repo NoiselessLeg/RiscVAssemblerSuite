@@ -64,15 +64,22 @@ namespace Assembler.SymbolTableConstruction
                         if (!directiveResults.IsLineAssemblerDirective &&
                             currSegmentType == desiredSegment)
                         {
-                            ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
-                            var asmLine = new LineData(line, lineNum);
-                            try
+                            if (!TryHandlingLinkageDeclaration(line, lineNum, currSegmentType, symTable))
                             {
-                                segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new AssemblyException(lineNum, ex.Message);
+                                ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
+                                var asmLine = new LineData(line, lineNum);
+                                try
+                                {
+                                    segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                                }
+                                catch (AssemblyException)
+                                {
+                                    throw;
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new AssemblyException(lineNum, ex.Message);
+                                }
                             }
                         }
                     }
@@ -130,19 +137,22 @@ namespace Assembler.SymbolTableConstruction
                         // further processing is needed
                         if (!directiveResults.IsLineAssemblerDirective)
                         {
-                            ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
-                            var asmLine = new LineData(line, lineNum);
-                            try
+                            if (!TryHandlingLinkageDeclaration(line, lineNum, currSegmentType, symTable))
                             {
-                                segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
-                            }
-                            catch (AssemblyException)
-                            {
-                                throw;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new AssemblyException(lineNum, ex.Message);
+                                ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
+                                var asmLine = new LineData(line, lineNum);
+                                try
+                                {
+                                    segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                                }
+                                catch (AssemblyException)
+                                {
+                                    throw;
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new AssemblyException(lineNum, ex.Message);
+                                }
                             }
                         }
                     }
