@@ -77,7 +77,8 @@ namespace Assembler.InstructionProcessing
                 else
                 {
                     short offsetVal = 0;
-                    if (!short.TryParse(parameterizedArgs[0], out offsetVal))
+                    bool isValidOffset = short.TryParse(parameterizedArgs[0], out offsetVal) && ((offsetVal & 0xF000) != 0);
+                    if (!isValidOffset)
                     {
                         throw new ArgumentException(parameterizedArgs[0] + " is not a valid 12-bit offset.");
                     }

@@ -10,6 +10,13 @@ namespace Assembler.InstructionProcessing
 {
     class AndiProcessor : BaseInstructionProcessor
     {
+        /// <summary>
+        /// Parses an instruction and generates the binary code for it.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
@@ -20,14 +27,17 @@ namespace Assembler.InstructionProcessing
             
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
-            short immVal = 0;
-            bool isValidImmediate = short.TryParse(args[2], out immVal);
+            int immVal = 0;
+            bool isValidImmediate = int.TryParse(args[2], out immVal);
 
             if (isValidImmediate)
             {
                 var instructionList = default(List<int>);
 
-                if (immVal > 2047 || immVal < -2048)
+                // see if this is a valid 12 bit immediate.
+                // if it is greater, treat this as a pseudo instruction and generate
+                // underlying code to support it. otherwise, use the real andi instruction.
+                if ((immVal & 0xFFFFF000) != 0)
                 {
                     instructionList = GenerateExpandedInstruction(address, immVal, args);
                 }

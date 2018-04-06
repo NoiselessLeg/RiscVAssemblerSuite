@@ -19,6 +19,19 @@ namespace Assembler.Output
             m_Endianness = outputEndianness;
             m_DataElements = new List<IObjectFileComponent>();
             m_TextElements = new List<IObjectFileComponent>();
+            m_ExternElements = new List<IObjectFileComponent>();
+        }
+
+        /// <summary>
+        /// Adds a number of byte elements to the .extern section of this .obj file.
+        /// </summary>
+        /// <param name="sizeInBytes">The number of bytes to reserve for this object.</param>
+        public void AddExternElement(int sizeInBytes)
+        {
+            for (int i = 0; i < sizeInBytes; ++i)
+            {
+                m_ExternElements.Add(new ByteDataElement(0));
+            }
         }
 
         /// <summary>
@@ -101,6 +114,14 @@ namespace Assembler.Output
         }
 
         /// <summary>
+        /// Gets an IEnumerable of all .extern elements in this .obj file.
+        /// </summary>
+        public IEnumerable<IObjectFileComponent> ExternElements
+        {
+            get { return m_ExternElements; }
+        }
+
+        /// <summary>
         /// Gets the symbol table used by this object file.
         /// </summary>
         public SymbolTable SymbolTable
@@ -112,5 +133,6 @@ namespace Assembler.Output
         private readonly Endianness m_Endianness;
         private readonly List<IObjectFileComponent> m_TextElements;
         private readonly List<IObjectFileComponent> m_DataElements;
+        private readonly List<IObjectFileComponent> m_ExternElements;
     }
 }

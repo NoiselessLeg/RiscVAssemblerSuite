@@ -1,5 +1,6 @@
 ﻿
 using CommandLine;
+using System;
 using System.Collections.Generic;
 
 namespace Assembler.Common
@@ -12,15 +13,22 @@ namespace Assembler.Common
         /// Creates an instance of the options that the assembler will use.
         /// </summary>
         /// <param name="inputFileNames">The list of input file names to be assembled.</param>
+        /// <param name="endianness">The endianness to output with. If unspecified, this will use the architecture's endianness.</param>
         /// <param name="logFile">The name of the log file, if any, to output to.</param>
-        /// <param name="endianness">The endianness to output with.</param>
         public AssemblerOptions(IEnumerable<string> inputFileNames, 
                                 Endianness endianness,
                                 string logFile = "")
         {
             m_InputFileNames = inputFileNames;
             m_LogFile = logFile;
-            m_Endianness = endianness;
+            if (endianness == Endianness.Unspecified)
+            {
+                m_Endianness = (BitConverter.IsLittleEndian ? Endianness.LittleEndian : Endianness.BigEndian);
+            }
+            else
+            {
+                m_Endianness = endianness;
+            }
         }
 
         /// <summary>
@@ -32,7 +40,8 @@ namespace Assembler.Common
             get { return m_InputFileNames; }
         }
 
-        [Option('e', "endianness", SetName = "", Default = Endianness.BigEndian,  Required = false, HelpText = "Desired endianness of output file.")]
+        [Option('e', "endianness", SetName = "", Default = Endianness.Unspecified,  Required = false, HelpText = "Desired endianness of output file. If unspecified, this" + 
+            " will use the architecture of the compiling computer's endianness.")]
         public Endianness Endianness
         {
             get { return m_Endianness; }

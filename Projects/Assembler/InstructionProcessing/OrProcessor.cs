@@ -7,6 +7,13 @@ namespace Assembler.InstructionProcessing
 {
     class OrProcessor : BaseInstructionProcessor
     {
+        /// <summary>
+        /// Parses an instruction and generates the binary code for it.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             if (args.Length != 3)
@@ -37,8 +44,8 @@ namespace Assembler.InstructionProcessing
             catch (ArgumentException)
             {
                 // try parsing as ori instruction
-                short immediate = 0;
-                bool isShort = short.TryParse(args[2], out immediate);
+                int immediate = 0;
+                bool isShort = int.TryParse(args[2], out immediate);
                 if (isShort)
                 {
                     var immediateParser = new OriProcessor();

@@ -55,7 +55,7 @@ namespace Assembler.SymbolTableConstruction
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        LineParseResults directiveResults = ParserCommon.HandleAssemblerDirective(line, lineNum, currSegmentType, currAlignment);
                         currAlignment = directiveResults.NewAlignment;
                         currSegmentType = directiveResults.NewSegment;
 
@@ -122,27 +122,31 @@ namespace Assembler.SymbolTableConstruction
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        LineParseResults directiveResults = ParserCommon.HandleAssemblerDirective(line, lineNum, currSegmentType, currAlignment);
                         currAlignment = directiveResults.NewAlignment;
                         currSegmentType = directiveResults.NewSegment;
 
                         // further processing is needed
                         if (!directiveResults.IsLineAssemblerDirective)
                         {
-                            ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
-                            var asmLine = new LineData(line, lineNum);
-                            try
+                            if (!TryHandlingLinkageDeclaration(line, lineNum, currSegmentType, currAlignment))
                             {
-                                segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                                ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
+                                var asmLine = new LineData(line, lineNum);
+                                try
+                                {
+                                    segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                                }
+                                catch (AssemblyException)
+                                {
+                                    throw;
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new AssemblyException(lineNum, ex.Message);
+                                }
                             }
-                            catch (AssemblyException)
-                            {
-                                throw;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new AssemblyException(lineNum, ex.Message);
-                            }
+                            
                         }
                     }
                 }
@@ -163,6 +167,52 @@ namespace Assembler.SymbolTableConstruction
             reader.Seek(0, SeekOrigin.Begin);
         }
 
+        /// <summary>
+        /// Tries to handle any linkage declarations 
+        /// </summary>
+        /// <param name="trimmedLine">The line with leading/trailing whitespace removed.</param>
+        /// <param name="lineNum">The current line number.</param>
+        /// <param name="segType">The current segment type.</param>
+        /// <param name="currAlignment">The current boundary alignment.</param>
+        /// <returns>A structure representing the new alignment (if any), the new segment type (if any), and a boolean representing
+        /// if any preprocessor directive was parsed at all</returns>
+        private bool TryHandlingLinkageDeclaration(string trimmedLine, int lineNum, SegmentType segType, int currAlignment)
+        {
+            // tokenize the line;
+            string[] tokens = trimmedLine.Split(' ');
+            int alignment = currAlignment;
+            SegmentType newSegType = segType;
+            bool isLinkageDec = false;
+
+            if (IsLinkageDeclaration(tokens[0]))
+            {
+                isLinkageDec = true;
+
+                // we expect three tokens,
+                if (tokens[0] == ".extern" && tokens.Length != 3)
+                {
+                }
+
+            }
+
+            return isLinkageDec;
+        }
+
+        /// <summary>
+        /// Determines if a token is a linkage token (e.g. ".extern").
+        /// </summary>
+        /// <param name="token">The token to examine.</param>
+        /// <returns>True if the token is a linkage declaration; otherwise returns false.</returns>
+        private bool IsLinkageDeclaration(string token)
+        {
+            bool isLinkageDec = false;
+            if (token == ".extern" || token == ".globl")
+            {
+                isLinkageDec = true;
+            }
+
+            return isLinkageDec;
+        }
 
         private readonly ILogger m_Logger;
         private readonly SegmentSymbolParserFactory m_SymbolBuilderFac;

@@ -333,7 +333,7 @@ namespace Assembler.Util
         /// <param name="currAlignment">The current boundary alignment.</param>
         /// <returns>A structure representing the new alignment (if any), the new segment type (if any), and a boolean representing
         /// if any preprocessor directive was parsed at all</returns>
-        public static LineParseResults HandlePreprocessorDeclarations(string trimmedLine, int lineNum, SegmentType segType, int currAlignment)
+        public static LineParseResults HandleAssemblerDirective(string trimmedLine, int lineNum, SegmentType segType, int currAlignment)
         {
             // tokenize the line;
             string[] tokens = trimmedLine.Split(' ');

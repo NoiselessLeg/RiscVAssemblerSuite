@@ -14,6 +14,14 @@ namespace Assembler.InstructionProcessing
         {
         }
 
+        /// <summary>
+        /// Generates the basic code for a branch instruction by delegating to implementing classes
+        /// to provide a function code.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
@@ -36,7 +44,7 @@ namespace Assembler.InstructionProcessing
             
             // if the offset is greater than the 12 bit immediate,
             // throw an error so that bad code isn't silently generated.
-            if (offset > 2047 || offset < -2048)
+            if ((offset & 0xFFFFF000) != 0)
             {
                 throw new ArgumentException("The offset between the address of \"" + symbolLabel.LabelName + "\"" +
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +

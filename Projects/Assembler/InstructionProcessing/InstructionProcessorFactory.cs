@@ -58,7 +58,7 @@ namespace Assembler.InstructionProcessing
                 { "sub", new SubProcessor() },
                 { "sll", new SllProcessor() },
                 { "slt", new SltProcessor() },
-                { "sltu", new PlaceholderProcessor("sltu") },
+                { "sltu", new SltuProcessor() },
                 { "xor", new XorProcessor() },
                 { "srl", new SrlProcessor() },
                 { "sra", new SraProcessor() },

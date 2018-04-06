@@ -9,6 +9,13 @@ namespace Assembler.InstructionProcessing
 {
     class SltProcessor : BaseInstructionProcessor
     {
+        /// <summary>
+        /// Parses an instruction and generates the binary code for it.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect three arguments. if not, throw an ArgumentException
@@ -17,18 +24,14 @@ namespace Assembler.InstructionProcessing
                 throw new ArgumentException("Invalid number of arguments provided. Expected 3, received " + args.Length + '.');
             }
 
-            string rd = args[0].Trim();
-            string rs1 = args[1].Trim();
-            string rs2 = args[2].Trim();
-
             IEnumerable<int> returnVal = null;
             int instruction = 0;
-            int rdReg = RegisterMap.GetNumericRegisterValue(rd);
-            int rs1Reg = RegisterMap.GetNumericRegisterValue(rs1);
+            int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+            int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
             int rs2Reg = 0;
             try
             {
-                rs2Reg = RegisterMap.GetNumericRegisterValue(rs2);
+                rs2Reg = RegisterMap.GetNumericRegisterValue(args[2]);
 
                 List<int> instructionList = new List<int>();
                 instruction |= (rs2Reg << 20);
@@ -43,7 +46,7 @@ namespace Assembler.InstructionProcessing
             {
                 // try to parse the string as a number; maybe the user meant addi?
                 int immediate = 0;
-                bool isInt = int.TryParse(rs2, out immediate);
+                bool isInt = int.TryParse(args[2], out immediate);
                 if (isInt)
                 {
                     var immediateParser = new SltiProcessor();

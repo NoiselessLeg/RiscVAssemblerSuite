@@ -55,7 +55,7 @@ namespace Assembler.CodeGeneration
                     // ignore blank lines. trim should remove all whitespace
                     if (line.Any())
                     {
-                        LineParseResults directiveResults = ParserCommon.HandlePreprocessorDeclarations(line, lineNum, currSegmentType, currAlignment);
+                        LineParseResults directiveResults = ParserCommon.HandleAssemblerDirective(line, lineNum, currSegmentType, currAlignment);
                         currAlignment = directiveResults.NewAlignment;
                         currSegmentType = directiveResults.NewSegment;
 

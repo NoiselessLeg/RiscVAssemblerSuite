@@ -15,6 +15,13 @@ namespace Assembler.InstructionProcessing
         {
         }
 
+        /// <summary>
+        /// Parses an instruction and generates the binary code for it.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
         public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] args)
         {
             // we expect two arguments. if not, throw an ArgumentException
@@ -27,11 +34,12 @@ namespace Assembler.InstructionProcessing
             Symbol symbolLabel = SymbolTable.GetSymbol(args[1]);
             var instructionList = new List<int>();
 
+            // the offset is doubled implicitly by the processor, so halve it here.
             int offset = (symbolLabel.Address - address) / 2;
 
             // this should rarely happen, but if the halved immediate exceeds the 21 bit boundary,
             // error out and notify the user.
-            if (offset > 1048575 || offset < -1048576)
+            if ((offset & 0xFFE00000) != 0)
             {
                 throw new ArgumentException("jal - the offset between the address of \"" + symbolLabel.LabelName + "\"" +
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +

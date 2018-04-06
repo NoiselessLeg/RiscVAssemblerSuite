@@ -6,6 +6,7 @@ namespace Assembler.Common
     /// </summary>
     public enum Endianness
     {
+        Unspecified,
         BigEndian,
         LittleEndian
     }

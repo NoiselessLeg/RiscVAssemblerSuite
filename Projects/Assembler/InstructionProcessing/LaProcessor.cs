@@ -14,7 +14,14 @@ namespace Assembler.InstructionProcessing
         {
         }
 
-        public override IEnumerable<int> GenerateCodeForInstruction(int nextTextAddress, string[] instructionArgs)
+        /// <summary>
+        /// Parses an instruction and generates the binary code for it.
+        /// </summary>
+        /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
+        /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
+        /// <returns>One or more 32-bit integers representing this instruction. If this interface is implemented
+        /// for a pseudo-instruction, this may return more than one instruction value.</returns>
+        public override IEnumerable<int> GenerateCodeForInstruction(int address, string[] instructionArgs)
         {
             if (instructionArgs.Length != 2)
             {
@@ -30,16 +37,16 @@ namespace Assembler.InstructionProcessing
             // where the symbol will lie.
             if (sym.SegmentType == SegmentType.Data)
             {
-                instructionList.AddRange(new AddiProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], "x0", sym.Address.ToString() }));
+                instructionList.AddRange(new AddiProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], "x0", sym.Address.ToString() }));
             }
             else
             {
                 int shiftedAddress = sym.Address >> 12;
-                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], shiftedAddress.ToString() }));
+                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], shiftedAddress.ToString() }));
 
                 // need to do something if this value is less 
                 int orImmVal = sym.Address & 0xFFF;
-                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(nextTextAddress, new string[] { instructionArgs[0], instructionArgs[0], orImmVal.ToString() }));
+                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], instructionArgs[0], orImmVal.ToString() }));
             }
 
             return instructionList;
@@ -50,7 +57,7 @@ namespace Assembler.InstructionProcessing
         /// that only one instruction will be returned.
         /// </summary>
         /// <param name="address">The address of the instruction being parsed in the .text segment.</param>
-        /// <param name="instructionArgs">An array containing the arguments of the instruction.</param>
+        /// <param name="args">An array containing the arguments of the instruction.</param>
         /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
         protected override int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args)
         {
