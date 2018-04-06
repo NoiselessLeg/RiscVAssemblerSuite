@@ -129,24 +129,20 @@ namespace Assembler.SymbolTableConstruction
                         // further processing is needed
                         if (!directiveResults.IsLineAssemblerDirective)
                         {
-                            if (!TryHandlingLinkageDeclaration(line, lineNum, currSegmentType, currAlignment))
+                            ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
+                            var asmLine = new LineData(line, lineNum);
+                            try
                             {
-                                ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
-                                var asmLine = new LineData(line, lineNum);
-                                try
-                                {
-                                    segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
-                                }
-                                catch (AssemblyException)
-                                {
-                                    throw;
-                                }
-                                catch (Exception ex)
-                                {
-                                    throw new AssemblyException(lineNum, ex.Message);
-                                }
+                                segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
                             }
-                            
+                            catch (AssemblyException)
+                            {
+                                throw;
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new AssemblyException(lineNum, ex.Message);
+                            }
                         }
                     }
                 }

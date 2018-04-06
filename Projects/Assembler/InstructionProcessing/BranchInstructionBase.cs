@@ -86,6 +86,15 @@ namespace Assembler.InstructionProcessing
             return instructionList;
         }
 
+        /// <summary>
+        /// Explicitly forces implementors to define a specific implementation per-instruction that calculates
+        /// the number of instructions generated for an instruction that accepts a symbol as a parameter.
+        /// Implementors should take care to NOT necessarily rely on the SymbolTable as part of this calculation,
+        /// as it is not guaranteed that all symbols will have been loaded prior to this calculation being performed.
+        /// </summary>
+        /// <param name="address">The address in the .text segment of the instruction being parsed.</param>
+        /// <param name="args">The parameters of the instruction</param>
+        /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
         protected override int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args)
         {
             return 1;

@@ -51,7 +51,7 @@ namespace Assembler.InstructionProcessing
         /// as it is not guaranteed that all symbols will have been loaded prior to this calculation being performed.
         /// </summary>
         /// <param name="address">The address in the .text segment of the instruction being parsed.</param>
-        /// <param name="instructionArgs">The parameters of the instruction</param>
+        /// <param name="args">The parameters of the instruction</param>
         /// <returns>An integer representing how many instructions will be generated for a line of assembly.</returns>
         protected abstract int GetNumOfInstructionsForSymbolicInstruction(int address, string[] args);
 
