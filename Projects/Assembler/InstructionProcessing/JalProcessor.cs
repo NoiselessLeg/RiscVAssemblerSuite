@@ -39,7 +39,7 @@ namespace Assembler.InstructionProcessing
 
             // this should rarely happen, but if the halved immediate exceeds the 21 bit boundary,
             // error out and notify the user.
-            if ((offset & 0xFFE00000) != 0)
+            if ((Math.Abs(offset) & 0xFFE00000) != 0)
             {
                 throw new ArgumentException("jal - the offset between the address of \"" + symbolLabel.LabelName + "\"" +
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +

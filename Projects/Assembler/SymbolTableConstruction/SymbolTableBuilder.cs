@@ -24,6 +24,7 @@ namespace Assembler.SymbolTableConstruction
         {
             m_Logger = logger;
             m_SymbolBuilderFac = new SegmentSymbolParserFactory(procFac);
+            m_CurrExternAddress = CommonConstants.BASE_EXTERN_ADDRESS;
         }
 
         /// <summary>
@@ -169,15 +170,12 @@ namespace Assembler.SymbolTableConstruction
         /// <param name="trimmedLine">The line with leading/trailing whitespace removed.</param>
         /// <param name="lineNum">The current line number.</param>
         /// <param name="segType">The current segment type.</param>
-        /// <param name="currAlignment">The current boundary alignment.</param>
-        /// <returns>A structure representing the new alignment (if any), the new segment type (if any), and a boolean representing
-        /// if any preprocessor directive was parsed at all</returns>
-        private bool TryHandlingLinkageDeclaration(string trimmedLine, int lineNum, SegmentType segType, int currAlignment)
+        /// <param name="symTable">The SymbolTable instance to populate.</param>
+        /// <returns>Returns true if a linkage directive was processed in this line. Otherwise, returns false.</returns>
+        private bool TryHandlingLinkageDeclaration(string trimmedLine, int lineNum, SegmentType segType, SymbolTable symTable)
         {
             // tokenize the line;
             string[] tokens = trimmedLine.Split(' ');
-            int alignment = currAlignment;
-            SegmentType newSegType = segType;
             bool isLinkageDec = false;
 
             if (IsLinkageDeclaration(tokens[0]))
@@ -185,10 +183,28 @@ namespace Assembler.SymbolTableConstruction
                 isLinkageDec = true;
 
                 // we expect three tokens,
-                if (tokens[0] == ".extern" && tokens.Length != 3)
+                if (tokens[0] == ".extern")
                 {
+                    int declarationSize = 0;
+                    if (tokens.Length != 3)
+                    {
+                        throw new AssemblyException(lineNum, "Expected symbol name and byte size declaration after .extern token.");
+                    }
+                    else if (!int.TryParse(tokens[2], out declarationSize))
+                    {
+                        throw new AssemblyException(lineNum, ".extern requires a non-negative 32-bit integer size.");
+                    }
+                    else if (declarationSize < 0)
+                    {
+                        throw new AssemblyException(lineNum, ".extern requires a non-negative 32-bit integer size.");
+                    }
+                    else
+                    {
+                        Symbol externSym = new Symbol(tokens[1], segType, m_CurrExternAddress);
+                        symTable.AddSymbol(externSym);
+                        m_CurrExternAddress += declarationSize;
+                    }
                 }
-
             }
 
             return isLinkageDec;
@@ -212,6 +228,7 @@ namespace Assembler.SymbolTableConstruction
 
         private readonly ILogger m_Logger;
         private readonly SegmentSymbolParserFactory m_SymbolBuilderFac;
+        private int m_CurrExternAddress;
     }
 
 }
