@@ -82,6 +82,9 @@ namespace Assembler.InstructionProcessing
                 { "rem", new PlaceholderProcessor("rem") },
                 { "remu", new PlaceholderProcessor("remu") },
 
+                // for system calls
+                { "ecall", new EcallProcessor() }
+
             };
         }
 
