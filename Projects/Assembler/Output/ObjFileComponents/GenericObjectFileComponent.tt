@@ -48,6 +48,11 @@ public class <#= ty.Name #>DataElement : IObjectFileComponent
         }
 
         /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(<#= ty.Name #>); } }
+
+        /// <summary>
         /// Gets the provided <#= ty.Name #> as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>

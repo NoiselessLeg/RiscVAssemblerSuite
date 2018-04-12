@@ -106,11 +106,45 @@ namespace Assembler.Output
         }
 
         /// <summary>
+        /// Gets the total size of the .text segment, in bytes.
+        /// </summary>
+        public int TextSegmentSize
+        {
+            get
+            {
+                int totalSize = 0;
+                foreach (IObjectFileComponent comp in m_TextElements)
+                {
+                    totalSize += comp.Size;
+                }
+
+                return totalSize;
+            }
+        }
+
+        /// <summary>
         /// Gets an IEnumerable of all saved .data elements in this .obj file.
         /// </summary>
         public IEnumerable<IObjectFileComponent> DataElements
         {
             get { return m_DataElements; }
+        }
+        
+        /// <summary>
+        /// Gets the total size of the .data segment, in bytes.
+        /// </summary>
+        public int DataSegmentSize
+        {
+            get
+            {
+                int totalSize = 0;
+                foreach (IObjectFileComponent comp in m_DataElements)
+                {
+                    totalSize += comp.Size;
+                }
+
+                return totalSize;
+            }
         }
 
         /// <summary>
@@ -119,6 +153,23 @@ namespace Assembler.Output
         public IEnumerable<IObjectFileComponent> ExternElements
         {
             get { return m_ExternElements; }
+        }
+
+        /// <summary>
+        /// Gets the total size of the .extern segment, in bytes.
+        /// </summary>
+        public int ExternSegmentSize
+        {
+            get
+            {
+                int totalSize = 0;
+                foreach (IObjectFileComponent comp in m_ExternElements)
+                {
+                    totalSize += comp.Size;
+                }
+
+                return totalSize;
+            }
         }
 
         /// <summary>

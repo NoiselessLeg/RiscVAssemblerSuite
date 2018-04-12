@@ -38,6 +38,11 @@ public class Int16DataElement : IObjectFileComponent
         }
 
         /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(Int16); } }
+
+        /// <summary>
         /// Gets the provided Int16 as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>
@@ -84,6 +89,11 @@ public class UInt16DataElement : IObjectFileComponent
             byte[] objBytes = ToByteArray(m_Elem, m_TargetEndianness);
             outputStream.Write(objBytes, 0, objBytes.Length);
         }
+
+        /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(UInt16); } }
 
         /// <summary>
         /// Gets the provided UInt16 as a byte array.
@@ -134,6 +144,11 @@ public class Int32DataElement : IObjectFileComponent
         }
 
         /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(Int32); } }
+
+        /// <summary>
         /// Gets the provided Int32 as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>
@@ -180,6 +195,11 @@ public class UInt32DataElement : IObjectFileComponent
             byte[] objBytes = ToByteArray(m_Elem, m_TargetEndianness);
             outputStream.Write(objBytes, 0, objBytes.Length);
         }
+
+        /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(UInt32); } }
 
         /// <summary>
         /// Gets the provided UInt32 as a byte array.
@@ -230,6 +250,11 @@ public class Int64DataElement : IObjectFileComponent
         }
 
         /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(Int64); } }
+
+        /// <summary>
         /// Gets the provided Int64 as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>
@@ -276,6 +301,11 @@ public class UInt64DataElement : IObjectFileComponent
             byte[] objBytes = ToByteArray(m_Elem, m_TargetEndianness);
             outputStream.Write(objBytes, 0, objBytes.Length);
         }
+
+        /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(UInt64); } }
 
         /// <summary>
         /// Gets the provided UInt64 as a byte array.

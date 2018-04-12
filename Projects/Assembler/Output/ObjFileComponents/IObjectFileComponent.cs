@@ -12,5 +12,10 @@ namespace Assembler.Output.ObjFileComponents
         /// </summary>
         /// <param name="outputStream">The output Stream object to write to.</param>
         void WriteDataToFile(Stream outputStream);
+
+        /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        int Size { get; }
     }
 }

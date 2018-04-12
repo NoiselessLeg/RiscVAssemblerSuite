@@ -17,6 +17,11 @@ namespace Assembler.Output.ObjFileComponents
         }
 
         /// <summary>
+        /// Gets the size of the object file element, in bytes.
+        /// </summary>
+        public int Size { get { return sizeof(byte); } }
+
+        /// <summary>
         /// Writes the bitwise representation of this object to the Stream.
         /// </summary>
         /// <param name="outputStream">The output Stream object to write to.</param>

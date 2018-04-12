@@ -274,6 +274,13 @@ namespace Assembler.Util
                 ret = line;
             }
 
+            // perform some escape character replacement, now that we've done some processing
+            ret = ret.Replace("\\\"", "\"");
+            ret = ret.Replace("\\t", "\t");
+            ret = ret.Replace("\\n", "\n");
+            ret = ret.Replace("\\\\", "\\");
+            ret = ret.Replace("\\0", "\0");
+
             return ret;
         }
 
