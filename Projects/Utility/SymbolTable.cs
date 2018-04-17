@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Assembler
+namespace Assembler.Common
 {
     /// <summary>
     /// Represents a mapping of symbol names to their addresses in program memory.
     /// </summary>
-    class SymbolTable
+    public class SymbolTable
     {
         /// <summary>
         /// Creates a new instance of the symbol table.

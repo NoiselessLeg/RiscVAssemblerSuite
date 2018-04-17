@@ -1,4 +1,5 @@
-﻿using Assembler.InstructionProcessing;
+﻿using Assembler.Common;
+using Assembler.InstructionProcessing;
 using Assembler.SymbolTableConstruction.SymbolBuilders;
 using Assembler.Util;
 using System.Collections.Generic;

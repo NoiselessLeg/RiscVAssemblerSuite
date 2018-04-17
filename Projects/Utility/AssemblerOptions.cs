@@ -29,6 +29,9 @@ namespace Assembler.Common
             {
                 m_Endianness = endianness;
             }
+
+            // JAL 4/14: override endianness for now and force little endian, since that's the processor spec.
+            m_Endianness = Endianness.LittleEndian;
         }
 
         /// <summary>

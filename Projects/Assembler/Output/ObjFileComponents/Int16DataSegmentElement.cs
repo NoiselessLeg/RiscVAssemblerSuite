@@ -1,40 +1,28 @@
-﻿<#@ template language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
-<#@ output extension=".cs" #>
-
-<# var typeList = new Type[]{ typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong) }; #>
-
-using Assembler.Common;
+﻿using Assembler.Common;
 using System;
+using System.Collections.Generic;
 using System.IO;
-
-// Note this file is auto-generated.
-// Changes to the .cs file may be overwritten upon save.
-// Make changes to the .tt file.
-
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assembler.Output.ObjFileComponents
 {
-    <# foreach (Type ty in typeList)
-        { 
-    #>
-/// <summary>
-/// Represents a <#= ty.Name #> as a data element in a .obj file.
-/// </summary>
-public class <#= ty.Name #>DataElement : IObjectFileComponent
+    /// <summary>
+    /// Represents a Int16 as a data element in a .obj file.
+    /// </summary>
+    public class Int16DataElement : IObjectFileComponent
     {
         /// <summary>
         /// Creates an instance of the data element with the provided value.
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
         /// <param name="targetEndianness">The target output endianness.</param>
-        public <#= ty.Name #>DataElement(<#= ty.Name #> elem, Endianness targetEndianness)
+        public Int16DataElement(short elem, Endianness targetEndianness)
         {
             m_Elem = elem;
             m_TargetEndianness = targetEndianness;
+            m_Metadata = new Metadata(ObjectTypeCode.Half, sizeof(short), targetEndianness);
         }
 
         /// <summary>
@@ -50,13 +38,13 @@ public class <#= ty.Name #>DataElement : IObjectFileComponent
         /// <summary>
         /// Gets the size of the object file element, in bytes.
         /// </summary>
-        public int Size { get { return sizeof(<#= ty.Name #>); } }
+        public int Size { get { return sizeof(short); } }
 
         /// <summary>
-        /// Gets the provided <#= ty.Name #> as a byte array.
+        /// Gets the provided Int16 as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>
-        private static byte[] ToByteArray(<#= ty.Name #> param, Endianness targetEndianness)
+        private static byte[] ToByteArray(short param, Endianness targetEndianness)
         {
             byte[] byteRep = BitConverter.GetBytes(param);
 
@@ -70,11 +58,17 @@ public class <#= ty.Name #>DataElement : IObjectFileComponent
             return byteRep;
         }
 
-        private readonly <#= ty.Name #> m_Elem;
-        private readonly Endianness m_TargetEndianness;
-    }
+        /// <summary>
+        /// Writes metadata about this object instance to a Stream.
+        /// </summary>
+        /// <param name="outputStream">The output Stream object to write to.</param>
+        public void WriteMetadataToFile(Stream outputStream)
+        {
+            m_Metadata.WriteToStream(outputStream);
+        }
 
-    <#
+        private readonly short m_Elem;
+        private readonly Endianness m_TargetEndianness;
+        private readonly Metadata m_Metadata;
     }
-    #>
 }

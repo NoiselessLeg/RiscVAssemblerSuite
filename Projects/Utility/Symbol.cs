@@ -1,12 +1,10 @@
-﻿using Assembler.Util;
-
-namespace Assembler
+﻿namespace Assembler.Common
 {
 
     /// <summary>
     /// Represents a symbol in an assembly file.
     /// </summary>
-    class Symbol
+    public class Symbol
     {
         /// <summary>
         /// Creates a new instance of an assembly symbol.

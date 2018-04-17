@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,6 @@ using System.Threading.Tasks;
 
 namespace Assembler.Util
 {
-    /// <summary>
-    /// An enumeration of the various supported segment types.
-    /// </summary>
-    public enum SegmentType
-    {
-        Invalid,
-        Data,
-        Text
-    }
 
     class SegmentTypeHelper
     {

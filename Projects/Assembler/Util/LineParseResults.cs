@@ -1,4 +1,6 @@
-﻿namespace Assembler.Util
+﻿using Assembler.Common;
+
+namespace Assembler.Util
 {
     /// <summary>
     /// Represents the results of the initial parse for any assembler directives.

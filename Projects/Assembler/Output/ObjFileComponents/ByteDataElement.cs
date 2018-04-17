@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Assembler.Common;
+using System.IO;
 
 namespace Assembler.Output.ObjFileComponents
 {
@@ -11,9 +12,11 @@ namespace Assembler.Output.ObjFileComponents
         /// Creates an instance of the data element with the provided value.
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
-        public ByteDataElement(byte elem)
+        /// <param name="targetEndianness">The target output endianness.</param>
+        public ByteDataElement(byte elem, Endianness targetEndianness)
         {
             m_Elem = elem;
+            m_Metadata = new Metadata(ObjectTypeCode.Byte, 1, targetEndianness);
         }
 
         /// <summary>
@@ -30,6 +33,16 @@ namespace Assembler.Output.ObjFileComponents
             outputStream.Write(new[] { m_Elem }, 0, 1);
         }
 
+        /// <summary>
+        /// Writes metadata about this object instance to a Stream.
+        /// </summary>
+        /// <param name="outputStream">The output Stream object to write to.</param>
+        public void WriteMetadataToFile(Stream outputStream)
+        {
+            m_Metadata.WriteToStream(outputStream);
+        }
+
         private readonly byte m_Elem;
+        private readonly Metadata m_Metadata;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assembler.Util;
+﻿using Assembler.Common;
+using Assembler.Util;
 
 namespace Assembler.SymbolTableConstruction.SymbolBuilders
 {

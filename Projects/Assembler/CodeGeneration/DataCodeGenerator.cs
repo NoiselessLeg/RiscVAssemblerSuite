@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Linq;
 using Assembler.Output;
 using Assembler.Util;

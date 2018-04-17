@@ -58,6 +58,7 @@
     <Compile Include="InstructionProcessing\BneProcessor.cs" />
     <Compile Include="InstructionProcessing\BnezProcessor.cs" />
     <Compile Include="InstructionProcessing\BranchInstructionBase.cs" />
+    <Compile Include="InstructionProcessing\EcallProcessor.cs" />
     <Compile Include="InstructionProcessing\InstructionProcessorFactory.cs" />
     <Compile Include="InstructionProcessing\JalrProcessor.cs" />
     <Compile Include="InstructionProcessing\JProcessor.cs" />
@@ -90,16 +91,18 @@
     <Compile Include="InstructionProcessing\SymbolicInstructionProcessor.cs" />
     <Compile Include="InstructionProcessing\XoriProcessor.cs" />
     <Compile Include="InstructionProcessing\XorProcessor.cs" />
+    <Compile Include="Output\Metadata.cs" />
+    <Compile Include="Output\ObjFileComponents\Int16DataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\Int32DataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\Int64DataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\UInt16DataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\UInt32DataSegmentElement.cs" />
+    <Compile Include="Output\ObjFileComponents\UInt64DataSegmentElement.cs" />
     <Compile Include="Output\OutputWriters\BasicBinaryObjectWriter.cs" />
     <Compile Include="Output\BasicObjectFile.cs" />
     <Compile Include="Output\ObjFileComponents\AsciiDataSegmentElement.cs" />
     <Compile Include="Output\ObjFileComponents\AsciizDataSegmentElement.cs" />
     <Compile Include="Output\ObjFileComponents\ByteDataElement.cs" />
-    <Compile Include="Output\ObjFileComponents\GenericObjectFileComponent.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GenericObjectFileComponent.tt</DependentUpon>
-    </Compile>
     <Compile Include="Output\ObjFileComponents\IObjectFileComponent.cs" />
     <Compile Include="InstructionProcessing\AddiProcessor.cs" />
     <Compile Include="InstructionProcessing\AddProcessor.cs" />
@@ -113,7 +116,6 @@
     <Compile Include="Output\OutputWriters\ObjectFileWriterFactory.cs" />
     <Compile Include="RiscVAssembler.cs" />
     <Compile Include="AssemblyException.cs" />
-    <Compile Include="Symbol.cs" />
     <Compile Include="InstructionProcessing\AndiProcessor.cs" />
     <Compile Include="InstructionProcessing\AndProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,7 +135,6 @@
     <Compile Include="Util\RegisterMap.cs" />
     <Compile Include="Util\SegmentTypeHelper.cs" />
     <Compile Include="Util\StreamReaderUtils.cs" />
-    <Compile Include="SymbolTable.cs" />
     <Compile Include="Util\StringUtils.cs" />
     <Compile Include="InstructionProcessing\OriProcessor.cs" />
     <Compile Include="InstructionProcessing\OrProcessor.cs" />
@@ -146,12 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Output\ObjFileComponents\GenericObjectFileComponent.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GenericObjectFileComponent.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

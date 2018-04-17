@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,9 +14,11 @@ namespace Assembler.Output.ObjFileComponents
         /// Creates an instance of the data element with the provided value.
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
-        public AsciiDataSegmentElement(string str)
+        /// <param name="targetEndianness">The target output endianness.</param>
+        public AsciiDataSegmentElement(string str, Endianness targetEndianness)
         {
             m_Elem = str;
+            m_Metadata = new Metadata(ObjectTypeCode.String, m_Elem.Length, targetEndianness);
         }
 
         /// <summary>
@@ -32,6 +35,16 @@ namespace Assembler.Output.ObjFileComponents
             outputStream.Write(Encoding.ASCII.GetBytes(m_Elem), 0, Encoding.ASCII.GetByteCount(m_Elem));
         }
 
+        /// <summary>
+        /// Writes metadata about this object instance to a Stream.
+        /// </summary>
+        /// <param name="outputStream">The output Stream object to write to.</param>
+        public virtual void WriteMetadataToFile(Stream outputStream)
+        {
+            m_Metadata.WriteToStream(outputStream);
+        }
+
         private readonly string m_Elem;
+        private readonly Metadata m_Metadata;
     }
 }

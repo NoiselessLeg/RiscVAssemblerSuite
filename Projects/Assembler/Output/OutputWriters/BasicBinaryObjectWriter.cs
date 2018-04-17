@@ -29,47 +29,79 @@ namespace Assembler.Output.OutputWriters
         {
             using (FileStream fs = File.Open(fileName, FileMode.Create))
             {
-                // write the actual file header.
-                WriteHeader(fs, file);
-
-                // write the .data preamble
-                //fs.Write(Encoding.ASCII.GetBytes(".data"), 0, Encoding.ASCII.GetByteCount(".data"));
-                foreach (IObjectFileComponent elem in file.DataElements)
+                using (MemoryStream tmpStrm = new MemoryStream())
                 {
-                    elem.WriteDataToFile(fs);
-                }
-
-                // write the .text preamble
-                //fs.Write(Encoding.ASCII.GetBytes(".text"), 0, Encoding.ASCII.GetByteCount(".text"));
-                foreach (IObjectFileComponent elem in file.TextElements)
-                {
-                    elem.WriteDataToFile(fs);
-                }
-
-                // write the .extern data.
-                //fs.Write(Encoding.ASCII.GetBytes(".extern"), 0, Encoding.ASCII.GetByteCount(".extern"));
-                foreach (IObjectFileComponent elem in file.ExternElements)
-                {
-                    elem.WriteDataToFile(fs);
-                }
-
-                // write the symbol table
-                //fs.Write(Encoding.ASCII.GetBytes(".symtbl"), 0, Encoding.ASCII.GetByteCount(".symtbl"));
-                foreach (Symbol elem in file.SymbolTable.Symbols)
-                {
-                    fs.Write(Encoding.ASCII.GetBytes(elem.LabelName), 0, Encoding.ASCII.GetByteCount(elem.LabelName));
-                    byte[] byteRepresentation = BitConverter.GetBytes(elem.Address);
-                    // if the architecture we're assembling on is not our desired endianness,
-                    // flip the byte array.
-                    if (BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.BigEndian ||
-                        !BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.LittleEndian)
+                    int dataSegmentLength = WriteDataToFile(tmpStrm, file.DataElements);
+                    int textSegmentLength = WriteDataToFile(tmpStrm, file.TextElements);
+                    int externSegmentLength = WriteDataToFile(tmpStrm, file.ExternElements);
+                    
+                    // write the symbol table
+                    int startPos = (int)tmpStrm.Position;
+                    foreach (Symbol elem in file.SymbolTable.Symbols)
                     {
-                        Array.Reverse(byteRepresentation);
-                    }
+                        // write the length of the symbol name, first.
+                        tmpStrm.WriteByte((byte)elem.LabelName.Length);
 
-                    fs.Write(byteRepresentation, 0, byteRepresentation.Length);
+                        // write the symbol name itself.
+                        tmpStrm.Write(Encoding.ASCII.GetBytes(elem.LabelName), 0, Encoding.ASCII.GetByteCount(elem.LabelName));
+                        byte[] byteRepresentation = ToByteArray(elem.Address, m_TargetEndianness);
+
+                        tmpStrm.Write(byteRepresentation, 0, byteRepresentation.Length);
+                    }
+                    int newPos = (int)tmpStrm.Position;
+
+                    int symTblLength = newPos - startPos;
+
+                    // write the .data segment metadata
+                    int dataMDataSize = WriteMetadataToFile(tmpStrm, file.DataElements);
+                    int externMdataLength = WriteMetadataToFile(tmpStrm, file.ExternElements);
+
+                    // write the actual file header, now that we know our absolute offsets
+                    WriteHeader(fs, dataSegmentLength, textSegmentLength, externSegmentLength, symTblLength, dataMDataSize);
+
+                    // copy the temp stream to the actual file stream.
+                    tmpStrm.Seek(0, SeekOrigin.Begin);
+                    tmpStrm.CopyTo(fs);
+
+                    fs.Flush();
                 }
             }
+        }
+
+        /// <summary>
+        /// Writes the actual elements of a segment to a stream.
+        /// </summary>
+        /// <param name="stream">The Stream object to write to.</param>
+        /// <param name="elements">The IEnumerable of elements to write out.</param>
+        /// <returns>The number of bytes written.</returns>
+        private int WriteDataToFile(Stream stream, IEnumerable<IObjectFileComponent> elements)
+        {
+            long startPos = stream.Position;
+            foreach (IObjectFileComponent elem in elements)
+            {
+                elem.WriteDataToFile(stream);
+            }
+            long newPos = stream.Position;
+
+            return (int)(newPos - startPos);
+        }
+
+        /// <summary>
+        /// Writes metadata about a segment to a stream.
+        /// </summary>
+        /// <param name="stream">The Stream object to write to.</param>
+        /// <param name="elements">The IEnumerable of elements to write out the metadata of.</param>
+        /// <returns>The number of bytes written.</returns>
+        private int WriteMetadataToFile(Stream stream, IEnumerable<IObjectFileComponent> elements)
+        {
+            long startPos = stream.Position;
+            foreach (IObjectFileComponent elem in elements)
+            {
+                elem.WriteMetadataToFile(stream);
+            }
+            long newPos = stream.Position;
+
+            return (int)(newPos - startPos);
         }
 
         /// <summary>
@@ -77,7 +109,8 @@ namespace Assembler.Output.OutputWriters
         /// </summary>
         /// <param name="fs">The FileStream object to write to.</param>
         /// <param name="objFile">The BasicObjectFile that contains the data to calculate offsets to.</param>
-        private void WriteHeader(FileStream fs, BasicObjectFile objFile)
+        private void WriteHeader(Stream fs, int dataSize, int textSize, int externSize, 
+                                 int symTblSize, int dataMdataSize)
         {
             // write the magic four bytes
             fs.WriteByte(0x7F);
@@ -105,6 +138,7 @@ namespace Assembler.Output.OutputWriters
             }
 
             // write the runtime starting addresses.
+            // TODO: eventually make this configurable
             byte[] dataRuntimeAddr = ToByteArray(CommonConstants.BASE_DATA_ADDRESS, m_TargetEndianness);
             byte[] textRuntimeAddr = ToByteArray(CommonConstants.BASE_TEXT_ADDRESS, m_TargetEndianness);
             byte[] externRuntimeAddr = ToByteArray(CommonConstants.BASE_EXTERN_ADDRESS, m_TargetEndianness);
@@ -121,29 +155,43 @@ namespace Assembler.Output.OutputWriters
             // calculate the relative .text offset
             // the .data segment should start at offset 0x30, so add the size to that to figure
             // out where the .text segment begins.
-            int textSegmentOffset = 0x30 + objFile.DataSegmentSize;
-            int relativeTxtSegmentOffset = textSegmentOffset - 0x16;
-            byte[] relTxtSegmentOffsetBytes = ToByteArray(relativeTxtSegmentOffset, m_TargetEndianness);
-            fs.Write(relTxtSegmentOffsetBytes, 0, relTxtSegmentOffsetBytes.Length);
+            int absoluteOffset = 0x30 + dataSize;
+            int relativeOffset = absoluteOffset - 0x16;
+            byte[] relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
 
             // calculate the relative .extern offset
             // the .data segment should start at offset 0x30, so add the size to that to figure
             // out where the .text segment begins, then add the .text segment size to determine where the .extern
             // segment begins.
-            int externSegmentOffset = textSegmentOffset + objFile.TextSegmentSize;
-            int relativeExtSegmentOffset = externSegmentOffset - 0x1A;
-            byte[] relExtSegmentOffsetBytes = ToByteArray(relativeExtSegmentOffset, m_TargetEndianness);
-            fs.Write(relExtSegmentOffsetBytes, 0, relExtSegmentOffsetBytes.Length);
+            absoluteOffset = absoluteOffset + textSize;
+            relativeOffset = absoluteOffset - 0x1A;
+            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
 
             // calculate the relative .symtbl offset
             // just like we did before with the others
-            int symtblSegmentOffset = externSegmentOffset + objFile.ExternSegmentSize;
-            int relativeSymTblSegmentOffset = symtblSegmentOffset - 0x1E;
-            byte[] relSymSegmentOffsetBytes = ToByteArray(relativeSymTblSegmentOffset, m_TargetEndianness);
-            fs.Write(relSymSegmentOffsetBytes, 0, relSymSegmentOffsetBytes.Length);
+            absoluteOffset = absoluteOffset + externSize;
+            relativeOffset = absoluteOffset - 0x1E;
+            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+
+            // calculate the relative .dmdta offset
+            // just like we did before with the others
+            absoluteOffset = absoluteOffset + symTblSize;
+            relativeOffset = absoluteOffset - 0x22;
+            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+
+            // calculate the relative .emdta offset
+            // just like we did before with the others
+            absoluteOffset = absoluteOffset + dataMdataSize;
+            relativeOffset = absoluteOffset - 0x26;
+            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
 
             // write the spare values.
-            byte[] dummyValues = new byte[14];
+            byte[] dummyValues = new byte[6];
             fs.Write(dummyValues, 0, dummyValues.Length);
         }
 

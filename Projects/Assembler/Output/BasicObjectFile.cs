@@ -1,6 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.Output.ObjFileComponents;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assembler.Output
 {
@@ -26,11 +27,11 @@ namespace Assembler.Output
         /// Adds a number of byte elements to the .extern section of this .obj file.
         /// </summary>
         /// <param name="sizeInBytes">The number of bytes to reserve for this object.</param>
-        public void AddExternElement(int sizeInBytes)
+        public virtual void AddExternElement(int sizeInBytes)
         {
             for (int i = 0; i < sizeInBytes; ++i)
             {
-                m_ExternElements.Add(new ByteDataElement(0));
+                m_ExternElements.Add(new ByteDataElement(0, m_Endianness));
             }
         }
 
@@ -38,16 +39,16 @@ namespace Assembler.Output
         /// Adds an 8-bit data element to this .obj file.
         /// </summary>
         /// <param name="dataElement">The 8 bit value to add.</param>
-        public void AddDataElement(byte dataElement)
+        public virtual void AddDataElement(byte dataElement)
         {
-            m_DataElements.Add(new ByteDataElement(dataElement));
+            m_DataElements.Add(new ByteDataElement(dataElement, m_Endianness));
         }
 
         /// <summary>
         /// Adds a 16-bit data element to this .obj file.
         /// </summary>
         /// <param name="dataElement">The 16 bit value to add.</param>
-        public void AddDataElement(short dataElement)
+        public virtual void AddDataElement(short dataElement)
         {
             m_DataElements.Add(new Int16DataElement(dataElement, m_Endianness));
         }
@@ -56,7 +57,7 @@ namespace Assembler.Output
         /// Adds a 32-bit data element to this .obj file.
         /// </summary>
         /// <param name="dataElement">The 32 bit value to add.</param>
-        public void AddDataElement(int dataElement)
+        public virtual void AddDataElement(int dataElement)
         {
             m_DataElements.Add(new Int32DataElement(dataElement, m_Endianness));
         }
@@ -65,7 +66,7 @@ namespace Assembler.Output
         /// Adds a 64-bit data element to this .obj file.
         /// </summary>
         /// <param name="dataElement">The 64 bit value to add.</param>
-        public void AddDataElement(long dataElement)
+        public virtual void AddDataElement(long dataElement)
         {
             m_DataElements.Add(new Int64DataElement(dataElement, m_Endianness));
         }
@@ -74,25 +75,25 @@ namespace Assembler.Output
         /// Adds a non-null-terminated ASCII data element to this .obj file.
         /// </summary>
         /// <param name="str">The string to add.</param>
-        public void AddAsciiString(string str)
+        public virtual void AddAsciiString(string str)
         {
-            m_DataElements.Add(new AsciiDataSegmentElement(str));
+            m_DataElements.Add(new AsciiDataSegmentElement(str, m_Endianness));
         }
 
         /// <summary>
         /// Adds a null-terminated ASCII data element to this .obj file.
         /// </summary>
         /// <param name="str">The string to add. This will implicitly be null terminated.</param>
-        public void AddNullTerminatedAsciiString(string str)
+        public virtual void AddNullTerminatedAsciiString(string str)
         {
-            m_DataElements.Add(new AsciizDataSegmentElement(str));
+            m_DataElements.Add(new AsciizDataSegmentElement(str, m_Endianness));
         }
 
         /// <summary>
         /// Adds a .text element to this .obj file.
         /// </summary>
         /// <param name="instruction">The 32-bit instruction to add.</param>
-        public void AddInstruction(int instruction)
+        public virtual void AddInstruction(int instruction)
         {
             m_TextElements.Add(new Int32DataElement(instruction, m_Endianness));
         }
@@ -106,45 +107,11 @@ namespace Assembler.Output
         }
 
         /// <summary>
-        /// Gets the total size of the .text segment, in bytes.
-        /// </summary>
-        public int TextSegmentSize
-        {
-            get
-            {
-                int totalSize = 0;
-                foreach (IObjectFileComponent comp in m_TextElements)
-                {
-                    totalSize += comp.Size;
-                }
-
-                return totalSize;
-            }
-        }
-
-        /// <summary>
         /// Gets an IEnumerable of all saved .data elements in this .obj file.
         /// </summary>
         public IEnumerable<IObjectFileComponent> DataElements
         {
             get { return m_DataElements; }
-        }
-        
-        /// <summary>
-        /// Gets the total size of the .data segment, in bytes.
-        /// </summary>
-        public int DataSegmentSize
-        {
-            get
-            {
-                int totalSize = 0;
-                foreach (IObjectFileComponent comp in m_DataElements)
-                {
-                    totalSize += comp.Size;
-                }
-
-                return totalSize;
-            }
         }
 
         /// <summary>
@@ -153,23 +120,6 @@ namespace Assembler.Output
         public IEnumerable<IObjectFileComponent> ExternElements
         {
             get { return m_ExternElements; }
-        }
-
-        /// <summary>
-        /// Gets the total size of the .extern segment, in bytes.
-        /// </summary>
-        public int ExternSegmentSize
-        {
-            get
-            {
-                int totalSize = 0;
-                foreach (IObjectFileComponent comp in m_ExternElements)
-                {
-                    totalSize += comp.Size;
-                }
-
-                return totalSize;
-            }
         }
 
         /// <summary>
