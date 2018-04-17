@@ -31,8 +31,16 @@ namespace Assembler.Output.OutputWriters
             {
                 using (MemoryStream tmpStrm = new MemoryStream())
                 {
+                    var sizeList = new List<int>();
+                    // write the .data segment metadata
+                    int dataMDataSize = WriteMetadataToFile(tmpStrm, file.DataElements);
+                    // write the actual .data segment
                     int dataSegmentLength = WriteDataToFile(tmpStrm, file.DataElements);
+
                     int textSegmentLength = WriteDataToFile(tmpStrm, file.TextElements);
+                    // write the .extern segment metadata
+                    int externMdataLength = WriteMetadataToFile(tmpStrm, file.ExternElements);
+                    // write the .extern segment proper.
                     int externSegmentLength = WriteDataToFile(tmpStrm, file.ExternElements);
                     
                     // write the symbol table
@@ -52,18 +60,21 @@ namespace Assembler.Output.OutputWriters
 
                     int symTblLength = newPos - startPos;
 
-                    // write the .data segment metadata
-                    int dataMDataSize = WriteMetadataToFile(tmpStrm, file.DataElements);
-                    int externMdataLength = WriteMetadataToFile(tmpStrm, file.ExternElements);
+                    // add the various sizes.
+                    // the order matters, as this is the order in which they are written to the header.
+                    sizeList.Add(dataMDataSize);
+                    sizeList.Add(dataSegmentLength);
+                    sizeList.Add(textSegmentLength);
+                    sizeList.Add(externMdataLength);
+                    sizeList.Add(externSegmentLength);
+                    sizeList.Add(symTblLength);
 
                     // write the actual file header, now that we know our absolute offsets
-                    WriteHeader(fs, dataSegmentLength, textSegmentLength, externSegmentLength, symTblLength, dataMDataSize);
+                    WriteHeader(fs, sizeList);
 
                     // copy the temp stream to the actual file stream.
                     tmpStrm.Seek(0, SeekOrigin.Begin);
                     tmpStrm.CopyTo(fs);
-
-                    fs.Flush();
                 }
             }
         }
@@ -108,9 +119,8 @@ namespace Assembler.Output.OutputWriters
         /// Writes the JEF file header to the file.
         /// </summary>
         /// <param name="fs">The FileStream object to write to.</param>
-        /// <param name="objFile">The BasicObjectFile that contains the data to calculate offsets to.</param>
-        private void WriteHeader(Stream fs, int dataSize, int textSize, int externSize, 
-                                 int symTblSize, int dataMdataSize)
+        /// <param name="segmentSizes">An IEnumerable of segment sizes, in the order that they appear in the file by the standard.</param>
+        private void WriteHeader(Stream fs, IEnumerable<int> segmentSizes)
         {
             // write the magic four bytes
             fs.WriteByte(0x7F);
@@ -146,52 +156,30 @@ namespace Assembler.Output.OutputWriters
             fs.Write(textRuntimeAddr, 0, textRuntimeAddr.Length);
             fs.Write(externRuntimeAddr, 0, externRuntimeAddr.Length);
 
+            // write the offset of the first segment after the header, since this is known.
+            byte[] dataMetadataOffset = ToByteArray(0x30 - 0x12, m_TargetEndianness);
+            fs.Write(dataMetadataOffset, 0, dataMetadataOffset.Length);
+
             // calculate the relative offsets to the various segments.
-            // the .data segment should start at about offset 0x30, so subtract 0x12 from that.
-            // which gives us 0x1E.
-            byte[] relativeDataOffset = ToByteArray(0x1E, m_TargetEndianness);
-            fs.Write(relativeDataOffset, 0, relativeDataOffset.Length);
+            // the first segment should begin at 0x30, and we should start writing
+            // this section at offset 0x16. 
+            int startingOffset = 0x30;
+            int writePosition = 0x16;
+            foreach (int size in segmentSizes)
+            {
+                int absoluteOffset = startingOffset + size;
+                int relativeOffset = absoluteOffset - writePosition;
 
-            // calculate the relative .text offset
-            // the .data segment should start at offset 0x30, so add the size to that to figure
-            // out where the .text segment begins.
-            int absoluteOffset = 0x30 + dataSize;
-            int relativeOffset = absoluteOffset - 0x16;
-            byte[] relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+                byte[] relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
+                fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
 
-            // calculate the relative .extern offset
-            // the .data segment should start at offset 0x30, so add the size to that to figure
-            // out where the .text segment begins, then add the .text segment size to determine where the .extern
-            // segment begins.
-            absoluteOffset = absoluteOffset + textSize;
-            relativeOffset = absoluteOffset - 0x1A;
-            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
-
-            // calculate the relative .symtbl offset
-            // just like we did before with the others
-            absoluteOffset = absoluteOffset + externSize;
-            relativeOffset = absoluteOffset - 0x1E;
-            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
-
-            // calculate the relative .dmdta offset
-            // just like we did before with the others
-            absoluteOffset = absoluteOffset + symTblSize;
-            relativeOffset = absoluteOffset - 0x22;
-            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
-
-            // calculate the relative .emdta offset
-            // just like we did before with the others
-            absoluteOffset = absoluteOffset + dataMdataSize;
-            relativeOffset = absoluteOffset - 0x26;
-            relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-            fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+                startingOffset = absoluteOffset;
+                writePosition += sizeof(int);
+            }
 
             // write the spare values.
-            byte[] dummyValues = new byte[6];
+            System.Diagnostics.Debug.Assert(startingOffset - writePosition > 0);
+            byte[] dummyValues = new byte[startingOffset - writePosition];
             fs.Write(dummyValues, 0, dummyValues.Length);
         }
 
