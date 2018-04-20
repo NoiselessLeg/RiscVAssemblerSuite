@@ -19,8 +19,6 @@ namespace Assembler.Common
         /// <param name="runtimeDataSegmentStart">The address that the .data segment will be simulated to be located during runtime.</param>
         public DataSegmentAccessor(IEnumerable<byte> data, IEnumerable<MetadataElement> metadata, int runtimeDataSegmentStart)
         {
-            System.Diagnostics.Debug.Assert(data.Count() == metadata.Count());
-
             m_ByteArray = data.ToArray();
             m_Metadata = metadata;
             m_RuntimeDataSegmentOffset = runtimeDataSegmentStart;
@@ -43,11 +41,19 @@ namespace Assembler.Common
         }
 
         /// <summary>
+        /// Gets the starting runtime address of the .data segment.
+        /// </summary>
+        public int BaseRuntimeDataAddress
+        {
+            get { return m_RuntimeDataSegmentOffset; }
+        }
+
+        /// <summary>
         /// Reads a byte from the data segment.
         /// </summary>
         /// <param name="address">The address in the .data segment to retrieve the byte from.</param>
         /// <returns>The byte stored at the provided address.</returns>
-        public int ReadByte(int address)
+        public byte ReadByte(int address)
         {
             int idx = address - m_RuntimeDataSegmentOffset;
             return m_ByteArray[idx];
@@ -131,7 +137,7 @@ namespace Assembler.Common
             int itr = idx;
 
             // go until we find a null terminator.
-            while (m_ByteArray[idx] != 0)
+            while (m_ByteArray[itr] != 0)
             {
                 ++strSize;
                 ++itr;

@@ -35,11 +35,11 @@ namespace Assembler.InstructionProcessing
             var instructionList = new List<int>();
 
             // the offset is doubled implicitly by the processor, so halve it here.
-            int offset = (symbolLabel.Address - address) / 2;
+            int offset = (symbolLabel.Address - address);
 
             // this should rarely happen, but if the halved immediate exceeds the 21 bit boundary,
             // error out and notify the user.
-            if ((Math.Abs(offset) & 0xFFE00000) != 0)
+            if ((Math.Abs(offset / 2) & 0xFFE00000) != 0)
             {
                 throw new ArgumentException("jal - the offset between the address of \"" + symbolLabel.LabelName + "\"" +
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +

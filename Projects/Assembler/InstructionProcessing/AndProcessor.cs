@@ -49,7 +49,7 @@ namespace Assembler.InstructionProcessing
             {
                 // try to parse the string as a number; maybe the user meant andi?
                 short immediate = 0;
-                bool isShort = short.TryParse(rs2, out immediate);
+                bool isShort = IntExtensions.TryParseEx(rs2, out immediate);
                 if (isShort)
                 {
                     var immediateParser = new AndiProcessor();

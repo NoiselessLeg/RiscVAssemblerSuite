@@ -13,15 +13,15 @@ namespace Assembler.Common
         /// <summary>
         /// Creates an instance of the options that the disassembler will use.
         /// </summary>
-        /// <param name="inputFileNames">The list of input file names to be disassembled.</param>
-        /// <param name="inputFileNames">The list of input file names to be assembled.</param>
+        /// <param name="inputFileName">The list of input file names to be disassembled.</param>
+        /// <param name="outputFileName">The list of input file names to be assembled.</param>
         /// <param name="logFile">The name of the log file, if any, to output to.</param>
-        public DisassemblerOptions(string inputFile,
-                                   string outputFile,
+        public DisassemblerOptions(string inputFileName,
+                                   string outputFileName,
                                    string logFile = "")
         {
-            m_InputFileName = inputFile;
-            m_OutputFileName = outputFile;
+            m_InputFileName = inputFileName;
+            m_OutputFileName = outputFileName;
             m_LogFile = logFile;
         }
 

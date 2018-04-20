@@ -11,22 +11,26 @@ namespace Assembler.OutputProcessing.ParamDecoding
         public IEnumerable<int> DecodeParameters(int instruction)
         {
             var paramList = new List<int>();
-            int regParam = (instruction & 0xF80);
+            int regParam = (instruction & 0xF80) >> 7;
             paramList.Add(regParam);
 
             int immParam = 0;
 
-            // shift the offset 20 bit into position
-            immParam |= ((int)(instruction & 0x80000000)) >> 12;
+            // shift bit 20 into position
+            int temp = ((int)(instruction & 0x80000000)) >> 31;
+            immParam |= (temp << 20);
 
-            //shift the 10 - 1 offset bits into position
-            immParam |= (instruction & 0x7FE00000) >> 20;
+            // shift bits 10 - 1 into position
+            temp = (instruction & 0x7FE00000) >> 21;
+            immParam |= (temp << 1);
 
-            // shift the 11 offset bit into position
-            immParam |= (instruction & 0x100000) >> 9;
+            // shift bit 11 into position
+            temp = (instruction & 0x100000) >> 20;
+            immParam |= (temp << 11);
 
-            // shift the 19 - 12 offset bits into position.
-            immParam |= (instruction & 0xFF000) >> 1;
+            // shift bits 19-12 into position
+            temp = (instruction & 0xFF000) >> 12;
+            immParam |= (temp << 12);
             paramList.Add(immParam);
             
             return paramList;

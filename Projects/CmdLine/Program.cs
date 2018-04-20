@@ -1,8 +1,9 @@
 ﻿using Assembler.CmdLine.LoggerTypes;
 using Assembler.Common;
-using Assembler.OutputProcessing;
+using Assembler.Disassembler;
 using CommandLine;
 using System;
+using System.Collections.Generic;
 
 namespace Assembler.CmdLine
 {
@@ -10,9 +11,9 @@ namespace Assembler.CmdLine
     {
         static void Main(string[] args)
         {
-            var parsedArgs = Parser.Default.ParseArguments<AssemblerOptions>(args)
-                                .WithParsed(options => RunAssembler(options))
-                                ;
+            var parsedArgs = Parser.Default.ParseArguments<AssemblerOptions, DisassemblerOptions>(args)
+                                .WithParsed<AssemblerOptions>(options => RunAssembler(options))
+                                .WithParsed<DisassemblerOptions>(options => RunDisassembler(options));
 
 #if DEBUG
             Console.ReadKey();
@@ -22,8 +23,8 @@ namespace Assembler.CmdLine
         /// <summary>
         /// Runs the assembler with the provided set of arguments.
         /// </summary>
-        /// <param name="options"></param>
-        private static void RunAssembler(AssemblerOptions options)
+        /// <param name="options">The options provided by the user.</param>
+        private static int RunAssembler(AssemblerOptions options)
         {
             ILogger logger = null;
             string logFileName = options.LogFile;
@@ -38,9 +39,14 @@ namespace Assembler.CmdLine
 
             RiscVAssembler assembler = new RiscVAssembler();
             assembler.Assemble(options, logger);
+            return 0;
         }
 
-        private static void RunDisassembler(DisassemblerOptions options)
+        /// <summary>
+        /// Runs the disassembler with the provided set of arguments.
+        /// </summary>
+        /// <param name="options">The options provided by the user.</param>
+        private static int RunDisassembler(DisassemblerOptions options)
         {
             ILogger logger = null;
             string logFileName = options.LogFile;
@@ -53,8 +59,14 @@ namespace Assembler.CmdLine
                 logger = new ConsoleLogger();
             }
 
-            RiscV_Disassembler disassembler = new RiscV_Disassembler();
-            disassembler.DisassembleFile(file)
+            var disassembler = new RiscVDisassembler();
+            disassembler.Disassemble(options, logger);
+            return 0;
+        }
+
+        private static int HandleErrors()
+        {
+            return -1;
         }
     }
 }

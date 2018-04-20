@@ -32,6 +32,24 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Disassembly Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Disassembly Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Assembly Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Assembly Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,7 +73,7 @@
     <Compile Include="ParamDecoding\ParamDecoderTable.cs" />
     <Compile Include="ParamDecoding\RegisterInstructionDecoder.cs" />
     <Compile Include="ParamDecoding\ShiftImmediateDecoder.cs" />
-    <Compile Include="RiscV_Disassembler.cs" />
+    <Compile Include="JefFileProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextSegmentParser.cs" />
     <Compile Include="Utils\EndianReader.cs" />

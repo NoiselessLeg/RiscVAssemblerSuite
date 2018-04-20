@@ -29,6 +29,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Disassembly Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Disassembly Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Assembly Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Assembly Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BinaryEndiannessExtensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d2d68bebc5a2db97, processorArchitecture=MSIL">
       <HintPath>..\..\packages\BinaryEndiannessExtensions.1.0.0\lib\portable-net45+wp8+win8\BinaryEndiannessExtensions.dll</HintPath>
@@ -138,6 +156,7 @@
     <Compile Include="Util\StringUtils.cs" />
     <Compile Include="InstructionProcessing\OriProcessor.cs" />
     <Compile Include="InstructionProcessing\OrProcessor.cs" />
+    <Compile Include="Util\IntExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">

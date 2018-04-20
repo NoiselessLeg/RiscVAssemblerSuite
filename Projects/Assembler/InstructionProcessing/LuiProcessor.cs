@@ -29,7 +29,7 @@ namespace Assembler.InstructionProcessing
             string immediateStr = args[1].Trim();
 
             int immediate = 0;
-            if (!int.TryParse(immediateStr, out immediate))
+            if (!IntExtensions.TryParseEx(immediateStr, out immediate))
             {
                 throw new ArgumentException("Lui - argument 2 was non-integer immediate value.");
             }

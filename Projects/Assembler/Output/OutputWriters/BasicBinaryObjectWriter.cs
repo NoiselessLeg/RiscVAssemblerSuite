@@ -59,8 +59,8 @@ namespace Assembler.Output.OutputWriters
                     // the order matters, as this is the order in which they are written to the header.
                     sizeList.Add(dataMDataSize);
                     sizeList.Add(dataSegmentLength);
-                    sizeList.Add(textSegmentLength);
                     sizeList.Add(UNUSED_SECTION_BYTE_SIZE);
+                    sizeList.Add(textSegmentLength);
                     sizeList.Add(externSegmentLength);
                     sizeList.Add(symTblLength);
 

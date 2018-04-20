@@ -49,7 +49,7 @@ namespace Assembler.InstructionProcessing
             {
                 Symbol sym = SymbolTable.GetSymbol(args[1]);
                 int shiftedAddress = sym.Address >> 12;
-                retList.AddRange(new AuipcProcessor().GenerateCodeForInstruction(address, new[] { args[0], shiftedAddress.ToString() }));
+                retList.AddRange(new LuiProcessor().GenerateCodeForInstruction(address, new[] { args[0], shiftedAddress.ToString() }));
                 int numericOffset = sym.Address & 0xFFF;
                 int instruction = 0;
                 instruction |= (numericOffset << 20);

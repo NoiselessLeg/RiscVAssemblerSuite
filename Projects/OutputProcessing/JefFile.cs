@@ -47,7 +47,7 @@ namespace Assembler.OutputProcessing
 
                 // symbol table runs from the starting offset to the end of the file, so just calculate the delta.
                 int symTblSize = (int)(fileReader.BaseStream.Length - hdr.SymTblOffset);
-                SymbolTable symTbl = ParseSymbolTableSection(fileReader, symTblSize);
+                ReverseSymbolTable symTbl = ParseSymbolTableSection(fileReader, symTblSize);
 
                 return new JefFile(hdr.BaseDataAddress, hdr.BaseTextAddress, hdr.BaseExternAddress, dataMetaData, 
                                    dataElems, textElems, externElems, symTbl);
@@ -87,6 +87,38 @@ namespace Assembler.OutputProcessing
         }
 
         /// <summary>
+        /// Gets the runtime base .data segment address.
+        /// </summary>
+        public int BaseDataAddress
+        {
+            get { return m_BaseDataAddress; }
+        }
+
+        /// <summary>
+        /// Gets the runtime base .text segment address.
+        /// </summary>
+        public int BaseTextAddress
+        {
+            get { return m_BaseTextAddress; }
+        }
+
+        /// <summary>
+        /// Gets the runtime base .extern segment address.
+        /// </summary>
+        public int BaseExternAddress
+        {
+            get { return m_BaseExternAddress; }
+        }
+
+        /// <summary>
+        /// Gets the extracted symbol table, with labels and addresses.
+        /// </summary>
+        public ReverseSymbolTable SymbolTable
+        {
+            get { return m_SymTbl; }
+        }
+
+        /// <summary>
         /// Creates a representation of a .JEF file in memory.
         /// </summary>
         /// <param name="baseDataAddress">The base .data segment address.</param>
@@ -99,7 +131,7 @@ namespace Assembler.OutputProcessing
         /// <param name="symTable">A reconstructed SymbolTable instance from the .JEF file.</param>
         private JefFile(int baseDataAddress, int baseTextAddress, int baseExternAddress, IEnumerable<MetadataElement> metadataElems,
                         IEnumerable<byte> dataElements, IEnumerable<int> textElements, IEnumerable<byte> externElements,
-                        SymbolTable symTable)
+                        ReverseSymbolTable symTable)
         {
             m_BaseDataAddress = baseDataAddress;
             m_BaseTextAddress = baseTextAddress;
@@ -251,15 +283,15 @@ namespace Assembler.OutputProcessing
         }
 
         /// <summary>
-        /// Parses the symtbl segment of the file, and reconstructs a symbol table
+        /// Parses the symtbl segment of the file, and reconstructs a reverse lookup symbol table.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="header"></param>
-        /// <returns></returns>
-        private static SymbolTable ParseSymbolTableSection(BinaryReader reader, int sectionSize)
+        /// <param name="reader">The reader to parse the file with.</param>
+        /// <param name="sectionSize">The size of the symbol table area, in bytes.</param>
+        /// <returns>A populated symbol reverse lookup table.</returns>
+        private static ReverseSymbolTable ParseSymbolTableSection(BinaryReader reader, int sectionSize)
         {
             // for every symbol, read the first byte. this dictates how long the symbol name is.
-            var symTable = new SymbolTable();
+            var symTable = new ReverseSymbolTable();
             int readBytes = 0;
             while (readBytes < sectionSize)
             {
@@ -272,9 +304,8 @@ namespace Assembler.OutputProcessing
                 string symNameStr = Encoding.ASCII.GetString(symbolName);
                 int symbolAddress = reader.ReadInt32();
                 readBytes += sizeof(int);
-
-                var symbol = new Symbol(symNameStr, SegmentType.Invalid, symbolAddress);
-                symTable.AddSymbol(symbol);
+                
+                symTable.AddSymbol(symbolAddress, symNameStr);
             }
 
             return symTable;
@@ -360,6 +391,6 @@ namespace Assembler.OutputProcessing
         private readonly IEnumerable<byte> m_DataElems;
         private readonly IEnumerable<byte> m_ExternElems;
         private readonly IEnumerable<int> m_TextElems;
-        private readonly SymbolTable m_SymTbl;
+        private readonly ReverseSymbolTable m_SymTbl;
     }
 }

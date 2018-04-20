@@ -11,7 +11,7 @@ namespace Assembler.OutputProcessing.ParamDecoding
         public IEnumerable<int> DecodeParameters(int instruction)
         {
             var paramList = new List<int>();
-            int regParam = (instruction & 0xF80);
+            int regParam = (instruction & 0xF80) >> 7;
             paramList.Add(regParam);
 
             int immParam = ((int)(instruction & 0xFFFFF000)) >> 12;
