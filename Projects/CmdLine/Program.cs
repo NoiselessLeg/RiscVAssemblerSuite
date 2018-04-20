@@ -1,5 +1,6 @@
 ﻿using Assembler.CmdLine.LoggerTypes;
 using Assembler.Common;
+using Assembler.OutputProcessing;
 using CommandLine;
 using System;
 
@@ -10,7 +11,8 @@ namespace Assembler.CmdLine
         static void Main(string[] args)
         {
             var parsedArgs = Parser.Default.ParseArguments<AssemblerOptions>(args)
-                                .WithParsed(options => RunAssembler(options));
+                                .WithParsed(options => RunAssembler(options))
+                                ;
 
 #if DEBUG
             Console.ReadKey();
@@ -36,6 +38,23 @@ namespace Assembler.CmdLine
 
             RiscVAssembler assembler = new RiscVAssembler();
             assembler.Assemble(options, logger);
+        }
+
+        private static void RunDisassembler(DisassemblerOptions options)
+        {
+            ILogger logger = null;
+            string logFileName = options.LogFile;
+            if (!string.IsNullOrEmpty(logFileName) && !string.IsNullOrWhiteSpace(logFileName))
+            {
+                logger = new HybridLogger(logFileName.Trim());
+            }
+            else
+            {
+                logger = new ConsoleLogger();
+            }
+
+            RiscV_Disassembler disassembler = new RiscV_Disassembler();
+            disassembler.DisassembleFile(file)
         }
     }
 }

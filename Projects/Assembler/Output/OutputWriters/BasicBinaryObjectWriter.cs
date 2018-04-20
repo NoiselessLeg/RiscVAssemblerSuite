@@ -15,11 +15,6 @@ namespace Assembler.Output.OutputWriters
     /// </summary>
     class BasicBinaryObjectWriter : IObjectFileWriter
     {
-        public BasicBinaryObjectWriter(Endianness targetEndianness)
-        {
-            m_TargetEndianness = targetEndianness;
-        }
-
         /// <summary>
         /// Outputs all data in the BasicObjectFile to the specified format.
         /// </summary>
@@ -34,13 +29,13 @@ namespace Assembler.Output.OutputWriters
                     var sizeList = new List<int>();
                     // write the .data segment metadata
                     int dataMDataSize = WriteMetadataToFile(tmpStrm, file.DataElements);
+
                     // write the actual .data segment
                     int dataSegmentLength = WriteDataToFile(tmpStrm, file.DataElements);
 
                     int textSegmentLength = WriteDataToFile(tmpStrm, file.TextElements);
-                    // write the .extern segment metadata
-                    int externMdataLength = WriteMetadataToFile(tmpStrm, file.ExternElements);
-                    // write the .extern segment proper.
+
+                    // write the .extern segment.
                     int externSegmentLength = WriteDataToFile(tmpStrm, file.ExternElements);
                     
                     // write the symbol table
@@ -52,7 +47,7 @@ namespace Assembler.Output.OutputWriters
 
                         // write the symbol name itself.
                         tmpStrm.Write(Encoding.ASCII.GetBytes(elem.LabelName), 0, Encoding.ASCII.GetByteCount(elem.LabelName));
-                        byte[] byteRepresentation = ToByteArray(elem.Address, m_TargetEndianness);
+                        byte[] byteRepresentation = ToByteArray(elem.Address);
 
                         tmpStrm.Write(byteRepresentation, 0, byteRepresentation.Length);
                     }
@@ -65,7 +60,7 @@ namespace Assembler.Output.OutputWriters
                     sizeList.Add(dataMDataSize);
                     sizeList.Add(dataSegmentLength);
                     sizeList.Add(textSegmentLength);
-                    sizeList.Add(externMdataLength);
+                    sizeList.Add(UNUSED_SECTION_BYTE_SIZE);
                     sizeList.Add(externSegmentLength);
                     sizeList.Add(symTblLength);
 
@@ -133,31 +128,20 @@ namespace Assembler.Output.OutputWriters
             fs.WriteByte(0x01);
 
             // write the endianness byte.
-            switch (m_TargetEndianness)
-            {
-                case Endianness.LittleEndian:
-                {
-                    fs.WriteByte(0x01);
-                    break;
-                }
-                case Endianness.BigEndian:
-                {
-                    fs.WriteByte(0x02);
-                    break;
-                }
-            }
+            // JAL 4/18: set to 0, spare bit (endianness will always be LITTLE).
+            fs.WriteByte(0x00);
 
             // write the runtime starting addresses.
             // TODO: eventually make this configurable
-            byte[] dataRuntimeAddr = ToByteArray(CommonConstants.BASE_DATA_ADDRESS, m_TargetEndianness);
-            byte[] textRuntimeAddr = ToByteArray(CommonConstants.BASE_TEXT_ADDRESS, m_TargetEndianness);
-            byte[] externRuntimeAddr = ToByteArray(CommonConstants.BASE_EXTERN_ADDRESS, m_TargetEndianness);
+            byte[] dataRuntimeAddr = ToByteArray(CommonConstants.BASE_DATA_ADDRESS);
+            byte[] textRuntimeAddr = ToByteArray(CommonConstants.BASE_TEXT_ADDRESS);
+            byte[] externRuntimeAddr = ToByteArray(CommonConstants.BASE_EXTERN_ADDRESS);
             fs.Write(dataRuntimeAddr, 0, dataRuntimeAddr.Length);
             fs.Write(textRuntimeAddr, 0, textRuntimeAddr.Length);
             fs.Write(externRuntimeAddr, 0, externRuntimeAddr.Length);
 
             // write the offset of the first segment after the header, since this is known.
-            byte[] dataMetadataOffset = ToByteArray(0x30 - 0x12, m_TargetEndianness);
+            byte[] dataMetadataOffset = ToByteArray(0x30 - 0x12);
             fs.Write(dataMetadataOffset, 0, dataMetadataOffset.Length);
 
             // calculate the relative offsets to the various segments.
@@ -165,21 +149,39 @@ namespace Assembler.Output.OutputWriters
             // this section at offset 0x16. 
             int startingOffset = 0x30;
             int writePosition = 0x16;
-            foreach (int size in segmentSizes)
+            
+            // do everything BUT the last segment size, since that would add an extra
+            // word to the preamble (and only gives us the offset of the end of the file).
+            for (int i = 0; i < segmentSizes.Count() - 1; ++i)
             {
-                int absoluteOffset = startingOffset + size;
-                int relativeOffset = absoluteOffset - writePosition;
+                int size = segmentSizes.ElementAt(i);
 
-                byte[] relativeOffsetBytes = ToByteArray(relativeOffset, m_TargetEndianness);
-                fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+                // if the size is not the sentry value,
+                // calculate the relative byte offset in the file
+                // of the section. otherwise, just write zeroes for the offset.
+                if (size != UNUSED_SECTION_BYTE_SIZE)
+                {
+                    int absoluteOffset = startingOffset + size;
+                    int relativeOffset = absoluteOffset - writePosition;
 
-                startingOffset = absoluteOffset;
+                    byte[] relativeOffsetBytes = ToByteArray(relativeOffset);
+                    fs.Write(relativeOffsetBytes, 0, relativeOffsetBytes.Length);
+
+                    startingOffset = absoluteOffset;
+                }
+                else
+                {
+                    byte[] zBytes = new byte[] { 0, 0, 0, 0 };
+                    fs.Write(zBytes, 0, zBytes.Length);
+                }
+
                 writePosition += sizeof(int);
             }
 
+            System.Diagnostics.Debug.Assert(writePosition == 0x2A);
+
             // write the spare values.
-            System.Diagnostics.Debug.Assert(startingOffset - writePosition > 0);
-            byte[] dummyValues = new byte[startingOffset - writePosition];
+            byte[] dummyValues = new byte[6];
             fs.Write(dummyValues, 0, dummyValues.Length);
         }
 
@@ -187,21 +189,19 @@ namespace Assembler.Output.OutputWriters
         /// Gets the provided 32 bit as a byte array.
         /// </summary>
         /// <param name="param">The value to convert to bytes.</param>
-        private static byte[] ToByteArray(int param, Endianness targetEndianness)
+        private static byte[] ToByteArray(int param)
         {
             byte[] byteRep = BitConverter.GetBytes(param);
 
             // if the architecture we're assembling on is not our desired endianness,
             // flip the byte array.
-            if (BitConverter.IsLittleEndian && targetEndianness == Endianness.BigEndian ||
-                !BitConverter.IsLittleEndian && targetEndianness == Endianness.LittleEndian)
+            if (!BitConverter.IsLittleEndian)
             {
                 Array.Reverse(byteRep);
             }
             return byteRep;
         }
 
-        private readonly Endianness m_TargetEndianness;
-        
+        private const int UNUSED_SECTION_BYTE_SIZE = -1;
     }
 }

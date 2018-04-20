@@ -66,6 +66,10 @@
       <Project>{71d5c5f0-ee31-47be-a430-76dc2c24d87f}</Project>
       <Name>Assembler.Main</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Diassembler\Assembler.OutputProcessing.csproj">
+      <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
+      <Name>Assembler.OutputProcessing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>
       <Name>Assembler.Common</Name>

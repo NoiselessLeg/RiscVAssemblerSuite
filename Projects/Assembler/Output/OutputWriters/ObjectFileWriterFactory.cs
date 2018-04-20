@@ -13,11 +13,11 @@ namespace Assembler.Output.OutputWriters
         /// Creates a new instance of the ObjectFileWriterFactory with the target endianness.
         /// </summary>
         /// <param name="targetEndianness">The endianness that should be used to generate output.</param>
-        public ObjectFileWriterFactory(Endianness targetEndianness)
+        public ObjectFileWriterFactory()
         {
             m_WriterTypes = new Dictionary<OutputTypes, IObjectFileWriter>()
             {
-                { OutputTypes.DirectBinary, new BasicBinaryObjectWriter(targetEndianness) }
+                { OutputTypes.DirectBinary, new BasicBinaryObjectWriter() }
             };
         }
 

@@ -14,10 +14,9 @@ namespace Assembler.Output
         /// Creates an instance of the basic object file.
         /// </summary>
         /// <param name="symTable">The symbol table that will be stored away.</param>
-        public BasicObjectFile(SymbolTable symTable, Endianness outputEndianness)
+        public BasicObjectFile(SymbolTable symTable)
         {
             m_SymTable = symTable;
-            m_Endianness = outputEndianness;
             m_DataElements = new List<IObjectFileComponent>();
             m_TextElements = new List<IObjectFileComponent>();
             m_ExternElements = new List<IObjectFileComponent>();
@@ -31,7 +30,7 @@ namespace Assembler.Output
         {
             for (int i = 0; i < sizeInBytes; ++i)
             {
-                m_ExternElements.Add(new ByteDataElement(0, m_Endianness));
+                m_ExternElements.Add(new ByteDataElement(0));
             }
         }
 
@@ -41,7 +40,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 8 bit value to add.</param>
         public virtual void AddDataElement(byte dataElement)
         {
-            m_DataElements.Add(new ByteDataElement(dataElement, m_Endianness));
+            m_DataElements.Add(new ByteDataElement(dataElement));
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 16 bit value to add.</param>
         public virtual void AddDataElement(short dataElement)
         {
-            m_DataElements.Add(new Int16DataElement(dataElement, m_Endianness));
+            m_DataElements.Add(new Int16DataElement(dataElement));
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 32 bit value to add.</param>
         public virtual void AddDataElement(int dataElement)
         {
-            m_DataElements.Add(new Int32DataElement(dataElement, m_Endianness));
+            m_DataElements.Add(new Int32DataElement(dataElement));
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace Assembler.Output
         /// <param name="dataElement">The 64 bit value to add.</param>
         public virtual void AddDataElement(long dataElement)
         {
-            m_DataElements.Add(new Int64DataElement(dataElement, m_Endianness));
+            m_DataElements.Add(new Int64DataElement(dataElement));
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Assembler.Output
         /// <param name="str">The string to add.</param>
         public virtual void AddAsciiString(string str)
         {
-            m_DataElements.Add(new AsciiDataSegmentElement(str, m_Endianness));
+            m_DataElements.Add(new AsciiDataSegmentElement(str));
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace Assembler.Output
         /// <param name="str">The string to add. This will implicitly be null terminated.</param>
         public virtual void AddNullTerminatedAsciiString(string str)
         {
-            m_DataElements.Add(new AsciizDataSegmentElement(str, m_Endianness));
+            m_DataElements.Add(new AsciizDataSegmentElement(str));
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace Assembler.Output
         /// <param name="instruction">The 32-bit instruction to add.</param>
         public virtual void AddInstruction(int instruction)
         {
-            m_TextElements.Add(new Int32DataElement(instruction, m_Endianness));
+            m_TextElements.Add(new Int32DataElement(instruction));
         }
 
         /// <summary>
@@ -131,7 +130,6 @@ namespace Assembler.Output
         }
 
         private readonly SymbolTable m_SymTable;
-        private readonly Endianness m_Endianness;
         private readonly List<IObjectFileComponent> m_TextElements;
         private readonly List<IObjectFileComponent> m_DataElements;
         private readonly List<IObjectFileComponent> m_ExternElements;

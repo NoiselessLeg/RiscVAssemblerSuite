@@ -12,11 +12,10 @@ namespace Assembler.Output.ObjFileComponents
         /// Creates an instance of the data element with the provided value.
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
-        /// <param name="targetEndianness">The target output endianness.</param>
-        public ByteDataElement(byte elem, Endianness targetEndianness)
+        public ByteDataElement(byte elem)
         {
             m_Elem = elem;
-            m_Metadata = new Metadata(ObjectTypeCode.Byte, 1, targetEndianness);
+            m_Metadata = new Metadata(ObjectTypeCode.Byte, 1);
         }
 
         /// <summary>

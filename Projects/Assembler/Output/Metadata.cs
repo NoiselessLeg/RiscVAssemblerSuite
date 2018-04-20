@@ -4,17 +4,6 @@ using System.IO;
 
 namespace Assembler.Output
 {
-    /// <summary>
-    /// Defines the various possible RISC-V data types as a byte code.
-    /// </summary>
-    enum ObjectTypeCode : byte
-    {
-        Byte = 0x01,
-        Half = 0x02,
-        Word = 0x03,
-        Dword = 0x04,
-        String = 0x05
-    }
 
     /// <summary>
     /// Struct that describes an element of the .data or .extern segments
@@ -26,11 +15,10 @@ namespace Assembler.Output
         /// </summary>
         /// <param name="typeCode">The TypeCode representing this data type.</param>
         /// <param name="size">The size of this data element, in bytes.</param>
-        public Metadata(ObjectTypeCode typeCode, int size, Endianness targetEndianness)
+        public Metadata(ObjectTypeCode typeCode, int size)
         {
             m_TypeCode = typeCode;
             m_Size = size;
-            m_TargetEndianness = targetEndianness;
         }
 
         /// <summary>
@@ -49,8 +37,7 @@ namespace Assembler.Output
                 byte[] sizeBytes = BitConverter.GetBytes(m_Size);
                 // if the architecture we're assembling on is not our desired endianness,
                 // flip the byte array.
-                if (BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.BigEndian ||
-                    !BitConverter.IsLittleEndian && m_TargetEndianness == Endianness.LittleEndian)
+                if (!BitConverter.IsLittleEndian)
                 {
                     Array.Reverse(sizeBytes);
                 }
@@ -59,8 +46,7 @@ namespace Assembler.Output
             }
             
         }
-
-        private readonly Endianness m_TargetEndianness;
+        
         private readonly ObjectTypeCode m_TypeCode;
         private readonly int m_Size;
     }

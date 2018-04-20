@@ -14,11 +14,10 @@ namespace Assembler.Output.ObjFileComponents
         /// Creates an instance of the data element with the provided value.
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
-        /// <param name="targetEndianness">The target output endianness.</param>
-        public AsciiDataSegmentElement(string str, Endianness targetEndianness)
+        public AsciiDataSegmentElement(string str)
         {
             m_Elem = str;
-            m_Metadata = new Metadata(ObjectTypeCode.String, m_Elem.Length, targetEndianness);
+            m_Metadata = new Metadata(ObjectTypeCode.String, m_Elem.Length);
         }
 
         /// <summary>

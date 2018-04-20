@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.CmdLine", "Projec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Common", "Projects\Utility\Assembler.Common.csproj", "{12BEECBB-6F2B-4D2C-9507-1E7E32AB2EE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Disassembler", "Projects\Diassembler\Assembler.Disassembler.csproj", "{79B8C0DC-354D-4285-A1AA-46693D7A2AC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.OutputProcessing", "Projects\OutputProcessing\Assembler.OutputProcessing.csproj", "{79B8C0DC-354D-4285-A1AA-46693D7A2AC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Interpreter", "Projects\Interpreter\Assembler.Interpreter.csproj", "{795BAC7E-64ED-4685-81BE-3032DCC461D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{79B8C0DC-354D-4285-A1AA-46693D7A2AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79B8C0DC-354D-4285-A1AA-46693D7A2AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79B8C0DC-354D-4285-A1AA-46693D7A2AC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795BAC7E-64ED-4685-81BE-3032DCC461D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795BAC7E-64ED-4685-81BE-3032DCC461D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795BAC7E-64ED-4685-81BE-3032DCC461D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795BAC7E-64ED-4685-81BE-3032DCC461D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

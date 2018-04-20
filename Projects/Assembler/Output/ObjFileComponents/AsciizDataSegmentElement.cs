@@ -14,10 +14,10 @@ namespace Assembler.Output.ObjFileComponents
         /// </summary>
         /// <param name="elem">The value of the element to store in the object file.</param>
         /// <param name="targetEndianness">The target output endianness.</param>
-        public AsciizDataSegmentElement(string str, Endianness targetEndianness):
-            base(str, targetEndianness)
+        public AsciizDataSegmentElement(string str):
+            base(str)
         {
-            m_Metadata = new Metadata(ObjectTypeCode.String, str.Length + 1, targetEndianness);
+            m_Metadata = new Metadata(ObjectTypeCode.String, str.Length + 1);
         }
 
         /// <summary>

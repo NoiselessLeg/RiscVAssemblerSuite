@@ -85,13 +85,13 @@ namespace Assembler
                     symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
                     // use the symbol table to generate code with references resolved.
-                    var objFile = new BasicObjectFile(symTable, options.Endianness);
+                    var objFile = new BasicObjectFile(symTable);
 
                     var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
                     codeGenerator.GenerateCode(reader, objFile);
 
                     // write the object file out.
-                    var writerFac = new ObjectFileWriterFactory(options.Endianness);
+                    var writerFac = new ObjectFileWriterFactory();
                     IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.DirectBinary);
                     string outputFile = fileNameNoExtension + ".obj";
                     writer.WriteObjectFile(outputFile, objFile);
