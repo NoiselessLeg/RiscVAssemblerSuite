@@ -10,7 +10,6 @@ namespace Assembler.Interpreter
     {
         static void Main(string[] args)
         {
-            if (args.Any)
         }
     }
 }

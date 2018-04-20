@@ -46,7 +46,7 @@ namespace Assembler.InstructionProcessing
             {
                 // try to parse the string as a number; maybe the user meant addi?
                 int immediate = 0;
-                bool isInt = int.TryParse(args[2], out immediate);
+                bool isInt = IntExtensions.TryParseEx(args[2], out immediate);
                 if (isInt)
                 {
                     var immediateParser = new SltiProcessor();

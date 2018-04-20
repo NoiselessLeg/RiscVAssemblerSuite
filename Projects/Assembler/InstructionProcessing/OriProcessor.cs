@@ -24,7 +24,7 @@ namespace Assembler.InstructionProcessing
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
             int immVal = 0;
-            bool isValidImmediate = int.TryParse(args[2], out immVal);
+            bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
 
             if (isValidImmediate)
             {

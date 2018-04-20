@@ -31,7 +31,36 @@ namespace Assembler.InstructionProcessing
             }
 
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
+
+#if DEBUG
+            int targetAddress = 0;
+
+            if (SymbolTable.ContainsSymbol(args[1]))
+            {
+                Symbol symbolLabel = SymbolTable.GetSymbol(args[1]);
+                targetAddress = symbolLabel.Address;
+            }
+            else if (!IntExtensions.TryParseEx(args[1], out targetAddress))
+            {
+                throw new ArgumentException(args[1] + " was not a symbol name or valid 32-bit address.");
+            }
+            var instructionList = new List<int>();
+
+            // the offset is doubled implicitly by the processor, so halve it here.
+            int offset = (targetAddress - address);
+
+            // this should rarely happen, but if the halved immediate exceeds the 21 bit boundary,
+            // error out and notify the user.
+            if ((Math.Abs(offset / 2) & 0xFFE00000) != 0)
+            {
+                throw new ArgumentException("jal - the offset between the address of \"0x" + targetAddress.ToString("X") + "\"" +
+                    " and this instruction address (0x" +
+                    address.ToString("X") + ") exceeds the 21 bit immediate limit. Use jalr instead.");
+            }
+#else
             Symbol symbolLabel = SymbolTable.GetSymbol(args[1]);
+                targetAddress
+            }
             var instructionList = new List<int>();
 
             // the offset is doubled implicitly by the processor, so halve it here.
@@ -45,6 +74,7 @@ namespace Assembler.InstructionProcessing
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +
                     address.ToString("X") + ") exceeds the 21 bit immediate limit. Use jalr instead.");
             }
+#endif
 
             int instruction = 0;
 
@@ -55,11 +85,11 @@ namespace Assembler.InstructionProcessing
             // get the 10-1 bit offsets and shift that range to the 30-20 offset.
             instruction |= ((offset & 0x7FE) << 20);
 
-            // get the 11th bit offset and shift it to offset 19.
-            instruction |= ((offset & 0x800) << 8);
+            // get the 11th bit offset and shift it to offset 20.
+            instruction |= ((offset & 0x800) << 9);
 
             // get the 19-12 bit offsets and shift them to position 18-11
-            instruction |= ((offset & 0xFF00) >> 1);
+            instruction |= ((offset & 0xFF000));
 
             // shift the rd register value up to offset 11-7
             instruction |= (rdReg << 7);

@@ -45,7 +45,7 @@ namespace Assembler.InstructionProcessing
             {
                 // try parsing as ori instruction
                 int immediate = 0;
-                bool isShort = int.TryParse(args[2], out immediate);
+                bool isShort = IntExtensions.TryParseEx(args[2], out immediate);
                 if (isShort)
                 {
                     var immediateParser = new OriProcessor();

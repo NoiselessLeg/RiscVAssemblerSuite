@@ -22,7 +22,7 @@ namespace Assembler.Disassembler
             {
                 GenerateDataSegment(writer, file.SymbolTable, file.DataSegment);
                 GenerateTextSegment(writer, file.SymbolTable, file.TextSegment);
-                writer.WriteLine(".extern " + file.ExternSegmentSize);
+                writer.WriteLine(".extern extern_data " + file.ExternSegmentSize);
             }
         }
 
