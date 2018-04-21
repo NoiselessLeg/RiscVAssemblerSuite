@@ -401,7 +401,7 @@ namespace Assembler.OutputProcessing
         /// <param name="offset">Where in the main .data segment the bytes shall be copied to.</param>
         private void CopyBytes(byte[] bytes, int offset)
         {
-            for (int i = offset; i < bytes.Length; ++i)
+            for (int i = offset; i < offset + bytes.Length; ++i)
             {
                 m_ByteArray[i] = bytes[i - offset];
             }
