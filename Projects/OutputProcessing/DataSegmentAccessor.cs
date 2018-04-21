@@ -22,7 +22,7 @@ namespace Assembler.OutputProcessing
             m_ByteArray = data.ToArray();
             m_Metadata = metadata;
             m_RuntimeDataSegmentOffset = runtimeDataSegmentStart;
-
+            m_StackStartAddress = Common.CommonConstants.DEFAULT_STACK_ADDRESS;
         }
 
         /// <summary>
@@ -51,7 +51,6 @@ namespace Assembler.OutputProcessing
 
         public void InitRuntimeData()
         {
-
         }
 
         /// <summary>
@@ -409,6 +408,8 @@ namespace Assembler.OutputProcessing
         }
 
         private readonly byte[] m_ByteArray;
+
+        private byte[] m_StackBytes;
         private readonly IEnumerable<MetadataElement> m_Metadata;
         private readonly int m_RuntimeDataSegmentOffset;
         private readonly int m_StackStartAddress;

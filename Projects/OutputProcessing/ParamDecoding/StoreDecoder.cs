@@ -11,11 +11,12 @@ namespace Assembler.OutputProcessing.ParamDecoding
         public IEnumerable<int> DecodeParameters(int instruction)
         {
             var paramList = new List<int>();
-            int rs1 = (instruction & 0xF8000) >> 15;
-            paramList.Add(rs1);
 
             int rs2 = (instruction & 0x1F00000) >> 20;
             paramList.Add(rs2);
+
+            int rs1 = (instruction & 0xF8000) >> 15;
+            paramList.Add(rs1);
 
             int offset = 0;
 

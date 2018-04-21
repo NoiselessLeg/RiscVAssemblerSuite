@@ -15,5 +15,8 @@ namespace Assembler.Common
         public const int BASE_INSTRUCTION_SIZE_BYTES = 0x04;
         public const int DEFAULT_ALIGNMENT = 0x04;
         public const int DEFAULT_STACK_ADDRESS = 0x7fffeffc;
+
+        // 4MiB
+        public const int MAX_SEGMENT_SIZE = 4194304;
     }
 }
