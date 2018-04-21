@@ -48,6 +48,8 @@ namespace Assembler.Interpreter
                 var disassembler = new JefFileProcessor();
                 DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
 
+                var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
+
                 m_Registers[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
 
                 int programCtr = m_Registers[InterpreterCommon.PC_REGISTER].Value;
@@ -59,7 +61,7 @@ namespace Assembler.Interpreter
 
                     // if this returns false, then increment the program counter by 4. otherwise, this indicates
                     // that the instruction needed to change the PC.
-                    if (!interpreter.InterpretInstruction(instruction.Parameters.ToArray(), m_Registers, file.DataSegment))
+                    if (!interpreter.InterpretInstruction(instruction.Parameters.ToArray(), m_Registers, dataSegment))
                     {
                         m_Registers[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
                     }

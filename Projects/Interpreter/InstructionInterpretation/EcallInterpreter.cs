@@ -15,7 +15,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             m_Terminal = terminal;
         }
 
-        public bool InterpretInstruction(int[] argList, Register[] registers, DataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
         {
             // correlates to register a0.
             // arguments SHALL be a1-a7.

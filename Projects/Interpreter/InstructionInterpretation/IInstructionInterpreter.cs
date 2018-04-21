@@ -21,6 +21,6 @@ namespace Assembler.Interpreter.InstructionInterpretation
         /// <param name="dataSegment">An accessor to the program .data segment.</param>
         /// <returns>True if the program counter value is modified in this register and should not be modified otherwise,
         /// false otherwise.</returns>
-        bool InterpretInstruction(int[] argList, Register[] registers, DataSegmentAccessor dataSegment);
+        bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment);
     }
 }

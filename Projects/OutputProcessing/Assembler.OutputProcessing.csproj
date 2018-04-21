@@ -83,6 +83,7 @@
     <Compile Include="ReverseSymbolTable.cs" />
     <Compile Include="TextSegmentAccessor.cs" />
     <Compile Include="TextSegmentParser.cs" />
+    <Compile Include="Utils\DataSegmentCommon.cs" />
     <Compile Include="Utils\EndianReader.cs" />
   </ItemGroup>
   <ItemGroup>
