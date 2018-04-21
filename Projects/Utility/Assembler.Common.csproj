@@ -74,7 +74,7 @@
     <Compile Include="DisassembledInstruction.cs" />
     <Compile Include="DisassemblerOptions.cs" />
     <Compile Include="Endianness.cs" />
-    <Compile Include="InstructionType.cs" />
+    <Compile Include="ITerminal.cs" />
     <Compile Include="LoggerBase.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="MetadataElement.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Assembler.Disassembler
 {
     /// <summary>
-    /// Defines the mapping between a register name and the numeric CPU value.
+    /// Defines the mapping between a numeric register value and its canonical name.
     /// </summary>
     static class ReverseRegisterMap
     {
@@ -52,7 +52,7 @@ namespace Assembler.Disassembler
 
         /// <summary>
         /// Returns the canonical name of a register used by the CPU.
-        /// Throws an ArgumentException if the register is not valid.
+        /// Throws an ArgumentException if the register is out of range.
         /// </summary>
         /// <param name="register">The numeric value of the register to look up.</param>
         /// <returns>The canonical name of the register to be used by the CPU.</returns>

@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="InstructionType.cs" />
     <Compile Include="ParamDecoding\BranchDecoder.cs" />
     <Compile Include="ParamDecoding\EcallDecoder.cs" />
     <Compile Include="ParamDecoding\ImmediateInstructionDecoder.cs" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Common
+namespace Assembler.OutputProcessing
 {
     /// <summary>
     /// Provides a simulated interface for accessing instructions at a specified address.
@@ -20,6 +20,18 @@ namespace Assembler.Common
         {
             m_Instructions = instructions.ToArray();
             m_StartingSegmentAddress = startingSegmentAddress;
+            m_SegmentSize = instructions.Count() * sizeof(int);
+        }
+
+        /// <summary>
+        /// Determines if the program counter has exceeded the size of the .text segment.
+        /// In effect, this indicates the program has dropped off the bottom.
+        /// </summary>
+        /// <param name="programCounter">The current 32-bit program counter value.</param>
+        /// <returns>True if the end of the .text segment is reached according to the program counter; false otherwise.</returns>
+        public bool EndOfFileReached(int programCounter)
+        {
+            return ((programCounter - m_StartingSegmentAddress) / sizeof(int)) > m_SegmentSize;
         }
         
         /// <summary>
@@ -45,11 +57,12 @@ namespace Assembler.Common
         /// <returns>An instruction located at the provided address in the .text segment.</returns>
         public DisassembledInstruction FetchInstruction(int programCounter)
         {
-            int instructionIdx = programCounter - m_StartingSegmentAddress;
+            int instructionIdx = (programCounter - m_StartingSegmentAddress) / sizeof(int);
             return m_Instructions[instructionIdx];
         }
         
         private readonly DisassembledInstruction[] m_Instructions;
         private readonly int m_StartingSegmentAddress;
+        private readonly int m_SegmentSize;
     }
 }

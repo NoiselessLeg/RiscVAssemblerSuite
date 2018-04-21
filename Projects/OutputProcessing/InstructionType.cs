@@ -1,4 +1,4 @@
-﻿namespace Assembler.Common
+﻿namespace Assembler.OutputProcessing
 {
     /// <summary>
     /// An enumeration describing the various instruction types.

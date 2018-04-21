@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleTerminal.cs" />
     <Compile Include="LoggerTypes\ConsoleLogger.cs" />
     <Compile Include="LoggerTypes\FileLogger.cs" />
     <Compile Include="LoggerTypes\HybridLogger.cs" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Common
+namespace Assembler.OutputProcessing
 {
     /// <summary>
     /// Represents a class that allows for the opposite operations as that of the SymbolTable,

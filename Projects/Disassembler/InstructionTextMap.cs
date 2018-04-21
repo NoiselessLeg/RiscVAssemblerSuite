@@ -1,5 +1,5 @@
-﻿using Assembler.Common;
-using Assembler.Disassembler.InstructionGenerators;
+﻿using Assembler.Disassembler.InstructionGenerators;
+using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Assembler.Disassembler
 {
     /// <summary>
-    /// Defines the mapping between a register name and the numeric CPU value.
+    /// Defines the mapping between an instruction type and the stringifier implementation of it.
     /// </summary>
     static class InstructionTextMap
     {
@@ -59,11 +59,11 @@ namespace Assembler.Disassembler
         }
 
         /// <summary>
-        /// Returns the canonical name of a register used by the CPU.
-        /// Throws an ArgumentException if the register is not valid.
+        /// Gets a stringifier implementation mapped to an instruction type. Throws
+        /// an ArgumentException if the instruction type is not recognized.
         /// </summary>
-        /// <param name="register">The numeric value of the register to look up.</param>
-        /// <returns>The canonical name of the register to be used by the CPU.</returns>
+        /// <param name="instructionName">The instruction type to find a stringifier for.</param>
+        /// <returns>The stringifier implementation to use.</returns>
         public static IParameterStringifier GetParameterStringifier(InstructionType instructionName)
         {
             IParameterStringifier stringifier = default(IParameterStringifier);

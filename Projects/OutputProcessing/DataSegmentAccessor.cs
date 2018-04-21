@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Common
+namespace Assembler.OutputProcessing
 {
     /// <summary>
     /// Class that controls access to a program's data segment.
@@ -22,6 +22,7 @@ namespace Assembler.Common
             m_ByteArray = data.ToArray();
             m_Metadata = metadata;
             m_RuntimeDataSegmentOffset = runtimeDataSegmentStart;
+
         }
 
         /// <summary>
@@ -48,12 +49,28 @@ namespace Assembler.Common
             get { return m_RuntimeDataSegmentOffset; }
         }
 
+        public void InitRuntimeData()
+        {
+
+        }
+
         /// <summary>
         /// Reads a byte from the data segment.
         /// </summary>
         /// <param name="address">The address in the .data segment to retrieve the byte from.</param>
         /// <returns>The byte stored at the provided address.</returns>
-        public byte ReadByte(int address)
+        public sbyte ReadSignedByte(int address)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            return (sbyte)m_ByteArray[idx];
+        }
+
+        /// <summary>
+        /// Reads an unsigned byte from the data segment.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to retrieve the byte from.</param>
+        /// <returns>The byte stored at the provided address.</returns>
+        public byte ReadUnsignedByte(int address)
         {
             int idx = address - m_RuntimeDataSegmentOffset;
             return m_ByteArray[idx];
@@ -146,8 +163,129 @@ namespace Assembler.Common
             return Encoding.ASCII.GetString(m_ByteArray, idx, strSize);
         }
 
+        /// <summary>
+        /// Writes a signed byte into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteSignedByte(int address, sbyte value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            m_ByteArray[idx] = (byte)value;
+        }
+
+        /// <summary>
+        /// Writes an unsigned byte into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteUnsignedByte(int address, byte value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            m_ByteArray[idx] = value;
+        }
+
+        /// <summary>
+        /// Writes a 16-bit signed integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteShort(int address, short value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] shortBytes = BitConverter.GetBytes(value);
+            CopyBytes(shortBytes, idx);
+        }
+
+        /// <summary>
+        /// Writes a 16-bit unsigned integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteUnsignedShort(int address, ushort value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] shortBytes = BitConverter.GetBytes(value);
+            CopyBytes(shortBytes, idx);
+        }
+
+        /// <summary>
+        /// Writes a 32-bit signed integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteWord(int address, int value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] wordBytes = BitConverter.GetBytes(value);
+            CopyBytes(wordBytes, idx);
+        }
+
+        /// <summary>
+        /// Writes a 32-bit unsigned integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteUnsignedWord(int address, uint value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] wordBytes = BitConverter.GetBytes(value);
+            CopyBytes(wordBytes, idx);
+        }
+
+        /// <summary>
+        /// Writes a 64-bit signed integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteLong(int address, long value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] longBytes = BitConverter.GetBytes(value);
+            CopyBytes(longBytes, idx);
+        }
+
+        /// <summary>
+        /// Writes a 64-bit unsigned integer into the specified .data segment offset.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteUnsignedLong(int address, ulong value)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] longBytes = BitConverter.GetBytes(value);
+            CopyBytes(longBytes, idx);
+        }
+
+        /// <summary>
+        /// Reads a null-terminated ASCII string from the .data segment.
+        /// </summary>
+        /// <param name="address">The address in the .data segment to write to.</param>
+        /// <param name="value">The value to write to the address.</param>
+        public void WriteString(int address, string str)
+        {
+            int idx = address - m_RuntimeDataSegmentOffset;
+            byte[] strBytes = Encoding.ASCII.GetBytes(str);
+            CopyBytes(strBytes, idx);
+        }
+        
+        /// <summary>
+        /// Copies a byte array into the main .data segment.
+        /// </summary>
+        /// <param name="bytes">The bytes to be copied into the data array.</param>
+        /// <param name="offset">Where in the main .data segment the bytes shall be copied to.</param>
+        private void CopyBytes(byte[] bytes, int offset)
+        {
+            for (int i = offset; i < bytes.Length; ++i)
+            {
+                m_ByteArray[i] = bytes[i - offset];
+            }
+        }
+
         private readonly byte[] m_ByteArray;
         private readonly IEnumerable<MetadataElement> m_Metadata;
         private readonly int m_RuntimeDataSegmentOffset;
+        private readonly int m_StackStartAddress;
+        private readonly int m_HeapStartAddress;
     }
 }

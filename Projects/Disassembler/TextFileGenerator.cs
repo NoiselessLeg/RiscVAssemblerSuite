@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.Disassembler.InstructionGenerators;
+using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,7 +57,7 @@ namespace Assembler.Disassembler
                     case ObjectTypeCode.Byte:
                     {
                         writer.Write(".byte ");
-                        byte value = dataSegment.ReadByte(currAddress);
+                        byte value = dataSegment.ReadUnsignedByte(currAddress);
                         writer.WriteLine(value);
                         break;
                     }
