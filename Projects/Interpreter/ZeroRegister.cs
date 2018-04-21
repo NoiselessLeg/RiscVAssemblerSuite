@@ -19,7 +19,7 @@ namespace Assembler.Interpreter
         }
 
         /// <summary>
-        /// Force the value to always be zero in the zero register.
+        /// Forces the value to always be zero in the zero register.
         /// </summary>
         public override int Value
         {

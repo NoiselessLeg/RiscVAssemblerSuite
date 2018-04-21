@@ -37,11 +37,6 @@ namespace Assembler.Common
         string ReadString();
 
         /// <summary>
-        /// Terminates the application
-        /// </summary>
-        void Terminate();
-
-        /// <summary>
         /// Prints a character to the terminal.
         /// </summary>
         /// <param name="c">The character to print.</param>

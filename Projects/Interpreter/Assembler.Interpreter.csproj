@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileInterpreter.cs" />
+    <Compile Include="IExecutionEnvironment.cs" />
     <Compile Include="InstructionInterpretation\AddiInterpreter.cs" />
     <Compile Include="InstructionInterpretation\AddInterpreter.cs" />
     <Compile Include="InstructionInterpretation\AndiInterpreter.cs" />

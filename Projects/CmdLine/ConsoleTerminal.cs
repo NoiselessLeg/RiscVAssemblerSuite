@@ -41,10 +41,5 @@ namespace Assembler.CmdLine
         {
             return Console.ReadLine();
         }
-
-        public void Terminate()
-        {
-            Environment.Exit(0);
-        }
     }
 }

@@ -49,9 +49,6 @@ namespace Assembler.Disassembler.InstructionGenerators
 
             int offset = inst.Parameters.ElementAt(2);
 
-            // the offset was halved while encoding, so undo that here.
-            offset *= 2;
-
             int address = currPgrmCtr + offset;
             // see if there's a symbol mapped to it.
             if (symTable.ContainsSymbol(address))

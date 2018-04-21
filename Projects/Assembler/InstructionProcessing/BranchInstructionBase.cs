@@ -41,7 +41,7 @@ namespace Assembler.InstructionProcessing
 
             // find the difference between the jump-to address and the theoretical next address.
             // note that the processor internally doubles this value, so we halve it here.
-            int offset = (symbolLabel.Address - address) / 2;
+            int offset = (symbolLabel.Address - address);
             
             // if the offset is greater than the 12 bit immediate,
             // throw an error so that bad code isn't silently generated.

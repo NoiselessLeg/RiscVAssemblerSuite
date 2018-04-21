@@ -29,7 +29,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int nextAddress = registers[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
             registers[rdIdx].Value = nextAddress;
 
-            registers[InterpreterCommon.PC_REGISTER].Value += offset;
+            registers[InterpreterCommon.PC_REGISTER].Value = targetAddress;
 
             return true;
         }

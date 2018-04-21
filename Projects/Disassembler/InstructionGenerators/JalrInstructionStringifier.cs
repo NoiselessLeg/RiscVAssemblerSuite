@@ -47,19 +47,7 @@ namespace Assembler.Disassembler.InstructionGenerators
             retStr += rd + ", " + rs1 + ", ";
 
             int offset = inst.Parameters.ElementAt(2);
-
-            int address = currPgrmCtr + offset;
-            // see if there's a symbol mapped to it.
-            if (symTable.ContainsSymbol(address))
-            {
-                string symName = symTable.GetLabel(address);
-                retStr += symName;
-            }
-            else
-            {
-                retStr += "0x" + address.ToString("X2");
-            }
-
+            retStr += "0x" + offset.ToString("X6");
             return retStr;
         }
 

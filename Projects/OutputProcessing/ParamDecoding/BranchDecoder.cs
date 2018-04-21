@@ -20,7 +20,7 @@ namespace Assembler.OutputProcessing.ParamDecoding
             int offset = 0;
 
             // get the 12th bit offset of this immediate and shift it to the correct position
-            offset |= ((int)(instruction & 0x80000000)) >> 20;
+            offset |= ((int)(instruction & 0x80000000)) >> 22;
 
             // get the 11th bit offset of this immediate and shift it to the correct position.
             offset |= ((instruction & 0x80) << 3);

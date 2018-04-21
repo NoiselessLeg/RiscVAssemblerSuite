@@ -12,7 +12,7 @@ namespace Assembler.Interpreter
     /// <summary>
     /// Class that runs and interprets a .JEF RISC-V output file.
     /// </summary>
-    public class FileInterpreter
+    public class FileInterpreter : IExecutionEnvironment
     {
         /// <summary>
         /// Creates an instance of the file interpreter.
@@ -20,7 +20,7 @@ namespace Assembler.Interpreter
         /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
         public FileInterpreter(ITerminal terminal)
         {
-            m_InterpreterFac = new InterpreterFactory(terminal);
+            m_InterpreterFac = new InterpreterFactory(this, terminal);
 
             m_Registers = new Register[InterpreterCommon.MAX_REGISTERS];
             for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
@@ -51,10 +51,11 @@ namespace Assembler.Interpreter
                 var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
 
                 m_Registers[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
+                m_Registers[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
 
                 int programCtr = m_Registers[InterpreterCommon.PC_REGISTER].Value;
 
-                while (!file.TextSegment.EndOfFileReached(m_Registers[InterpreterCommon.PC_REGISTER].Value))
+                while (!file.TextSegment.EndOfFileReached(m_Registers[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
                 {
                     DisassembledInstruction instruction = file.TextSegment.FetchInstruction(m_Registers[InterpreterCommon.PC_REGISTER].Value);
                     IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
@@ -75,7 +76,13 @@ namespace Assembler.Interpreter
             }
         }
 
+        public void Terminate()
+        {
+            m_TerminationRequested = true;
+        }
+
         private readonly Register[] m_Registers;
         private readonly InterpreterFactory m_InterpreterFac;
+        private bool m_TerminationRequested;
     }
 }

@@ -10,9 +10,10 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class EcallInterpreter : IInstructionInterpreter
     {
-        public EcallInterpreter(ITerminal terminal)
+        public EcallInterpreter(IExecutionEnvironment env, ITerminal terminal)
         {
             m_Terminal = terminal;
+            m_Environment = env;
         }
 
         public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
@@ -61,17 +62,21 @@ namespace Assembler.Interpreter.InstructionInterpretation
 
                 case READ_STR_CODE:
                 {
-                    throw new NotImplementedException("Read string system call not yet implemented.");
+                    string str = m_Terminal.ReadString();
+                    dataSegment.WriteString(registers[ARG1_IDX].Value, str);
+                    break;
                 }
 
                 case ALLOC_MEM_CODE:
                 {
-                    throw new NotImplementedException("Sbrk system call not yet implemented.");
+                    int newAddress = dataSegment.Sbrk(registers[ARG1_IDX].Value);
+                    registers[SYSCALL_IDX].Value = newAddress;
+                    break;
                 }
 
                 case TERMINATE_CODE:
                 {
-                    m_Terminal.Terminate();
+                    m_Environment.Terminate();
                     break;
                 }
 
@@ -93,6 +98,8 @@ namespace Assembler.Interpreter.InstructionInterpretation
         }
 
         private readonly ITerminal m_Terminal;
+        private readonly IExecutionEnvironment m_Environment;
+
         private const int PRINT_INT_CODE = 1;
         private const int PRINT_STR_CODE = 4;
         private const int READ_INT_CODE = 5;

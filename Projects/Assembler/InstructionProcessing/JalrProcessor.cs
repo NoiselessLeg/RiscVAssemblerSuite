@@ -26,22 +26,37 @@ namespace Assembler.InstructionProcessing
 
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
-            short immVal = 0;
+            int immVal = 0;
             bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
 
-            isValidImmediate = isValidImmediate && ((immVal & 0xF000) == 0);
+            if (isValidImmediate)
+            {
+                var instructionList = new List<int>();
 
-            var instructionList = new List<int>();
+                // if the immediate is greater than 12 bits, use
+                // an auipc instruction.
+                if ((int)(immVal & 0xFFFFF000) != 0)
+                {
+                    var auipcHelper = new AuipcProcessor();
+                    IEnumerable<int> auipcInstructions =
+                        auipcHelper.GenerateCodeForInstruction(address, new string[] { args[1], (immVal >> 12).ToString() });
+                    instructionList.AddRange(auipcInstructions);
+                }
+                
+                int instruction = 0;
+                instruction |= (immVal << 20);
+                instruction |= (rs1Reg << 15);
+                instruction |= (rdReg << 7);
+                instruction |= 0x67;
+                instructionList.Add(instruction);
 
-            immVal &= 0xFFF;
-            int instruction = 0;
-            instruction |= (immVal << 20);
-            instruction |= (rs1Reg << 15);
-            instruction |= (rdReg << 7);
-            instruction |= 0x67;
-            instructionList.Add(instruction);
-
-            return instructionList;
+                return instructionList;
+            }
+            else
+            {
+                throw new ArgumentException("Immediate was not a valid 32-bit integer.");
+            }
+            
         }
     }
 }
