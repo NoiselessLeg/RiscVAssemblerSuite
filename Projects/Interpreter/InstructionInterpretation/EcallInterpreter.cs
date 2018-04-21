@@ -19,15 +19,16 @@ namespace Assembler.Interpreter.InstructionInterpretation
         {
             // correlates to register a0.
             // arguments SHALL be a1-a7.
-            const int SYSCALL_IDX = 12;
+            const int SYSCALL_IDX = 10;
             const int ARG1_IDX = 11;
 
 #if SYSCALL_AGS
-            const int ARG2_IDX = 13;
-            const int ARG3_IDX = 14;
-            const int ARG4_IDX = 15;
-            const int ARG5_IDX = 16;
-            const int ARG6_IDX = 17;
+            const int ARG2_IDX = 12;
+            const int ARG3_IDX = 13;
+            const int ARG4_IDX = 14;
+            const int ARG5_IDX = 15;
+            const int ARG6_IDX = 16;
+            const int ARG7_IDX = 17;
 #endif
 
 

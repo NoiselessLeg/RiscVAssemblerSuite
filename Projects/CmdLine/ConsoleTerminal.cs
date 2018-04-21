@@ -10,16 +10,6 @@ namespace Assembler.CmdLine
 {
     class ConsoleTerminal : ITerminal
     {
-        public ConsoleTerminal(IRuntimeEnvironment parentEnvironment)
-        {
-            m_Environment = parentEnvironment;
-        }
-
-        public byte[] AllocMemory()
-        {
-            return m_Environment.AllocMemory();
-        }
-
         public void PrintChar(char c)
         {
             Console.Write(c);
@@ -54,9 +44,7 @@ namespace Assembler.CmdLine
 
         public void Terminate()
         {
-            m_Environment.Terminate();
+            Environment.Exit(0);
         }
-
-        private readonly IRuntimeEnvironment m_Environment;
     }
 }

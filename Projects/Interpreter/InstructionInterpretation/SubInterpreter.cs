@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter.InstructionInterpretation
 {
-    class SubProcessor : IInstructionInterpreter
+    class SubInterpreter : IInstructionInterpreter
     {
         public bool InterpretInstruction(int[] argList, Register[] registers, DataSegmentAccessor dataSegment)
         {

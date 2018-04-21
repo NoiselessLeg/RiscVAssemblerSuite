@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{795BAC7E-64ED-4685-81BE-3032DCC461D7}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Assembler.Interpreter</RootNamespace>
     <AssemblyName>Assembler.Interpreter</AssemblyName>
@@ -40,7 +40,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Assembly Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +50,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,12 +66,63 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRuntimeEnvironment.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="FileInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\AddiInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\AddInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\AndiInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\AndInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\AuipcInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BeqInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BgeInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BgeuInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BltInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BltuInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\BneInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\EcallInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\IInstructionInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\InterpreterFactory.cs" />
+    <Compile Include="InstructionInterpretation\JalInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\JalrInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LbInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LbuInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LhInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LhuInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LuiInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\LwInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\OriInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\OrInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SbInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\ShInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SlliInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SllInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SltiInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SltInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SltuInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SraiInterpreter..cs" />
+    <Compile Include="InstructionInterpretation\SraInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SrliInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SrlInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SubInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\SwInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\XoriInterpreter.cs" />
+    <Compile Include="InstructionInterpretation\XorInterpreter.cs" />
+    <Compile Include="InterpreterCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register.cs" />
+    <Compile Include="ZeroRegister.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OutputProcessing\Assembler.OutputProcessing.csproj">
+      <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
+      <Name>Assembler.OutputProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Assembler.Common.csproj">
+      <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>
+      <Name>Assembler.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

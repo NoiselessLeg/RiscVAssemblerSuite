@@ -24,7 +24,7 @@ namespace Assembler
         /// </summary>
         /// <param name="inputFileNames">One or more file paths to assembly files.</param>
         /// <param name="logger">A logging implementation to log errors to.</param>
-        public void Assemble(AssemblerOptions options, ILogger logger)
+        public bool Assemble(AssemblerOptions options, ILogger logger)
         {
             var stopwatch = new Stopwatch();
 
@@ -40,16 +40,19 @@ namespace Assembler
             // wait for all of our assembler tasks to join.
             Task.WaitAll(tasks.ToArray());
             stopwatch.Stop();
-            
+
+            bool ret = false;
             if (tasks.Any(t => !t.Result))
             {
                 logger.Log(LogLevel.Info, "Build completed (with errors) in " + stopwatch.Elapsed.ToString());
             }
             else
             {
+                ret = true;
                 logger.Log(LogLevel.Info, "Build completed in " + stopwatch.Elapsed.ToString());
             }
 
+            return ret;
         }
 
         /// <summary>

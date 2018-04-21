@@ -18,8 +18,8 @@ namespace Assembler.Interpreter.InstructionInterpretation
 
             int rdIdx = argList[0];
             int immediate = (argList[1] << 12);
-
-            registers[rdIdx].Value = (registers[rdIdx].Value & immediate);
+            registers[rdIdx].Value = 0;
+            registers[rdIdx].Value = (registers[rdIdx].Value | immediate);
 
             return false;
         }

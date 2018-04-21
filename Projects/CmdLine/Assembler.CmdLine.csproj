@@ -89,6 +89,10 @@
       <Project>{ee846cec-7720-4c0d-af2a-283870ae8bec}</Project>
       <Name>Assembler.Disassembler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interpreter\Assembler.Interpreter.csproj">
+      <Project>{795bac7e-64ed-4685-81be-3032dcc461d7}</Project>
+      <Name>Assembler.Interpreter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>
       <Name>Assembler.Common</Name>

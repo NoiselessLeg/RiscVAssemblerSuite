@@ -31,7 +31,7 @@ namespace Assembler.OutputProcessing
         /// <returns>True if the end of the .text segment is reached according to the program counter; false otherwise.</returns>
         public bool EndOfFileReached(int programCounter)
         {
-            return ((programCounter - m_StartingSegmentAddress) / sizeof(int)) > m_SegmentSize;
+            return (programCounter - m_StartingSegmentAddress) >= m_SegmentSize;
         }
         
         /// <summary>

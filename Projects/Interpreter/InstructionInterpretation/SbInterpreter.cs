@@ -22,7 +22,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 
             int address = registers[rs1Idx].Value + offset;
 
-            dataSegment.WriteSignedByte(address, (sbyte)registers[rs2Idx].Value);
+            dataSegment.WriteSignedByte(address, (sbyte)(registers[rs2Idx].Value & 0xFF));
 
             return false;
         }

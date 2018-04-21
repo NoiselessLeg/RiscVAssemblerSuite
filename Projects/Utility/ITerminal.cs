@@ -27,12 +27,30 @@ namespace Assembler.Common
         /// <summary>
         /// Reads an integer provided by the user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The 32-bit integer that was read from the terminal.</returns>
         int ReadInt();
+
+        /// <summary>
+        /// Reads a string from the terminal.
+        /// </summary>
+        /// <returns>The string read from the terminal.</returns>
         string ReadString();
-        byte[] AllocMemory();
+
+        /// <summary>
+        /// Terminates the application
+        /// </summary>
         void Terminate();
+
+        /// <summary>
+        /// Prints a character to the terminal.
+        /// </summary>
+        /// <param name="c">The character to print.</param>
         void PrintChar(char c);
+
+        /// <summary>
+        /// Reads a character from the terminal.
+        /// </summary>
+        /// <returns>The character that was read.</returns>
         char ReadChar();
     }
 }

@@ -14,11 +14,14 @@ namespace Assembler.Common
         /// </summary>
         /// <param name="inputFileNames">The list of input file names to be assembled.</param>
         /// <param name="logFile">The name of the log file, if any, to output to.</param>
+        /// <param name="runAfterAssembly">If true, the interpreter will execute the assembled file after code is generated.</param>
         public AssemblerOptions(IEnumerable<string> inputFileNames,
-                                string logFile = "")
+                                string logFile = "",
+                                bool runAfterAssembly = false)
         {
             m_InputFileNames = inputFileNames;
             m_LogFile = logFile;
+            m_RunAfterAssembly = runAfterAssembly;
         }
 
         /// <summary>
@@ -36,7 +39,14 @@ namespace Assembler.Common
             get { return m_LogFile; }
         }
 
+        [Option('r', "run-after", Default=false, Required = false, HelpText = "Run this file after successful assembly.")]
+        public bool RunAfterAssembly
+        {
+            get { return m_RunAfterAssembly; }
+        }
+
         private readonly IEnumerable<string> m_InputFileNames;
         private readonly string m_LogFile;
+        private readonly bool m_RunAfterAssembly;
     }
 }

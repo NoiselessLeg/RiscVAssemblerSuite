@@ -59,8 +59,6 @@ namespace Assembler.InstructionProcessing
             }
 #else
             Symbol symbolLabel = SymbolTable.GetSymbol(args[1]);
-                targetAddress
-            }
             var instructionList = new List<int>();
 
             // the offset is doubled implicitly by the processor, so halve it here.

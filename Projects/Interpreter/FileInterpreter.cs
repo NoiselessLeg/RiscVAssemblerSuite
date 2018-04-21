@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Interpreter.InstructionInterpretation;
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,19 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
+    /// <summary>
+    /// Class that runs and interprets a .JEF RISC-V output file.
+    /// </summary>
     public class FileInterpreter
     {
-        public FileInterpreter()
+        /// <summary>
+        /// Creates an instance of the file interpreter.
+        /// </summary>
+        /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
+        public FileInterpreter(ITerminal terminal)
         {
+            m_InterpreterFac = new InterpreterFactory(terminal);
+
             m_Registers = new Register[InterpreterCommon.MAX_REGISTERS];
             for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
             {
@@ -26,21 +36,44 @@ namespace Assembler.Interpreter
             }
         }
 
-        public void RunJefFile(string fileName, ILogger logger, ITerminal terminal)
+        /// <summary>
+        /// Diassembles and interprets a .JEF file.
+        /// </summary>
+        /// <param name="fileName">The file name to run the interpreter with.</param>
+        /// <param name="logger">A logging implementation to use to disassemble the file.</param>
+        public void RunJefFile(string fileName, ILogger logger)
         {
-            var disassembler = new JefFileProcessor();
-            DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
-
-            m_Registers[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
-
-            int programCtr = m_Registers[InterpreterCommon.PC_REGISTER].Value;
-
-            while (!file.TextSegment.EndOfFileReached(m_Registers[InterpreterCommon.PC_REGISTER].Value))
+            try
             {
+                var disassembler = new JefFileProcessor();
+                DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
 
+                m_Registers[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
+
+                int programCtr = m_Registers[InterpreterCommon.PC_REGISTER].Value;
+
+                while (!file.TextSegment.EndOfFileReached(m_Registers[InterpreterCommon.PC_REGISTER].Value))
+                {
+                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(m_Registers[InterpreterCommon.PC_REGISTER].Value);
+                    IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
+
+                    // if this returns false, then increment the program counter by 4. otherwise, this indicates
+                    // that the instruction needed to change the PC.
+                    if (!interpreter.InterpretInstruction(instruction.Parameters.ToArray(), m_Registers, file.DataSegment))
+                    {
+                        m_Registers[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
+                    }
+                }
+
+                logger.Log(LogLevel.Info, "Execution complete.");
+            }
+            catch (Exception ex)
+            {
+                logger.Log(LogLevel.Critical, "Runtime exception occurred: " + ex.Message);
             }
         }
 
         private readonly Register[] m_Registers;
+        private readonly InterpreterFactory m_InterpreterFac;
     }
 }

@@ -23,6 +23,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             registers[rdIdx].Value = nextAddress;
 
             registers[InterpreterCommon.PC_REGISTER].Value += offset;
+
             return true;
         }
     }

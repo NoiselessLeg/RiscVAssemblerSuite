@@ -13,7 +13,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
         {
             if (argList.Length != 3)
             {
-                throw new InvalidOperationException("Malformed SRLI instruction - expected three parameters; received " + argList.Length);
+                throw new InvalidOperationException("Malformed SRL instruction - expected three parameters; received " + argList.Length);
             }
 
             int rdIdx = argList[0];
