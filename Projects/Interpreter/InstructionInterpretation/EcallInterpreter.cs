@@ -19,7 +19,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             // get all of the system calls in the assembly.
             m_SystemCalls = new Dictionary<int, ISystemCall>();
             var sysCallType = typeof(ISystemCall);
-            var availableCalls = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => sysCallType.IsAssignableFrom(p) && p.IsClass);
+            var availableCalls = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => sysCallType.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
 
             foreach (Type callType in availableCalls)
             {

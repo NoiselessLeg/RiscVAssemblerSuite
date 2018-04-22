@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.Common
 {
-    [Verb("disassemble", HelpText = "Diassembles a .JEF file into source assembly.", Hidden = false)]
+    [Verb("disassemble", HelpText = "Diassembles a .JEF file into source assembly.")]
     public class DisassemblerOptions
     {
         /// <summary>

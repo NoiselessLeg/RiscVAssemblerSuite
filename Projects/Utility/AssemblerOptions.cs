@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Assembler.Common
 {
-    [Verb("assemble", HelpText = "Assembles a series of files.", Hidden = false)]
+    [Verb("assemble", HelpText = "Assembles a series of files.")]
     public class AssemblerOptions
     {
 

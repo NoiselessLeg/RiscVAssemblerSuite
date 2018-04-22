@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.Common
 {
-    [Verb("run", HelpText = "Runs a .JEF file.", Hidden = false)]
+    [Verb("run", HelpText = "Runs a .JEF file.")]
     public class InterpreterOptions
     {
         /// <summary>
