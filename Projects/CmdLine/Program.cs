@@ -94,10 +94,5 @@ namespace Assembler.CmdLine
             interpreter.RunJefFile(options.InputFileName, logger);
             return 0;
         }
-
-        private static int HandleErrors()
-        {
-            return -1;
-        }
     }
 }

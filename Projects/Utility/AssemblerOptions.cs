@@ -33,12 +33,19 @@ namespace Assembler.Common
             get { return m_InputFileNames; }
         }
 
+
+        /// <summary>
+        /// The log file that any log data will be written out to.
+        /// </summary>
         [Option('l', "logfile", Required = false, HelpText = "Log file to output to (optional).")]
         public string LogFile
         {
             get { return m_LogFile; }
         }
 
+        /// <summary>
+        /// Gets a boolean value representing if the file will be executed by the runtime after assembly.
+        /// </summary>
         [Option('r', "run-after", Default=false, Required = false, HelpText = "Run this file after successful assembly.")]
         public bool RunAfterAssembly
         {
