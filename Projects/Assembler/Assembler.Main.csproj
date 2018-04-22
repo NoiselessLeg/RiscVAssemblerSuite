@@ -89,6 +89,7 @@
     <Compile Include="InstructionProcessing\LoadInstructionBase.cs" />
     <Compile Include="InstructionProcessing\LwProcessor.cs" />
     <Compile Include="InstructionProcessing\MvProcessor.cs" />
+    <Compile Include="InstructionProcessing\NotProcessor.cs" />
     <Compile Include="InstructionProcessing\PlaceholderProcessor.cs" />
     <Compile Include="CodeGeneration\ISegmentCodeGenerator.cs" />
     <Compile Include="InstructionProcessing\SbProcessor.cs" />
