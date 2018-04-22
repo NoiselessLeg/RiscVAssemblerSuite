@@ -27,14 +27,14 @@ namespace Assembler.InstructionProcessing
             IEnumerable<int> returnVal = null;
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
-            byte shiftAmt = 0;
-            bool isValidImmediate = byte.TryParse(args[2], out shiftAmt);
+            int shiftAmt = 0;
+            bool isValidImmediate = IntExtensions.TryParseEx(args[2], out shiftAmt);
 
             // ensure our shift amount is 5 bits or less.
-            isValidImmediate = isValidImmediate && (shiftAmt <= 0x1F);
+            isValidImmediate = isValidImmediate && ((shiftAmt & 0xFFFFFFE0) == 0);
+            var instructionList = new List<int>();
             if (isValidImmediate)
             {
-                var instructionList = new List<int>();
                 int instruction = 0;
                 instruction |= (shiftAmt << 20);
                 instruction |= (rs1Reg << 15);
@@ -46,7 +46,17 @@ namespace Assembler.InstructionProcessing
             }
             else
             {
-                throw new ArgumentException("Value \"" + args[2] + "\" is greater than allowed 5-bit value.");
+                // otherwise, emit three instructions. load the upper 20 bits of the immediate into the destination register,
+                // bitwise-or it with the remaining 12 bits, and then shift the target register by the destination register.
+                var luiProc = new LuiProcessor();
+                instructionList.AddRange(luiProc.GenerateCodeForInstruction(address, new string[] { args[0], (shiftAmt >> 12).ToString() }));
+
+                int orImmVal = shiftAmt & 0xFFF;
+                var oriProc = new OriProcessor();
+                instructionList.AddRange(oriProc.GenerateCodeForInstruction(address, new string[] { args[0], orImmVal.ToString() }));
+
+                var srlProc = new SrlProcessor();
+                instructionList.AddRange(srlProc.GenerateCodeForInstruction(address, new string[] { args[0], args[1], args[0] }));
             }
 
             return returnVal;

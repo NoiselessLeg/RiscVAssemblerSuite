@@ -28,27 +28,33 @@ namespace Assembler.InstructionProcessing
             int rdReg = RegisterMap.GetNumericRegisterValue(args[0]);
             int rs1Reg = RegisterMap.GetNumericRegisterValue(args[1]);
 
-            short immVal = 0;
+            uint immVal = 0;
             bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
-            isValidImmediate = isValidImmediate && ((immVal & 0xF000) == 0);
+            isValidImmediate = isValidImmediate && ((immVal & 0xFFFFF000) == 0);
+
+            var instructionList = new List<int>();
 
             if (isValidImmediate)
             {
-                var instructionList = default(List<int>);
-
-                // if greater than 0x7FF (2047) or less than 0xFFF, then help the user by trying to expand out the instruction
-                // so that it effectively does the same thing.
-                // TODO: do we need to use another mask for negative numbers?
-                instructionList = new List<int>();
                 int instruction = GenerateUnexpandedInstruction(immVal, rs1Reg, rdReg);
                 instructionList.Add(instruction);
-
-                return instructionList;
             }
             else
             {
-                throw new ArgumentException(args[2] + " is not a valid 12-bit immediate value.");
+                // otherwise, emit three instructions. load the upper 20 bits of the immediate into the destination register,
+                // bitwise-or it with the remaining 12 bits, and then use sltu (the s-type).
+                var luiProc = new LuiProcessor();
+                instructionList.AddRange(luiProc.GenerateCodeForInstruction(address, new string[] { args[0], (immVal >> 12).ToString() }));
+
+                uint orImmVal = immVal & 0xFFF;
+                var oriProc = new OriProcessor();
+                instructionList.AddRange(oriProc.GenerateCodeForInstruction(address, new string[] { args[0], orImmVal.ToString() }));
+
+                var sltuProc = new SltuProcessor();
+                instructionList.AddRange(sltuProc.GenerateCodeForInstruction(address, new string[] { args[0], args[1], args[0] }));
             }
+
+            return instructionList;
         }
 
         /// <summary>
@@ -59,12 +65,12 @@ namespace Assembler.InstructionProcessing
         /// <param name="rs1Reg">The numeric rs register.</param>
         /// <param name="rdReg">The rd register.</param>
         /// <returns>A 32 bit RISC-V assembly instruction for the addi operation.</returns>
-        private int GenerateUnexpandedInstruction(int immediate, int rs1Reg, int rdReg)
+        private int GenerateUnexpandedInstruction(uint immediate, int rs1Reg, int rdReg)
         {
             // take the first 12 bits of the immediate value.
             immediate &= 0xFFF;
             int instruction = 0;
-            instruction |= (immediate << 20);
+            instruction |= (int)(immediate << 20);
             instruction |= (rs1Reg << 15);
             instruction |= (0x3 << 12);
             instruction |= (rdReg << 7);
