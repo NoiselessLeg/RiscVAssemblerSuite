@@ -10,7 +10,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class InterpreterFactory
     {
-        public InterpreterFactory(IExecutionEnvironment env, ITerminal terminalWindow)
+        public InterpreterFactory(IRuntimeEnvironment env, ITerminal terminalWindow)
         {
             m_InterpreterTable = new Dictionary<InstructionType, IInstructionInterpreter>()
             {

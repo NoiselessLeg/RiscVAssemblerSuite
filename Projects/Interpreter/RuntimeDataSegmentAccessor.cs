@@ -13,14 +13,8 @@ namespace Assembler.Interpreter
     {
         public RuntimeDataSegmentAccessor(DataSegmentAccessor segmentAccessor)
         {
+            // order data sections from LARGEST to SMALLEST.
             m_DataSubsections = new List<DataSubsection>();
-
-            byte[] dataBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
-            Array.Copy(segmentAccessor.RawData.ToArray(), dataBytes, segmentAccessor.RawData.Count());
-            int startingDataOffset = segmentAccessor.BaseRuntimeDataAddress;
-            int limitDataOffset = startingDataOffset + CommonConstants.MAX_SEGMENT_SIZE;
-            DataSubsection dataSubsection = new DataSubsection(startingDataOffset, limitDataOffset, dataBytes);
-            m_DataSubsections.Add(dataSubsection);
 
             byte[] stackBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
             int stackBaseOffset = InterpreterCommon.STACK_BASE_OFFSET;
@@ -30,7 +24,6 @@ namespace Assembler.Interpreter
             DataSubsection stackSubsection = new DataSubsection(stackLimitOffset, stackBaseOffset, stackBytes);
             m_DataSubsections.Add(stackSubsection);
             
-
             byte[] heapBytes = new byte[0];
             int heapBaseOffset = InterpreterCommon.HEAP_BASE_OFFSET;
             int heapLimitOffset = heapBaseOffset + CommonConstants.MAX_SEGMENT_SIZE;
@@ -38,6 +31,13 @@ namespace Assembler.Interpreter
             m_DataSubsections.Add(heapSubsection);
 
             m_CurrHeapAddress = heapBaseOffset;
+
+            byte[] dataBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
+            Array.Copy(segmentAccessor.RawData.ToArray(), dataBytes, segmentAccessor.RawData.Count());
+            int startingDataOffset = segmentAccessor.BaseRuntimeDataAddress;
+            int limitDataOffset = startingDataOffset + CommonConstants.MAX_SEGMENT_SIZE;
+            DataSubsection dataSubsection = new DataSubsection(startingDataOffset, limitDataOffset, dataBytes);
+            m_DataSubsections.Add(dataSubsection);
         }
 
         /// <summary>
@@ -48,6 +48,7 @@ namespace Assembler.Interpreter
         /// <returns>The address of the new block, or -1 if the system is out of memory.</returns>
         public int Sbrk(int amountToAllocate)
         {
+            int returnAddress = m_CurrHeapAddress;
             int newAddress = m_CurrHeapAddress + amountToAllocate;
             try
             {
@@ -67,11 +68,12 @@ namespace Assembler.Interpreter
                 // if so, return -1.
                 if (newAddress >= subsection.StartingAddress + CommonConstants.MAX_SEGMENT_SIZE)
                 {
-                    newAddress = -1;
+                    returnAddress = -1;
                 }
                 else
                 {
                     Array.Resize(ref subsection.RawData, newHeapSize);
+                    m_CurrHeapAddress = newAddress;
                 }
                 
             }
@@ -80,10 +82,10 @@ namespace Assembler.Interpreter
                 // if our whole system is legitimately out of memory, return -1. (should never happen).
                 // hopefully should be safe, since this is the only area we really dynamically
                 // allocate memory during runtime.
-                newAddress = -1;
+                returnAddress = -1;
             }
 
-            return newAddress;
+            return returnAddress;
         }
         
         /// <summary>
@@ -408,7 +410,7 @@ namespace Assembler.Interpreter
         /// <summary>
         /// Structure to quickly lookup data ranges, as well as the raw data itself.
         /// </summary>
-        private struct DataSubsection
+        private class DataSubsection
         {
             /// <summary>
             /// Creates a data subsection entry.
