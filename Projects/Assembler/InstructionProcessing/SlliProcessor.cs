@@ -28,7 +28,7 @@ namespace Assembler.InstructionProcessing
             bool isValidImmediate = byte.TryParse(args[2], out shiftAmt);
 
             // ensure our shift amount is 5 bits or less.
-            isValidImmediate = isValidImmediate && ((shiftAmt & 0xE0) != 0);
+            isValidImmediate = isValidImmediate && ((shiftAmt & 0xE0) == 0);
             if (isValidImmediate)
             { 
                 var instructionList = new List<int>();

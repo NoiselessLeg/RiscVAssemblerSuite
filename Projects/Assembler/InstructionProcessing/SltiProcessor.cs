@@ -30,7 +30,7 @@ namespace Assembler.InstructionProcessing
 
             short immVal = 0;
             bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
-            isValidImmediate = isValidImmediate && ((immVal & 0xF000) != 0);
+            isValidImmediate = isValidImmediate && ((immVal & 0xF000) == 0);
 
             if (isValidImmediate)
             {
