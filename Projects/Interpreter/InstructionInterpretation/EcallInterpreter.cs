@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Interpreter.SysCalls;
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
@@ -10,103 +11,53 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class EcallInterpreter : IInstructionInterpreter
     {
-        public EcallInterpreter(IExecutionEnvironment env, ITerminal terminal)
+        public EcallInterpreter(IRuntimeEnvironment env, ITerminal terminal)
         {
             m_Terminal = terminal;
             m_Environment = env;
+
+            // get all of the system calls in the assembly.
+            m_SystemCalls = new Dictionary<int, ISystemCall>();
+            var sysCallType = typeof(ISystemCall);
+            var availableCalls = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => sysCallType.IsAssignableFrom(p) && p.IsClass);
+
+            foreach (Type callType in availableCalls)
+            {
+                var callInstance = (ISystemCall) Activator.CreateInstance(callType);
+                m_SystemCalls.Add(callInstance.SystemCallId, callInstance);
+            }
         }
 
+        /// <summary>
+        /// Performs processing related to a given instruction and its parameters.
+        /// </summary>
+        /// <param name="argList">The parameter list associated with the instruction.</param>
+        /// <param name="registers">The array of 32-bit registers that this instruction may read from/write to.</param>
+        /// <param name="dataSegment">An accessor to the program .data segment.</param>
+        /// <returns>True if the program counter value is modified in this register and should not be modified otherwise,
+        /// false otherwise.</returns>
         public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
         {
-            // correlates to register a0.
-            // arguments SHALL be a1-a7.
-            const int SYSCALL_IDX = 10;
-            const int ARG1_IDX = 11;
-
-#if SYSCALL_AGS
-            const int ARG2_IDX = 12;
-            const int ARG3_IDX = 13;
-            const int ARG4_IDX = 14;
-            const int ARG5_IDX = 15;
-            const int ARG6_IDX = 16;
-            const int ARG7_IDX = 17;
-#endif
-
-
             if (argList.Length != 0)
             {
                 throw new InvalidOperationException("Malformed ECALL instruction - expected zero parameters; received " + argList.Length);
             }
 
-            int sysCall = registers[SYSCALL_IDX].Value;
-            switch (sysCall)
+            ISystemCall sysCall = default(ISystemCall);
+            if (!m_SystemCalls.TryGetValue(registers[SysCallRegisters.SYSCALL_IDX].Value, out sysCall))
             {
-                case PRINT_INT_CODE:
-                {
-                    m_Terminal.PrintInt(registers[ARG1_IDX].Value);
-                    break;
-                }
-
-                case PRINT_STR_CODE:
-                {
-                    string dataStr = dataSegment.ReadString(registers[ARG1_IDX].Value);
-                    m_Terminal.PrintString(dataStr);
-                    break;
-                }
-
-                case READ_INT_CODE:
-                {
-                    registers[SYSCALL_IDX].Value = m_Terminal.ReadInt();
-                    break;
-                }
-
-                case READ_STR_CODE:
-                {
-                    string str = m_Terminal.ReadString();
-                    dataSegment.WriteString(registers[ARG1_IDX].Value, str);
-                    break;
-                }
-
-                case ALLOC_MEM_CODE:
-                {
-                    int newAddress = dataSegment.Sbrk(registers[ARG1_IDX].Value);
-                    registers[SYSCALL_IDX].Value = newAddress;
-                    break;
-                }
-
-                case TERMINATE_CODE:
-                {
-                    m_Environment.Terminate();
-                    break;
-                }
-
-                case PRINT_CHAR_CODE:
-                {
-                    m_Terminal.PrintChar((char)(registers[ARG1_IDX].Value & 0xFF));
-                    break;
-                }
-
-                case READ_CHAR_CODE:
-                {
-                    registers[SYSCALL_IDX].Value = m_Terminal.ReadChar();
-                    break;
-                }
+                throw new ArgumentException(registers[SysCallRegisters.SYSCALL_IDX].Value + " does not correspond to a valid system call.");
             }
+
+            sysCall.ExecuteSystemCall(m_Environment, m_Terminal, registers, dataSegment);
 
             return false;
 
         }
 
         private readonly ITerminal m_Terminal;
-        private readonly IExecutionEnvironment m_Environment;
+        private readonly IRuntimeEnvironment m_Environment;
 
-        private const int PRINT_INT_CODE = 1;
-        private const int PRINT_STR_CODE = 4;
-        private const int READ_INT_CODE = 5;
-        private const int READ_STR_CODE = 8;
-        private const int ALLOC_MEM_CODE = 9;
-        private const int TERMINATE_CODE = 10;
-        private const int PRINT_CHAR_CODE = 11;
-        private const int READ_CHAR_CODE = 12;
+        private readonly Dictionary<int, ISystemCall> m_SystemCalls;
     }
 }

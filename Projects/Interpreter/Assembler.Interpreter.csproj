@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileInterpreter.cs" />
-    <Compile Include="IExecutionEnvironment.cs" />
+    <Compile Include="IRuntimeEnvironment.cs" />
     <Compile Include="InstructionInterpretation\AddiInterpreter.cs" />
     <Compile Include="InstructionInterpretation\AddInterpreter.cs" />
     <Compile Include="InstructionInterpretation\AndiInterpreter.cs" />
@@ -111,6 +111,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.cs" />
     <Compile Include="RuntimeDataSegmentAccessor.cs" />
+    <Compile Include="SysCalls\AllocMemorySysCall.cs" />
+    <Compile Include="SysCalls\ISystemCall.cs" />
+    <Compile Include="SysCalls\PrintCharSysCall.cs" />
+    <Compile Include="SysCalls\PrintIntSysCall.cs" />
+    <Compile Include="SysCalls\PrintStringSysCall.cs" />
+    <Compile Include="SysCalls\ReadCharSysCall.cs" />
+    <Compile Include="SysCalls\ReadIntSysCall.cs" />
+    <Compile Include="SysCalls\ReadStringSysCall.cs" />
+    <Compile Include="SysCalls\SysCallRegisters.cs" />
+    <Compile Include="SysCalls\TerminateSysCall.cs" />
     <Compile Include="ZeroRegister.cs" />
   </ItemGroup>
   <ItemGroup>

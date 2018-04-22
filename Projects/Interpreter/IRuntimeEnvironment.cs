@@ -9,7 +9,7 @@ namespace Assembler.Interpreter
     /// <summary>
     /// Defines a class that acts as an environment harness for the interpreter.
     /// </summary>
-    public interface IExecutionEnvironment
+    public interface IRuntimeEnvironment
     {
         /// <summary>
         /// Requests that the environment implementation terminates the application runtime.

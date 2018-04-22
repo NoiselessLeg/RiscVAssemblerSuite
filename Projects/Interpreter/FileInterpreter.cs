@@ -12,7 +12,7 @@ namespace Assembler.Interpreter
     /// <summary>
     /// Class that runs and interprets a .JEF RISC-V output file.
     /// </summary>
-    public class FileInterpreter : IExecutionEnvironment
+    public class FileInterpreter : IRuntimeEnvironment
     {
         /// <summary>
         /// Creates an instance of the file interpreter.
@@ -76,6 +76,9 @@ namespace Assembler.Interpreter
             }
         }
 
+        /// <summary>
+        /// Terminates execution of the current assembly program.
+        /// </summary>
         public void Terminate()
         {
             m_TerminationRequested = true;

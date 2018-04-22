@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
-    class RuntimeDataSegmentAccessor
+    public class RuntimeDataSegmentAccessor
     {
         public RuntimeDataSegmentAccessor(DataSegmentAccessor segmentAccessor)
         {
