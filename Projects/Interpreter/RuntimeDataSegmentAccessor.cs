@@ -14,6 +14,7 @@ namespace Assembler.Interpreter
         public RuntimeDataSegmentAccessor(DataSegmentAccessor segmentAccessor)
         {
             // order data sections from LARGEST to SMALLEST.
+            // the heap start overlaps with the static data end, so we need to make sure
             m_DataSubsections = new List<DataSubsection>();
 
             byte[] stackBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
@@ -200,9 +201,9 @@ namespace Assembler.Interpreter
                 int idx = address - correspondingSubsection.StartingAddress;
                 correspondingSubsection.RawData[idx] = (byte)value;
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 8 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 8 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -219,9 +220,9 @@ namespace Assembler.Interpreter
                 int idx = address - correspondingSubsection.StartingAddress;
                 correspondingSubsection.RawData[idx] = value;
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 8 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 8 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -239,9 +240,9 @@ namespace Assembler.Interpreter
                 byte[] shortBytes = BitConverter.GetBytes(value);
                 CopyBytes(shortBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 16 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 16 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -259,9 +260,9 @@ namespace Assembler.Interpreter
                 byte[] shortBytes = BitConverter.GetBytes(value);
                 CopyBytes(shortBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 16 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 16 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -279,9 +280,9 @@ namespace Assembler.Interpreter
                 byte[] wordBytes = BitConverter.GetBytes(value);
                 CopyBytes(wordBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 32 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 32 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -299,9 +300,9 @@ namespace Assembler.Interpreter
                 byte[] wordBytes = BitConverter.GetBytes(value);
                 CopyBytes(wordBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 32 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 32 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -319,9 +320,9 @@ namespace Assembler.Interpreter
                 byte[] longBytes = BitConverter.GetBytes(value);
                 CopyBytes(longBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 64 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 64 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -339,9 +340,9 @@ namespace Assembler.Interpreter
                 byte[] longBytes = BitConverter.GetBytes(value);
                 CopyBytes(longBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds 64 bit memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds 64 bit memory write to address 0x" + address.ToString("X8"));
             }
         }
 
@@ -359,9 +360,9 @@ namespace Assembler.Interpreter
                 byte[] strBytes = Encoding.ASCII.GetBytes(str);
                 CopyBytes(strBytes, correspondingSubsection.RawData, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out of bounds memory write to address 0x" + address.ToString("X8"));
+                throw new AccessViolationException("Attempted out of bounds memory write to address 0x" + address.ToString("X8"));
             }
         }
 

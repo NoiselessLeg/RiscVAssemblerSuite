@@ -25,9 +25,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return (sbyte)array[idx];
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 8-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 8-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -45,9 +45,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return array[idx];
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 8-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 8-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -65,9 +65,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToInt16(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 16-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 16-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -85,9 +85,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToUInt16(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 16-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 16-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -105,9 +105,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToInt32(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 32-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 32-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -125,9 +125,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToUInt32(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 32-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 32-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -145,9 +145,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToInt64(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 64-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 64-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -165,9 +165,9 @@ namespace Assembler.OutputProcessing.Utils
                 int idx = address - runtimeDataSegmentOffset;
                 return BitConverter.ToUInt64(array, idx);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
-                throw new Exception("Attempted out-of-bounds 64-bit memory read of address 0x" + address.ToString("X2"));
+                throw new AccessViolationException("Attempted out-of-bounds 64-bit memory read of address 0x" + address.ToString("X2"));
             }
         }
 
@@ -195,7 +195,7 @@ namespace Assembler.OutputProcessing.Utils
 
                 return Encoding.ASCII.GetString(array, idx, strSize);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
             {
                 throw new Exception("Attempted out of bounds string read from memory at address 0x" + address.ToString("X2"));
             }
