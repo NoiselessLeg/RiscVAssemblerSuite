@@ -20,13 +20,13 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int immediate = argList[2];
 
-            if (ctx.RuntimeRegisters[rs1Idx].Value < immediate)
+            if (ctx.UserRegisters[rs1Idx].Value < immediate)
             {
-                ctx.RuntimeRegisters[rdIdx].Value = 1;
+                ctx.UserRegisters[rdIdx].Value = 1;
             }
             else
             {
-                ctx.RuntimeRegisters[rdIdx].Value = 0;
+                ctx.UserRegisters[rdIdx].Value = 0;
             }
 
             return false;

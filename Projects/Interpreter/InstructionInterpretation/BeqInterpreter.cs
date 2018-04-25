@@ -19,11 +19,11 @@ namespace Assembler.Interpreter.InstructionInterpretation
             bool pcModified = false;
             int rs1Idx = argList[0];
             int rs2Idx = argList[1];
-            if (ctx.RuntimeRegisters[rs1Idx].Value == ctx.RuntimeRegisters[rs2Idx].Value)
+            if (ctx.UserRegisters[rs1Idx].Value == ctx.UserRegisters[rs2Idx].Value)
             {
                 System.Diagnostics.Debug.Assert(argList[2] % 4 == 0);
                 int offset = argList[2];
-                ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += offset;
+                ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += offset;
                 pcModified = true;
             }
 

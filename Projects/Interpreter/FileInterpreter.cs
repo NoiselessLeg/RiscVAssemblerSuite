@@ -38,21 +38,21 @@ namespace Assembler.Interpreter
                 var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
                 RuntimeContext ctx = new RuntimeContext(this, dataSegment);
 
-                ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
-                ctx.RuntimeRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
+                ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
+                ctx.UserRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
 
-                int programCtr = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value;
+                int programCtr = ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
 
-                while (!file.TextSegment.EndOfFileReached(ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
+                while (!file.TextSegment.EndOfFileReached(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
                 {
-                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value);
+                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value);
                     IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
 
                     // if this returns false, then increment the program counter by 4. otherwise, this indicates
                     // that the instruction needed to change the PC.
                     if (!interpreter.InterpretInstruction(ctx, instruction.Parameters.ToArray()))
                     {
-                        ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
+                        ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
                     }
                 }
 

@@ -19,7 +19,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rdIdx = argList[0];
             int rs1Idx = argList[1];
             int immediate = argList[2];
-            ctx.RuntimeRegisters[rdIdx].Value = (ctx.RuntimeRegisters[rs1Idx].Value >> immediate);
+            ctx.UserRegisters[rdIdx].Value = (ctx.UserRegisters[rs1Idx].Value >> immediate);
 
             return false;
         }

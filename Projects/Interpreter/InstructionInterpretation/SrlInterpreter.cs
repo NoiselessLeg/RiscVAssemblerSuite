@@ -21,7 +21,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs2Idx = argList[2];
 
             // have to cast register to uint to force logical shift right, otherwise C# assumed arithmetic shift.
-            ctx.RuntimeRegisters[rdIdx].Value = (int)(((uint)ctx.RuntimeRegisters[rs1Idx].Value) >> (ctx.RuntimeRegisters[rs2Idx].Value));
+            ctx.UserRegisters[rdIdx].Value = (int)(((uint)ctx.UserRegisters[rs1Idx].Value) >> (ctx.UserRegisters[rs2Idx].Value));
 
             return false;
         }

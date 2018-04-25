@@ -19,8 +19,8 @@ namespace Assembler.Interpreter.SysCalls
 
         public void ExecuteSystemCall(ITerminal terminal, RuntimeContext ctx)
         {
-            int newAddress = ctx.Sbrk(ctx.RuntimeRegisters[SysCallRegisters.ARG1_IDX].Value);
-            ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value = newAddress;
+            int newAddress = ctx.Sbrk(ctx.UserRegisters[SysCallRegisters.ARG1_IDX].Value);
+            ctx.UserRegisters[SysCallRegisters.SYSCALL_IDX].Value = newAddress;
         }
     }
 }

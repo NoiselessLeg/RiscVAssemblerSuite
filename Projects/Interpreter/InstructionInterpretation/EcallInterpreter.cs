@@ -43,9 +43,9 @@ namespace Assembler.Interpreter.InstructionInterpretation
             }
 
             ISystemCall sysCall = default(ISystemCall);
-            if (!m_SystemCalls.TryGetValue(ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value, out sysCall))
+            if (!m_SystemCalls.TryGetValue(ctx.UserRegisters[SysCallRegisters.SYSCALL_IDX].Value, out sysCall))
             {
-                throw new ArgumentException(ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value + " does not correspond to a valid system call.");
+                throw new ArgumentException(ctx.UserRegisters[SysCallRegisters.SYSCALL_IDX].Value + " does not correspond to a valid system call.");
             }
 
             sysCall.ExecuteSystemCall(m_Terminal, ctx);

@@ -19,7 +19,7 @@ namespace Assembler.Interpreter.SysCalls
 
         public void ExecuteSystemCall(ITerminal terminal, RuntimeContext ctx)
         {
-            terminal.PrintChar((char)(ctx.RuntimeRegisters[SysCallRegisters.ARG1_IDX].Value & 0xFF));
+            terminal.PrintChar((char)(ctx.UserRegisters[SysCallRegisters.ARG1_IDX].Value & 0xFF));
         }
     }
 }

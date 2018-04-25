@@ -20,16 +20,16 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int rs2Idx = argList[2];
 
-            uint rs1Val = (uint)ctx.RuntimeRegisters[rs1Idx].Value;
-            uint rs2Val = (uint)ctx.RuntimeRegisters[rs2Idx].Value;
+            uint rs1Val = (uint)ctx.UserRegisters[rs1Idx].Value;
+            uint rs2Val = (uint)ctx.UserRegisters[rs2Idx].Value;
 
             if (rs1Val < rs2Val)
             {
-                ctx.RuntimeRegisters[rdIdx].Value = 1;
+                ctx.UserRegisters[rdIdx].Value = 1;
             }
             else
             {
-                ctx.RuntimeRegisters[rdIdx].Value = 0;
+                ctx.UserRegisters[rdIdx].Value = 0;
             }
 
             return false;

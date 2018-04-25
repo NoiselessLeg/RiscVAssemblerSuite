@@ -20,9 +20,9 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int offset = argList[2];
 
-            int addressToLoad = ctx.RuntimeRegisters[rs1Idx].Value + offset;
+            int addressToLoad = ctx.UserRegisters[rs1Idx].Value + offset;
 
-            ctx.RuntimeRegisters[rdIdx].Value = ctx.ReadWord(addressToLoad);
+            ctx.UserRegisters[rdIdx].Value = ctx.ReadWord(addressToLoad);
 
             return false;
         }

@@ -24,12 +24,12 @@ namespace Assembler.Interpreter.InstructionInterpretation
             offset = (offset << 20);
             offset = (offset >> 20);
 
-            int targetAddress = (int)((offset + ctx.RuntimeRegisters[rs1Idx].Value) & 0xFFFFFFFE);
+            int targetAddress = (int)((offset + ctx.UserRegisters[rs1Idx].Value) & 0xFFFFFFFE);
 
-            int nextAddress = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
-            ctx.RuntimeRegisters[rdIdx].Value = nextAddress;
+            int nextAddress = ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
+            ctx.UserRegisters[rdIdx].Value = nextAddress;
 
-            ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value = targetAddress;
+            ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = targetAddress;
 
             return true;
         }

@@ -19,10 +19,10 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rdIdx = argList[0];
             int offset = argList[1];
 
-            int nextAddress = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
-            ctx.RuntimeRegisters[rdIdx].Value = nextAddress;
+            int nextAddress = ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
+            ctx.UserRegisters[rdIdx].Value = nextAddress;
 
-            ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += offset;
+            ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += offset;
 
             return true;
         }

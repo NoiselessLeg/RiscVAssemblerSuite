@@ -20,7 +20,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int rs2Idx = argList[2];
 
-            ctx.RuntimeRegisters[rdIdx].Value = (int)((ctx.RuntimeRegisters[rs1Idx].Value + ctx.RuntimeRegisters[rs2Idx].Value) & 0xFFFFFFFF);
+            ctx.UserRegisters[rdIdx].Value = (int)((ctx.UserRegisters[rs1Idx].Value + ctx.UserRegisters[rs2Idx].Value) & 0xFFFFFFFF);
 
             return false;
         }

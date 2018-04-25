@@ -232,7 +232,7 @@ namespace Assembler.Interpreter
         /// <summary>
         /// Gets the array of registers that are read/writeable during runtime.
         /// </summary>
-        public Register[] RuntimeRegisters
+        public Register[] UserRegisters
         {
             get { return m_RuntimeRegisters; }
         }
