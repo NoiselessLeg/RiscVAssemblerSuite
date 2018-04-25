@@ -17,10 +17,10 @@ namespace Assembler.Interpreter.SysCalls
             }
         }
 
-        public void ExecuteSystemCall(IRuntimeEnvironment runtimeEnv, ITerminal terminal, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public void ExecuteSystemCall(ITerminal terminal, RuntimeContext ctx)
         {
-            int newAddress = dataSegment.Sbrk(registers[SysCallRegisters.ARG1_IDX].Value);
-            registers[SysCallRegisters.SYSCALL_IDX].Value = newAddress;
+            int newAddress = dataSegment.Sbrk(ctx.RuntimeRegisters[SysCallRegisters.ARG1_IDX].Value);
+            ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value = newAddress;
         }
     }
 }

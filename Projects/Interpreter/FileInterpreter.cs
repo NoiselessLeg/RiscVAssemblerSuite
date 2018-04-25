@@ -21,19 +21,6 @@ namespace Assembler.Interpreter
         public FileInterpreter(ITerminal terminal)
         {
             m_InterpreterFac = new InterpreterFactory(this, terminal);
-
-            m_Registers = new Register[InterpreterCommon.MAX_REGISTERS];
-            for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-            {
-                if (i == 0)
-                {
-                    m_Registers[i] = new ZeroRegister();
-                }
-                else
-                {
-                    m_Registers[i] = new Register();
-                }
-            }
         }
 
         /// <summary>
@@ -49,22 +36,23 @@ namespace Assembler.Interpreter
                 DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
 
                 var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
+                RuntimeContext ctx = new RuntimeContext(this, dataSegment);
 
-                m_Registers[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
-                m_Registers[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
+                ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
+                ctx.RuntimeRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
 
-                int programCtr = m_Registers[InterpreterCommon.PC_REGISTER].Value;
+                int programCtr = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value;
 
-                while (!file.TextSegment.EndOfFileReached(m_Registers[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
+                while (!file.TextSegment.EndOfFileReached(ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
                 {
-                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(m_Registers[InterpreterCommon.PC_REGISTER].Value);
+                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value);
                     IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
 
                     // if this returns false, then increment the program counter by 4. otherwise, this indicates
                     // that the instruction needed to change the PC.
                     if (!interpreter.InterpretInstruction(instruction.Parameters.ToArray(), m_Registers, dataSegment))
                     {
-                        m_Registers[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
+                        ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
                     }
                 }
 
@@ -83,8 +71,7 @@ namespace Assembler.Interpreter
         {
             m_TerminationRequested = true;
         }
-
-        private readonly Register[] m_Registers;
+        
         private readonly InterpreterFactory m_InterpreterFac;
         private bool m_TerminationRequested;
     }

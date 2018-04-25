@@ -65,6 +65,7 @@ namespace Assembler.InstructionProcessing
                 { "sra", new SraProcessor() },
                 { "or", new OrProcessor() },
                 { "and", new AndProcessor() },
+                { "not", new NotProcessor() },
 
                 // these are pseudo instructions
                 { "nop", new NopProcessor() },

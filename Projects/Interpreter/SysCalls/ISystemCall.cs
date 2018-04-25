@@ -17,14 +17,10 @@ namespace Assembler.Interpreter.SysCalls
         /// <summary>
         /// Performs the execution of a system call.
         /// </summary>
-        /// <param name="runtimeEnv">The runtime environment implementation that can perform operating system
-        /// calls on behalf of the assembled child program.</param>
         /// <param name="terminal">The terminal window which can perform user I/O.</param>
-        /// <param name="registers">An array of runtime program registers that can be written to or read from 
-        /// during system call processing.</param>
-        /// <param name="dataSegment">The runtime program data segment that can be written to or read from
-        /// during system call processing.</param>
-        void ExecuteSystemCall(IRuntimeEnvironment runtimeEnv, ITerminal terminal, Register[] registers, RuntimeDataSegmentAccessor dataSegment);
+        /// <param name="runtimeEnv">The runtime environment context that can perform operating system
+        /// calls on behalf of the assembled child program.</param>
+        void ExecuteSystemCall(ITerminal terminal, RuntimeContext ctx);
 
     }
 }

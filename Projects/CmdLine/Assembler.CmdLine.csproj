@@ -100,8 +100,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if not exist "$(SolutionDir)binaries" mkdir "$(SolutionDir)binaries"
+
+copy /b /v /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)binaries\riscv_asm.exe"
+
+echo "Copying dependencies..."
+copy /b /v /y "$(TargetDir)Assembler.Common.dll" "$(SolutionDir)\binaries\Assembler.Common.dll"
+copy /b /v /y "$(TargetDir)Assembler.Disassembler.dll" "$(SolutionDir)\binaries\Assembler.Disassembler.dll"
+copy /b /v /y "$(TargetDir)Assembler.dll" "$(SolutionDir)\binaries\Assembler.dll"
+copy /b /v /y "$(TargetDir)Assembler.Interpreter.dll" "$(SolutionDir)\binaries\Assembler.Interpreter.dll"
+copy /b /v /y "$(TargetDir)Assembler.OutputProcessing.dll" "$(SolutionDir)\binaries\Assembler.OutputProcessing.dll"
+copy /b /v /y "$(TargetDir)CommandLine.dll" "$(SolutionDir)\binaries\CommandLine.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

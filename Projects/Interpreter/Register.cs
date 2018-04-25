@@ -11,11 +11,18 @@ namespace Assembler.Interpreter
     /// </summary>
     public class Register
     {
+        /// <summary>
+        /// Creates a register with a default value of zero.
+        /// </summary>
         public Register()
         {
             m_Value = 0;
         }
 
+        /// <summary>
+        /// Creates a register with a provided value as its default value.
+        /// </summary>
+        /// <param name="defaultValue">The value to set the register to.</param>
         public Register(int defaultValue)
         {
             m_Value = defaultValue;
