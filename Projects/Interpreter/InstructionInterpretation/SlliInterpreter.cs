@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class SlliInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -20,7 +20,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int immediate = argList[2];
 
-            registers[rdIdx].Value = (registers[rs1Idx].Value << immediate);
+            ctx.RuntimeRegisters[rdIdx].Value = (ctx.RuntimeRegisters[rs1Idx].Value << immediate);
 
             return false;
         }

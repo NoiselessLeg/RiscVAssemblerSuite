@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class JalrInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -24,12 +24,12 @@ namespace Assembler.Interpreter.InstructionInterpretation
             offset = (offset << 20);
             offset = (offset >> 20);
 
-            int targetAddress = (int)((offset + registers[rs1Idx].Value) & 0xFFFFFFFE);
+            int targetAddress = (int)((offset + ctx.RuntimeRegisters[rs1Idx].Value) & 0xFFFFFFFE);
 
-            int nextAddress = registers[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
-            registers[rdIdx].Value = nextAddress;
+            int nextAddress = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value + sizeof(int);
+            ctx.RuntimeRegisters[rdIdx].Value = nextAddress;
 
-            registers[InterpreterCommon.PC_REGISTER].Value = targetAddress;
+            ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value = targetAddress;
 
             return true;
         }

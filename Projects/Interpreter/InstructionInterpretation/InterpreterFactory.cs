@@ -10,7 +10,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class InterpreterFactory
     {
-        public InterpreterFactory(IRuntimeEnvironment env, ITerminal terminalWindow)
+        public InterpreterFactory(ITerminal terminalWindow)
         {
             m_InterpreterTable = new Dictionary<InstructionType, IInstructionInterpreter>()
             {
@@ -25,7 +25,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
                 { InstructionType.Blt, new BltInterpreter() },
                 { InstructionType.Bltu, new BltuInterpreter() },
                 { InstructionType.Bne, new BneInterpreter() },
-                { InstructionType.Ecall, new EcallInterpreter(env, terminalWindow) },
+                { InstructionType.Ecall, new EcallInterpreter(terminalWindow) },
                 { InstructionType.Jal, new JalInterpreter() },
                 { InstructionType.Jalr, new JalrInterpreter() },
                 { InstructionType.Lb, new LbInterpreter() },

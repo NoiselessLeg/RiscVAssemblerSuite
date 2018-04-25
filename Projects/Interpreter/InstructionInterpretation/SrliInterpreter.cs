@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class SrliInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -21,7 +21,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int immediate = argList[2];
 
             // have to cast register to uint to force logical shift right, otherwise C# assumed arithmetic shift.
-            registers[rdIdx].Value = (int)(((uint)registers[rs1Idx].Value) >> immediate);
+            ctx.RuntimeRegisters[rdIdx].Value = (int)(((uint)ctx.RuntimeRegisters[rs1Idx].Value) >> immediate);
 
             return false;
         }

@@ -240,6 +240,5 @@ namespace Assembler.Interpreter
         private readonly IRuntimeEnvironment m_Environment;
         private readonly RuntimeDataSegmentAccessor m_DataAccessor;
         private readonly Register[] m_RuntimeRegisters;
-        private readonly Register[] m_ExceptionRegisters;
     }
 }

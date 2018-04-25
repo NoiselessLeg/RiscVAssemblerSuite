@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class XorInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -20,7 +20,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int rs2Idx = argList[2];
 
-            registers[rdIdx].Value = (registers[rs1Idx].Value ^ registers[rs2Idx].Value);
+            ctx.RuntimeRegisters[rdIdx].Value = (ctx.RuntimeRegisters[rs1Idx].Value ^ ctx.RuntimeRegisters[rs2Idx].Value);
 
             return false;
         }

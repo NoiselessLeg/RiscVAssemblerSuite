@@ -11,10 +11,9 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class EcallInterpreter : IInstructionInterpreter
     {
-        public EcallInterpreter(IRuntimeEnvironment env, ITerminal terminal)
+        public EcallInterpreter(ITerminal terminal)
         {
             m_Terminal = terminal;
-            m_Environment = env;
 
             // get all of the system calls in the assembly.
             m_SystemCalls = new Dictionary<int, ISystemCall>();
@@ -36,7 +35,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
         /// <param name="dataSegment">An accessor to the program .data segment.</param>
         /// <returns>True if the program counter value is modified in this register and should not be modified otherwise,
         /// false otherwise.</returns>
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 0)
             {
@@ -44,20 +43,18 @@ namespace Assembler.Interpreter.InstructionInterpretation
             }
 
             ISystemCall sysCall = default(ISystemCall);
-            if (!m_SystemCalls.TryGetValue(registers[SysCallRegisters.SYSCALL_IDX].Value, out sysCall))
+            if (!m_SystemCalls.TryGetValue(ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value, out sysCall))
             {
-                throw new ArgumentException(registers[SysCallRegisters.SYSCALL_IDX].Value + " does not correspond to a valid system call.");
+                throw new ArgumentException(ctx.RuntimeRegisters[SysCallRegisters.SYSCALL_IDX].Value + " does not correspond to a valid system call.");
             }
 
-            sysCall.ExecuteSystemCall(m_Environment, m_Terminal, registers, dataSegment);
+            sysCall.ExecuteSystemCall(m_Terminal, ctx);
 
             return false;
 
         }
 
         private readonly ITerminal m_Terminal;
-        private readonly IRuntimeEnvironment m_Environment;
-
         private readonly Dictionary<int, ISystemCall> m_SystemCalls;
     }
 }

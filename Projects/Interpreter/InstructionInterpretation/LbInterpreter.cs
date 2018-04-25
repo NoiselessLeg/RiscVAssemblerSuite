@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class LbInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -20,9 +20,9 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int offset = argList[2];
 
-            int addressToLoad = registers[rs1Idx].Value + offset;
+            int addressToLoad = ctx.RuntimeRegisters[rs1Idx].Value + offset;
 
-            registers[rdIdx].Value = dataSegment.ReadSignedByte(addressToLoad);
+            ctx.RuntimeRegisters[rdIdx].Value = ctx.ReadSignedByte(addressToLoad);
 
             return false;
         }

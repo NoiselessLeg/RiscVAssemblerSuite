@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class SltInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -20,13 +20,13 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int rs2Idx = argList[2];
 
-            if (registers[rs1Idx].Value < registers[rs2Idx].Value)
+            if (ctx.RuntimeRegisters[rs1Idx].Value < ctx.RuntimeRegisters[rs2Idx].Value)
             {
-                registers[rdIdx].Value = 1;
+                ctx.RuntimeRegisters[rdIdx].Value = 1;
             }
             else
             {
-                registers[rdIdx].Value = 0;
+                ctx.RuntimeRegisters[rdIdx].Value = 0;
             }
 
             return false;

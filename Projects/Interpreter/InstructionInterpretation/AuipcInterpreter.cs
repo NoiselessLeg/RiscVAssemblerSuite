@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class AuipcInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 2)
             {
@@ -19,7 +19,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rdIdx = argList[0];
             int immediate = (argList[1] << 12);
 
-            registers[rdIdx].Value = registers[InterpreterCommon.PC_REGISTER].Value + immediate;
+            ctx.RuntimeRegisters[rdIdx].Value = ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value + immediate;
 
             return false;
         }

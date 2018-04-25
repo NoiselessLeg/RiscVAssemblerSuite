@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class ShInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -20,9 +20,9 @@ namespace Assembler.Interpreter.InstructionInterpretation
             int rs1Idx = argList[1];
             int offset = argList[2];
 
-            int address = registers[rs1Idx].Value + offset;
+            int address = ctx.RuntimeRegisters[rs1Idx].Value + offset;
 
-            dataSegment.WriteShort(address, (short)(registers[rs2Idx].Value & 0xFFFF));
+            ctx.WriteShort(address, (short)(ctx.RuntimeRegisters[rs2Idx].Value & 0xFFFF));
 
             return false;
         }

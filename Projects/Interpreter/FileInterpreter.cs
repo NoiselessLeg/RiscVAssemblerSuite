@@ -20,7 +20,7 @@ namespace Assembler.Interpreter
         /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
         public FileInterpreter(ITerminal terminal)
         {
-            m_InterpreterFac = new InterpreterFactory(this, terminal);
+            m_InterpreterFac = new InterpreterFactory(terminal);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Assembler.Interpreter
 
                     // if this returns false, then increment the program counter by 4. otherwise, this indicates
                     // that the instruction needed to change the PC.
-                    if (!interpreter.InterpretInstruction(instruction.Parameters.ToArray(), m_Registers, dataSegment))
+                    if (!interpreter.InterpretInstruction(ctx, instruction.Parameters.ToArray()))
                     {
                         ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
                     }

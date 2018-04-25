@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class BgeInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 3)
             {
@@ -19,11 +19,11 @@ namespace Assembler.Interpreter.InstructionInterpretation
             bool pcModified = false;
             int rs1Idx = argList[0];
             int rs2Idx = argList[1];
-            if (registers[rs1Idx].Value >= registers[rs2Idx].Value)
+            if (ctx.RuntimeRegisters[rs1Idx].Value >= ctx.RuntimeRegisters[rs2Idx].Value)
             {
                 System.Diagnostics.Debug.Assert(argList[2] % 4 == 0);
                 int offset = argList[2];
-                registers[InterpreterCommon.PC_REGISTER].Value += offset;
+                ctx.RuntimeRegisters[InterpreterCommon.PC_REGISTER].Value += offset;
                 pcModified = true;
             }
 

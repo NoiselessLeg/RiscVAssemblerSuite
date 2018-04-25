@@ -9,7 +9,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
 {
     class LuiInterpreter : IInstructionInterpreter
     {
-        public bool InterpretInstruction(int[] argList, Register[] registers, RuntimeDataSegmentAccessor dataSegment)
+        public bool InterpretInstruction(RuntimeContext ctx, int[] argList)
         {
             if (argList.Length != 2)
             {
@@ -18,8 +18,8 @@ namespace Assembler.Interpreter.InstructionInterpretation
 
             int rdIdx = argList[0];
             int immediate = (argList[1] << 12);
-            registers[rdIdx].Value = 0;
-            registers[rdIdx].Value = (registers[rdIdx].Value | immediate);
+            ctx.RuntimeRegisters[rdIdx].Value = 0;
+            ctx.RuntimeRegisters[rdIdx].Value = (ctx.RuntimeRegisters[rdIdx].Value | immediate);
 
             return false;
         }
