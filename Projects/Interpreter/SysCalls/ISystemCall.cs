@@ -18,7 +18,7 @@ namespace Assembler.Interpreter.SysCalls
         /// Performs the execution of a system call.
         /// </summary>
         /// <param name="terminal">The terminal window which can perform user I/O.</param>
-        /// <param name="runtimeEnv">The runtime environment context that can perform operating system
+        /// <param name="ctx">The runtime environment context that can perform operating system
         /// calls on behalf of the assembled child program.</param>
         void ExecuteSystemCall(ITerminal terminal, RuntimeContext ctx);
 
