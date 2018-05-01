@@ -40,5 +40,10 @@ namespace Assembler.Interpreter
         /// Defines the stack pointer register index.
         /// </summary>
         public const int SP_REGISTER = 2;
+
+        /// <summary>
+        /// Defines the maximum allocation size for a specific segment in the simulator (4MiB).
+        /// </summary>
+        public const int MAX_SEGMENT_SIZE = 4194304;
     }
 }

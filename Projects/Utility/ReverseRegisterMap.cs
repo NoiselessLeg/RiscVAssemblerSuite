@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Disassembler
+namespace Assembler.Common
 {
     /// <summary>
     /// Defines the mapping between a numeric register value and its canonical name.
     /// </summary>
-    static class ReverseRegisterMap
+    public static class ReverseRegisterMap
     {
         static ReverseRegisterMap()
         {

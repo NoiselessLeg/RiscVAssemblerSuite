@@ -34,10 +34,9 @@ namespace Assembler.InstructionProcessing
             {
                 var instructionList = default(List<int>);
 
-                // if greater than 0x7FF (2047) or less than 0xFFF, then help the user by trying to expand out the instruction
-                // so that it effectively does the same thing.
-                // TODO: do we need to use another mask for negative numbers?
-                if (immVal > 2047 || immVal < -2048)
+                // if the mask is greater not zero, this would indicate that there are bits beyond the 11th bit offset.
+                // help the user by generating equivalent s-type instructions
+                if (!IsValidTwelveBitSignedImmediate(immVal))
                 {
                     instructionList = GenerateExpandedInstruction(address, immVal, args);
                 }

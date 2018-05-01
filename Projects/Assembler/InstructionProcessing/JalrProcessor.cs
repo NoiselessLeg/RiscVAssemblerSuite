@@ -35,7 +35,7 @@ namespace Assembler.InstructionProcessing
 
                 // if the immediate is greater than 12 bits, use
                 // an auipc instruction.
-                if ((int)(immVal & 0xFFFFF000) != 0)
+                if (!IsValidTwelveBitSignedImmediate(immVal))
                 {
                     var auipcHelper = new AuipcProcessor();
                     IEnumerable<int> auipcInstructions =

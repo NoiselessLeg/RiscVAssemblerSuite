@@ -1,4 +1,5 @@
-﻿using Assembler.OutputProcessing;
+﻿using Assembler.Common;
+using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
 using System.IO;

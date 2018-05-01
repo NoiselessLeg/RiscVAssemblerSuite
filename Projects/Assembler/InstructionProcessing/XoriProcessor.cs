@@ -35,7 +35,7 @@ namespace Assembler.InstructionProcessing
 
                 // if the immediate is greater than our 12 bit immediate value, then treat this as a pseudo instruction
                 // and generate backing instructions.
-                if ((immVal & 0xFFFFF000) != 0)
+                if (!IsValidTwelveBitSignedImmediate(immVal))
                 {
                     instructionList = GenerateExpandedInstruction(address, immVal, args);
                 }

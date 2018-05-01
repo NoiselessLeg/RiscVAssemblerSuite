@@ -78,20 +78,18 @@ namespace Assembler.CmdLine
 
         private static int RunInterpreter(InterpreterOptions options)
         {
-            ILogger logger = null;
-            string logFileName = options.LogFile;
-            if (!string.IsNullOrEmpty(logFileName) && !string.IsNullOrWhiteSpace(logFileName))
+            var terminal = new ConsoleTerminal();
+
+            if (options.DebugDumpEnabled)
             {
-                logger = new HybridLogger(logFileName.Trim());
+                var interpreter = new FileDebugger(terminal);
+                interpreter.RunJefFile(options.InputFileName, new ConsoleLogger());
             }
             else
             {
-                logger = new ConsoleLogger();
+                var interpreter = new FileInterpreter(terminal);
+                interpreter.RunJefFile(options.InputFileName, new ConsoleLogger());
             }
-
-            var terminal = new ConsoleTerminal();
-            var interpreter = new FileInterpreter(terminal);
-            interpreter.RunJefFile(options.InputFileName, logger);
             return 0;
         }
     }

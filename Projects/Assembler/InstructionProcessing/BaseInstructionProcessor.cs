@@ -32,6 +32,17 @@ namespace Assembler.InstructionProcessing
         }
 
         /// <summary>
+        /// Determines if a signed 32-bit value is a proper 12 bit immediate. This will take into
+        /// account the sign bit.
+        /// </summary>
+        /// <param name="immediate">The value to examine.</param>
+        /// <returns>True if the value is a valid 12-bit immediate, excluding the sign bit.</returns>
+        protected bool IsValidTwelveBitSignedImmediate(int immediate)
+        {
+            return (immediate >= -4096) && (immediate <= 4095);
+        }
+
+        /// <summary>
         /// Determines if a token is a "parameterized" token. In other words,
         /// this token specifies that a register holds an address, and an offset
         /// to dereference it by (e.g. 4(x5)).

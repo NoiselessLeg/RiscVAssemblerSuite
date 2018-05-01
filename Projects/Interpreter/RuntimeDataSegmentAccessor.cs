@@ -13,13 +13,12 @@ namespace Assembler.Interpreter
     {
         public RuntimeDataSegmentAccessor(DataSegmentAccessor segmentAccessor)
         {
-            // order data sections from LARGEST to SMALLEST.
-            // the heap start overlaps with the static data end, so we need to make sure
+            // order data sections from LARGEST to SMALLEST end offset.
             m_DataSubsections = new List<DataSubsection>();
 
-            byte[] stackBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
+            byte[] stackBytes = new byte[InterpreterCommon.MAX_SEGMENT_SIZE];
             int stackBaseOffset = InterpreterCommon.STACK_BASE_OFFSET;
-            int stackLimitOffset = stackBaseOffset - CommonConstants.MAX_SEGMENT_SIZE;
+            int stackLimitOffset = stackBaseOffset - InterpreterCommon.MAX_SEGMENT_SIZE;
 
             // since the stack grows downward, need to provide these parameters in reverse order
             DataSubsection stackSubsection = new DataSubsection(stackLimitOffset, stackBaseOffset, stackBytes);
@@ -27,16 +26,18 @@ namespace Assembler.Interpreter
             
             byte[] heapBytes = new byte[0];
             int heapBaseOffset = InterpreterCommon.HEAP_BASE_OFFSET;
-            int heapLimitOffset = heapBaseOffset + CommonConstants.MAX_SEGMENT_SIZE;
+            int heapLimitOffset = heapBaseOffset + InterpreterCommon.MAX_SEGMENT_SIZE;
             DataSubsection heapSubsection = new DataSubsection(heapBaseOffset, heapLimitOffset, heapBytes);
             m_DataSubsections.Add(heapSubsection);
 
             m_CurrHeapAddress = heapBaseOffset;
 
-            byte[] dataBytes = new byte[CommonConstants.MAX_SEGMENT_SIZE];
+            // the heap start overlaps with the static data end, so we may need
+            // to reduce this at some point? 
+            byte[] dataBytes = new byte[InterpreterCommon.MAX_SEGMENT_SIZE];
             Array.Copy(segmentAccessor.RawData.ToArray(), dataBytes, segmentAccessor.RawData.Count());
             int startingDataOffset = segmentAccessor.BaseRuntimeDataAddress;
-            int limitDataOffset = startingDataOffset + CommonConstants.MAX_SEGMENT_SIZE;
+            int limitDataOffset = startingDataOffset + InterpreterCommon.MAX_SEGMENT_SIZE;
             DataSubsection dataSubsection = new DataSubsection(startingDataOffset, limitDataOffset, dataBytes);
             m_DataSubsections.Add(dataSubsection);
         }
@@ -67,7 +68,7 @@ namespace Assembler.Interpreter
 
                 // determine if the address is out of our 4MB limit.
                 // if so, return -1.
-                if (newAddress >= subsection.StartingAddress + CommonConstants.MAX_SEGMENT_SIZE)
+                if (newAddress >= subsection.StartingAddress + InterpreterCommon.MAX_SEGMENT_SIZE)
                 {
                     returnAddress = -1;
                 }
@@ -402,7 +403,7 @@ namespace Assembler.Interpreter
 
             if (!foundSubsection)
             {
-                throw new ArgumentException("Address was out of range of .data area.");
+                throw new AccessViolationException("Address was out of range of .data area.");
             }
 
             return subsection;

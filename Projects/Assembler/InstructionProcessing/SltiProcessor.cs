@@ -30,7 +30,7 @@ namespace Assembler.InstructionProcessing
 
             int immVal = 0;
             bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
-            isValidImmediate = isValidImmediate && ((immVal & 0xFFFFF000) == 0);
+            isValidImmediate = isValidImmediate && IsValidTwelveBitSignedImmediate(immVal);
 
             var instructionList = new List<int>();
 

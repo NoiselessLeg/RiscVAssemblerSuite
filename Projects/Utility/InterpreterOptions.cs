@@ -15,11 +15,14 @@ namespace Assembler.Common
         /// </summary>
         /// <param name="inputFileName">The list of input file names to be disassembled.</param>
         /// <param name="logFile">The name of the log file, if any, to output to.</param>
+        /// <param name="debugDumpEnabled">If true, SIGSEGV or access violations will trigger a register dump.</param>
         public InterpreterOptions(string inputFileName,
-                                  string logFile = "")
+                                  string logFile = "",
+                                  bool debugDumpEnabled = false)
         {
             m_InputFileName = inputFileName;
             m_LogFile = logFile;
+            m_DebugDumpEnabled = debugDumpEnabled;
         }
 
         /// <summary>
@@ -37,8 +40,14 @@ namespace Assembler.Common
             get { return m_LogFile; }
         }
 
+        [Option('d', "debug-dumps", Required = false, Default = false,  HelpText = "If enabled, SIGSEGV signals generate register dumps.")]
+        public bool DebugDumpEnabled
+        {
+            get { return m_DebugDumpEnabled; }
+        }
 
         private readonly string m_InputFileName;
         private readonly string m_LogFile;
+        private readonly bool m_DebugDumpEnabled;
     }
 }

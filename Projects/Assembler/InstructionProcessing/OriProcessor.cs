@@ -33,7 +33,7 @@ namespace Assembler.InstructionProcessing
                 // see if this is a valid 12 bit immediate.
                 // if it is greater, treat this as a pseudo instruction and generate
                 // underlying code to support it. otherwise, use the real andi instruction.
-                if ((immVal & 0xFFFFF000) != 0)
+                if (!IsValidTwelveBitSignedImmediate(immVal))
                 {
                     instructionList = GenerateExpandedInstruction(address, immVal, args);
                 }

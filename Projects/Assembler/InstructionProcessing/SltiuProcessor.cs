@@ -30,6 +30,8 @@ namespace Assembler.InstructionProcessing
 
             uint immVal = 0;
             bool isValidImmediate = IntExtensions.TryParseEx(args[2], out immVal);
+
+            // this is okay, as we expect an unsigned value.
             isValidImmediate = isValidImmediate && ((immVal & 0xFFFFF000) == 0);
 
             var instructionList = new List<int>();

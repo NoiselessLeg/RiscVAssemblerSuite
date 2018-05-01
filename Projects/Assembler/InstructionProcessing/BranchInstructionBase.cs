@@ -45,7 +45,7 @@ namespace Assembler.InstructionProcessing
             
             // if the offset is greater than the 12 bit immediate,
             // throw an error so that bad code isn't silently generated.
-            if ((Math.Abs(offset) & 0xFFFFF000) != 0)
+            if (!IsValidTwelveBitSignedImmediate(Math.Abs(offset)))
             {
                 throw new ArgumentException("The offset between the address of \"" + symbolLabel.LabelName + "\"" +
                     " (0x" + symbolLabel.Address.ToString("X") + " and this instruction address (0x" +

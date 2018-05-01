@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter.Exceptions
 {
-    class AccessViolationException : RuntimeException
+    class RuntimeException : Exception
     {
-        public AccessViolationException(string why):
+        public RuntimeException(string why):
             base(why)
         {
 
