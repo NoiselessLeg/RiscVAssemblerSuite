@@ -55,6 +55,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -77,17 +81,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\PredicateCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\ITreeViewItemViewModel.cs" />
-    <Compile Include="Model\AssemblyFile.cs" />
-    <Compile Include="Util\RelayCommand.cs" />
-    <Compile Include="Util\XmlOutputWriter.cs" />
-    <Compile Include="ViewModel\EditorPaneViewModel.cs" />
-    <Compile Include="ViewModel\FileViewModel.cs" />
-    <Compile Include="ViewModel\ObservableObject.cs" />
-    <Compile Include="Views\TextEditor.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
+    <Compile Include="Models\AssemblyFile.cs" />
+    <Compile Include="Models\LoggerModel.cs" />
+    <Compile Include="Models\ProjectModel.cs" />
+    <Compile Include="Services\DialogOptions.cs" />
+    <Compile Include="Services\DialogServiceFactory.cs" />
+    <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\Win32DialogService.cs" />
+    <Compile Include="Util\CollectionExtensions.cs" />
+    <Compile Include="IO\FileReaderWriterFactory.cs" />
+    <Compile Include="IO\IProjectFileReader.cs" />
+    <Compile Include="IO\IProjectFileWriter.cs" />
+    <Compile Include="IO\XmlFileProc\IXmlChildNodeReader.cs" />
+    <Compile Include="IO\XmlFileProc\XmlChildNodeReaderV1.cs" />
+    <Compile Include="IO\XmlFileProc\XmlProjectFileReader.cs" />
+    <Compile Include="IO\XmlFileProc\XmlProjectFileWriter.cs" />
+    <Compile Include="Models\ProjectFileVersion.cs" />
+    <Compile Include="IO\SupportedFileTypes.cs" />
+    <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
+    <Compile Include="Util\NotifyPropertyChangedBase.cs" />
+    <Compile Include="ViewModels\LoggerViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\ProjectViewModel.cs" />
+    <Compile Include="ViewModels\TabControlViewModel.cs" />
+    <Compile Include="ViewModels\TabPageViewModel.cs" />
+    <Compile Include="Views\AssemblyFileTab.xaml.cs">
+      <DependentUpon>AssemblyFileTab.xaml</DependentUpon>
     </Compile>
-    <Page Include="EditorWindow.xaml">
+    <Compile Include="Views\OpenFileTabView.xaml.cs">
+      <DependentUpon>OpenFileTabView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,17 +123,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EditorWindow.xaml.cs">
-      <DependentUpon>EditorWindow.xaml</DependentUpon>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\TextEditor.xaml">
+    <Page Include="Views\AssemblyFileTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OpenFileTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\AssemblyProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,6 +154,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -142,9 +174,7 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
