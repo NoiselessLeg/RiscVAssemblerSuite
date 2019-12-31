@@ -9,7 +9,7 @@ namespace Assembler.Interpreter
     /// <summary>
     /// Defines constants common to the interpreter classes.
     /// </summary>
-    class InterpreterCommon
+    public class InterpreterCommon
     {
         /// <summary>
         /// Defines how many registers are used in the "processor."

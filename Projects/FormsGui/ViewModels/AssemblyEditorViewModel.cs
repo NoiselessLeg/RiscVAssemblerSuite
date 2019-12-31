@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class EditorViewModel : NotifyPropertyChangedBase
+   public class AssemblyEditorViewModel : NotifyPropertyChangedBase
    {
-      public EditorViewModel()
+      public AssemblyEditorViewModel()
       {
          m_Disassembler = new DisassemblyManager();
          m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();

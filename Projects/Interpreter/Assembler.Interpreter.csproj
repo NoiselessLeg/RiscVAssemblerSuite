@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\AccessViolationException.cs" />
     <Compile Include="Exceptions\RuntimeException.cs" />
+    <Compile Include="ExecutionContext.cs" />
     <Compile Include="FileDebugger.cs" />
     <Compile Include="FileInterpreter.cs" />
     <Compile Include="IRuntimeEnvironment.cs" />

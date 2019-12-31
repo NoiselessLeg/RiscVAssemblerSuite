@@ -20,9 +20,10 @@ namespace Assembler.FormsGui.IO
             using (var reader = new StreamReader(readStream))
             {
                string rawFileData = reader.ReadToEnd();
+               file.FileText = rawFileData;
 
                // text box expects this to be a specific new line, let's give it what it wants.
-               file.FileText = rawFileData.Replace("\n", Environment.NewLine);
+               //file.FileText = rawFileData.Replace("\n", Environment.NewLine);
             }
          }
 

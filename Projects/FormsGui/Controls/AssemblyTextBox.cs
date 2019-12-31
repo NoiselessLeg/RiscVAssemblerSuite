@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.Controls
 {
-   public partial class EditorTextBox : UserControl
+   public partial class AssemblyTextBox : UserControl
    {
-      public EditorTextBox()
+      public AssemblyTextBox()
       {
          InitializeComponent();
       }
 
-      public EditorTextBox(AssemblyFileViewModel avm):
+      public AssemblyTextBox(AssemblyFileViewModel avm):
          this()
       {
          var binding = new Binding("Text", avm, "FileText", true, DataSourceUpdateMode.OnPropertyChanged);

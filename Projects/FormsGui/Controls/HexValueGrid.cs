@@ -34,6 +34,7 @@ namespace Assembler.FormsGui.Controls
 
          public void DeleteBytes(long index, long length)
          {
+            // not implemented.
          }
 
          public bool HasChanges()

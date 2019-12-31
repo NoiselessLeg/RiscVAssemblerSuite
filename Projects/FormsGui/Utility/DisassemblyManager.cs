@@ -32,7 +32,7 @@ namespace Assembler.FormsGui.Utility
                using (var reader = new StreamReader(fileStream))
                {
                   string fileTxt = reader.ReadToEnd();
-                  asmFile.FileText = fileTxt.Replace("\n", Environment.NewLine);
+                  asmFile.FileText = fileTxt;// fileTxt.Replace("\n", Environment.NewLine);
                }
             }
 

@@ -58,20 +58,23 @@
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\CloseableTabControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\ConsoleTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ConsoleTextBox.Designer.cs">
       <DependentUpon>ConsoleTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditorTextBox.cs">
+    <Compile Include="Controls\AssemblyTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\EditorTextBox.Designer.cs">
-      <DependentUpon>EditorTextBox.cs</DependentUpon>
+    <Compile Include="Controls\AssemblyTextBox.Designer.cs">
+      <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FileExecutionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FileExecutionView.Designer.cs">
+      <DependentUpon>FileExecutionView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\HexValueGrid.cs">
       <SubType>UserControl</SubType>
@@ -110,9 +113,13 @@
     <Compile Include="Utility\NotifyPropertyChangedBase.cs" />
     <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
     <Compile Include="ViewModels\CompiledFileViewModel.cs" />
-    <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="ViewModels\AssemblyEditorViewModel.cs" />
+    <Compile Include="ViewModels\DebugWindowViewModel.cs" />
+    <Compile Include="ViewModels\ExecutionViewModel.cs" />
     <Compile Include="ViewModels\HexExplorerViewModel.cs" />
     <Compile Include="ViewModels\LoggerViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\TerminalViewModel.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />
     <Compile Include="Views\DebugView.cs">
       <SubType>UserControl</SubType>
@@ -120,11 +127,11 @@
     <Compile Include="Views\DebugView.Designer.cs">
       <DependentUpon>DebugView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\EditorView.cs">
+    <Compile Include="Views\AssemblyEditorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\EditorView.Designer.cs">
-      <DependentUpon>EditorView.cs</DependentUpon>
+    <Compile Include="Views\AssemblyEditorView.Designer.cs">
+      <DependentUpon>AssemblyEditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\HexExplorerView.cs">
       <SubType>UserControl</SubType>
@@ -134,14 +141,14 @@
     </Compile>
     <Compile Include="Views\IBasicView.cs" />
     <Compile Include="Controls\Custom\MenuBarContext.cs" />
-    <EmbeddedResource Include="Controls\CloseableTabControl.resx">
-      <DependentUpon>CloseableTabControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ConsoleTextBox.resx">
       <DependentUpon>ConsoleTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\EditorTextBox.resx">
-      <DependentUpon>EditorTextBox.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AssemblyTextBox.resx">
+      <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FileExecutionView.resx">
+      <DependentUpon>FileExecutionView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HexValueGrid.resx">
       <DependentUpon>HexValueGrid.cs</DependentUpon>
@@ -158,13 +165,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\EditorView.resx">
-      <DependentUpon>EditorView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\AssemblyEditorView.resx">
+      <DependentUpon>AssemblyEditorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DebugView.resx">
+      <DependentUpon>DebugView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HexExplorerView.resx">
       <DependentUpon>HexExplorerView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.ExecutionViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.HexExplorerViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.OpenFilesViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.TabPageViewModel.datasource" />

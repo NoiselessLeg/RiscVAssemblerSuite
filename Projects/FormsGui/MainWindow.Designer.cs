@@ -33,7 +33,7 @@
          this.m_TabCtrl = new System.Windows.Forms.TabControl();
          this.m_EditorTabPage = new System.Windows.Forms.TabPage();
          this.m_DbgTabPage = new System.Windows.Forms.TabPage();
-         this.m_EditorView = new Assembler.FormsGui.Views.EditorView();
+         this.m_EditorView = new Assembler.FormsGui.Views.AssemblyEditorView();
          this.m_DbgView = new Assembler.FormsGui.Views.DebugView();
          this.m_HexExplorerTabPage = new System.Windows.Forms.TabPage();
          this.m_HexExplorerView = new Assembler.FormsGui.Views.HexExplorerView();
@@ -147,7 +147,7 @@
       private System.Windows.Forms.TabPage m_EditorTabPage;
       private System.Windows.Forms.TabPage m_DbgTabPage;
       private Views.DebugView m_DbgView;
-      private Views.EditorView m_EditorView;
+      private Views.AssemblyEditorView m_EditorView;
       private System.Windows.Forms.TabPage m_HexExplorerTabPage;
       private Views.HexExplorerView m_HexExplorerView;
    }

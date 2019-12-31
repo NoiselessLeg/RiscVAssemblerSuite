@@ -28,10 +28,31 @@
       /// </summary>
       private void InitializeComponent()
       {
-         components = new System.ComponentModel.Container();
+         this.m_OpenFilesTabCtrl = new System.Windows.Forms.TabControl();
+         this.SuspendLayout();
+         // 
+         // m_OpenFilesTabCtrl
+         // 
+         this.m_OpenFilesTabCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_OpenFilesTabCtrl.Location = new System.Drawing.Point(0, 0);
+         this.m_OpenFilesTabCtrl.Name = "m_OpenFilesTabCtrl";
+         this.m_OpenFilesTabCtrl.SelectedIndex = 0;
+         this.m_OpenFilesTabCtrl.Size = new System.Drawing.Size(469, 388);
+         this.m_OpenFilesTabCtrl.TabIndex = 0;
+         // 
+         // DebugView
+         // 
+         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+         this.Controls.Add(this.m_OpenFilesTabCtrl);
+         this.Name = "DebugView";
+         this.Size = new System.Drawing.Size(469, 388);
+         this.ResumeLayout(false);
+
       }
 
       #endregion
+
+      private System.Windows.Forms.TabControl m_OpenFilesTabCtrl;
    }
 }

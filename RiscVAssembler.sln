@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Disassembler", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Linker", "Projects\Assembler.Linker\Assembler.Linker.csproj", "{28ED32B0-76E7-48CD-9664-E045F5FB073E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.FormsGui", "Projects\Assembler.FormsGui\Assembler.FormsGui.csproj", "{63D29618-58E3-45A7-9E10-8393A9C7F05C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.FormsGui", "Projects\FormsGui\Assembler.FormsGui.csproj", "{63D29618-58E3-45A7-9E10-8393A9C7F05C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

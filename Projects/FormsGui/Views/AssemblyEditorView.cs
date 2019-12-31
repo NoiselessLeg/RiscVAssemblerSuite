@@ -11,11 +11,11 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.Views
 {
-   public partial class EditorView : UserControl, IBasicView
+   public partial class AssemblyEditorView : UserControl, IBasicView
    {
-      public EditorView()
+      public AssemblyEditorView()
       {
-         m_EditorVm = new EditorViewModel();
+         m_EditorVm = new AssemblyEditorViewModel();
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
@@ -24,13 +24,13 @@ namespace Assembler.FormsGui.Views
          m_AssembleFileCmd = new RelayCommand(
             (param) =>
             {
-               var evm = param as EditorViewModel;
+               var evm = param as AssemblyEditorViewModel;
                System.Diagnostics.Debug.Assert(evm != null);
                m_EditorVm.AssembleFileCmd.Execute(evm.ActiveFile.FilePath);
             },
             (param) =>
             {
-               var evm = param as EditorViewModel;
+               var evm = param as AssemblyEditorViewModel;
                System.Diagnostics.Debug.Assert(evm != null);
                return evm.ActiveFile.IsFileBackedPhysically;
             }
@@ -81,7 +81,7 @@ namespace Assembler.FormsGui.Views
                   }
                   else
                   {
-                     var evm = param as EditorViewModel;
+                     var evm = param as AssemblyEditorViewModel;
                      System.Diagnostics.Debug.Assert(evm != null);
                      CloseTabAction(evm.ActiveFileIndex);
                   }
@@ -99,7 +99,7 @@ namespace Assembler.FormsGui.Views
                   }
                   else
                   {
-                     var evm = param as EditorViewModel;
+                     var evm = param as AssemblyEditorViewModel;
                      System.Diagnostics.Debug.Assert(evm != null);
                      if (evm.ActiveFileIndex < m_EditorVm.AllOpenFiles.Count)
                      {
@@ -121,14 +121,14 @@ namespace Assembler.FormsGui.Views
       {
          var newTab = new TabPage();
          newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new EditorTextBox(viewModel);
+         var tabContent = new AssemblyTextBox(viewModel);
          tabContent.Dock = DockStyle.Fill;
          newTab.Controls.Add(tabContent);
 
          return newTab;
       }
 
-      private void CreateDataBindings(EditorViewModel viewModel)
+      private void CreateDataBindings(AssemblyEditorViewModel viewModel)
       {
          m_OpenFileTabs.TabPages.BindToObservableCollection(m_EditorVm.AllOpenFiles,
                                                             (avm) => CreateNewTabPage(avm));
@@ -362,7 +362,7 @@ namespace Assembler.FormsGui.Views
       }
 
       private readonly MenuBarContext m_Ctx;
-      private readonly EditorViewModel m_EditorVm;
+      private readonly AssemblyEditorViewModel m_EditorVm;
 
       private readonly RelayCommand m_OpenFileCmd;
       private readonly RelayCommand m_SaveFileCmd;

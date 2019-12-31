@@ -1,6 +1,6 @@
 ﻿namespace Assembler.FormsGui.Controls
 {
-   partial class EditorTextBox
+   partial class AssemblyTextBox
    {
       /// <summary> 
       /// Required designer variable.
@@ -28,35 +28,31 @@
       /// </summary>
       private void InitializeComponent()
       {
-         this.m_FileTxtBox = new System.Windows.Forms.TextBox();
+         this.m_FileTxtBox = new System.Windows.Forms.RichTextBox();
          this.SuspendLayout();
          // 
          // m_FileTxtBox
          // 
-         this.m_FileTxtBox.AcceptsReturn = true;
-         this.m_FileTxtBox.AcceptsTab = true;
+         this.m_FileTxtBox.DetectUrls = false;
          this.m_FileTxtBox.Dock = System.Windows.Forms.DockStyle.Fill;
          this.m_FileTxtBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.m_FileTxtBox.Location = new System.Drawing.Point(0, 0);
-         this.m_FileTxtBox.Multiline = true;
          this.m_FileTxtBox.Name = "m_FileTxtBox";
-         this.m_FileTxtBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
          this.m_FileTxtBox.Size = new System.Drawing.Size(392, 324);
          this.m_FileTxtBox.TabIndex = 0;
-         this.m_FileTxtBox.WordWrap = false;
+         this.m_FileTxtBox.Text = "";
          // 
-         // EditorTabPage
+         // EditorTextBox
          // 
          this.Controls.Add(this.m_FileTxtBox);
-         this.Name = "EditorTabPage";
+         this.Name = "EditorTextBox";
          this.Size = new System.Drawing.Size(392, 324);
          this.ResumeLayout(false);
-         this.PerformLayout();
 
       }
 
       #endregion
 
-      private System.Windows.Forms.TextBox m_FileTxtBox;
+      private System.Windows.Forms.RichTextBox m_FileTxtBox;
    }
 }

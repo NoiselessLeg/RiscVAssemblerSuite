@@ -1,6 +1,6 @@
 ﻿namespace Assembler.FormsGui.Views
 {
-   partial class EditorView
+   partial class AssemblyEditorView
    {
       /// <summary> 
       /// Required designer variable.
