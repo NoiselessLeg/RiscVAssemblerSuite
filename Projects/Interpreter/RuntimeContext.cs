@@ -237,8 +237,17 @@ namespace Assembler.Interpreter
             get { return m_RuntimeRegisters; }
         }
 
+        /// <summary>
+        /// Gets the array of registers that are only read/writeable by the environment or via privileged instructions
+        /// </summary>
+        public Register[] PrivilegedRegisters
+        {
+            get { return m_PrivilegedRegisters; }
+        }
+
         private readonly IRuntimeEnvironment m_Environment;
         private readonly RuntimeDataSegmentAccessor m_DataAccessor;
         private readonly Register[] m_RuntimeRegisters;
+        private readonly Register[] m_PrivilegedRegisters;
     }
 }

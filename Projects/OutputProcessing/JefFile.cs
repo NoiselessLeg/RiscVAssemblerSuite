@@ -196,6 +196,11 @@ namespace Assembler.OutputProcessing
                         totalBytesRead += 4;
                         break;
                     }
+
+                    default:
+                    {
+                        throw new Exception("Unrecognized typecode \"0x" + typeCodeByte + "\" in disassembled file.");
+                    }
                 }
 
                 var dataElem = new MetadataElement(typeCodeByte, size);

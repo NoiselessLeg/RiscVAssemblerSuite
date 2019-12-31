@@ -31,6 +31,19 @@ namespace Assembler.InstructionProcessing
             return GenerateCodeForInstruction(address, instructionArgs).Count();
         }
 
+      protected bool IsValidSignedImmediate(uint numBits, int immediate)
+      {
+         int mask = 0;
+         for (int i = 0; i < numBits; ++i)
+         {
+            mask |= (1 << i);
+         }
+         int MAX_VALUE = (mask - 1);
+         int MIN_VALUE = -mask;
+
+         return (immediate >= MIN_VALUE) && (immediate <= MAX_VALUE);
+      }
+
         /// <summary>
         /// Determines if a signed 32-bit value is a proper 12 bit immediate. This will take into
         /// account the sign bit.

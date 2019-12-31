@@ -381,7 +381,7 @@ namespace Assembler.Util
                     int tokenizedAlign = 0;
                     if (int.TryParse(tokens[1], out tokenizedAlign))
                     {
-                        alignment = ParserCommon.GetNewAlignment(tokenizedAlign);
+                        alignment = GetNewAlignment(tokenizedAlign);
                         isDirective = true;
                     }
                     else

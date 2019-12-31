@@ -76,28 +76,49 @@ namespace Assembler
                     fileNameNoExtension = inputFile.Substring(0, inputFile.LastIndexOf('.'));
                 }
 
-                using (var reader = new StreamReader(File.OpenRead(inputFile)))
+                // check our time stamps.
+                // if our output file last write timestamp is later than our input file's write timestamp,
+                // then everything is up to date and nothing needs rebuilt.
+                // TODO: eventually, if using .include preprocessing, we're going to need
+                // to recursively check to make sure that all included file time stamps have not changed
+                string outputFile = fileNameNoExtension + ".jef";
+                bool furtherProcessingNeeded = true;
+                if (File.Exists(inputFile) && 
+                    File.Exists(outputFile))
                 {
-                    var symTable = new SymbolTable();
+                    DateTime inputFileWriteTime = File.GetLastWriteTimeUtc(inputFile);
+                    DateTime outputFileWriteTime = File.GetLastWriteTimeUtc(outputFile);
+                    if (outputFileWriteTime > inputFileWriteTime)
+                    {
+                        logger.Log(LogLevel.Info, "Nothing to do for file " + inputFile);
+                        furtherProcessingNeeded = false;
+                    }
+                }
 
-                    // build the symbol table
-                    var instructionProcFac = new InstructionProcessorFactory(symTable);
-                    var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
+                if (furtherProcessingNeeded)
+                {
+                    using (var reader = new StreamReader(File.OpenRead(inputFile)))
+                    {
+                        var symTable = new SymbolTable();
 
-                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
-                    symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
+                        // build the symbol table
+                        var instructionProcFac = new InstructionProcessorFactory(symTable);
+                        var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
 
-                    // use the symbol table to generate code with references resolved.
-                    var objFile = new BasicObjectFile(symTable);
+                        symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
+                        symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
-                    var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
-                    codeGenerator.GenerateCode(reader, objFile);
+                        // use the symbol table to generate code with references resolved.
+                        var objFile = new BasicObjectFile(symTable);
 
-                    // write the object file out.
-                    var writerFac = new ObjectFileWriterFactory();
-                    IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.DirectBinary);
-                    string outputFile = fileNameNoExtension + ".jef";
-                    writer.WriteObjectFile(outputFile, objFile);
+                        var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
+                        codeGenerator.GenerateCode(reader, objFile);
+
+                        // write the object file out.
+                        var writerFac = new ObjectFileWriterFactory();
+                        IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.DirectBinary);
+                        writer.WriteObjectFile(outputFile, objFile);
+                    }
                 }
             }
             catch (AggregateException ex)
@@ -112,7 +133,10 @@ namespace Assembler
             catch (IOException ex)
             {
                 logger.Log(LogLevel.Critical, ex.Message);
-                logger.Log(LogLevel.Critical, ex.InnerException?.Message);
+                if (ex.InnerException != null)
+                {
+                    logger.Log(LogLevel.Critical, ex.InnerException.Message);
+                }
                 success = false;
             }
 

@@ -17,6 +17,11 @@ namespace Assembler.Interpreter
         public const int MAX_REGISTERS = 33;
 
         /// <summary>
+        /// Defines how many privileged-level registers are used in the "processor."
+        /// </summary>
+        public const int MAX_PRIVILEGED_REGISTERS = 32;
+
+        /// <summary>
         /// Defines the index of the program counter register.
         /// </summary>
         public const int PC_REGISTER = MAX_REGISTERS - 1;

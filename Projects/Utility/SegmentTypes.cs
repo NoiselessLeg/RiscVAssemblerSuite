@@ -14,6 +14,8 @@ namespace Assembler.Common
         Invalid,
         Data,
         Text,
-        Extern
+        Extern,
+        KText,
+        KData
     }
 }

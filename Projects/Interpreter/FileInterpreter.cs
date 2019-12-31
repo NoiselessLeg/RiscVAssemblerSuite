@@ -22,6 +22,15 @@ namespace Assembler.Interpreter
         {
             m_InterpreterFac = new InterpreterFactory(terminal);
         }
+        
+        /// <summary>
+        /// Returns a boolean value representing if the runtime was requested to terminate.
+        /// </summary>
+        /// <returns>True if a termination request was placed by the runtime; otherwise returns false.</returns>
+        public bool IsTerminationRequested()
+        {
+            return m_TerminationRequested;
+        }
 
         /// <summary>
         /// Diassembles and interprets a .JEF file.
@@ -36,31 +45,40 @@ namespace Assembler.Interpreter
                 DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
 
                 var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
-                RuntimeContext ctx = new RuntimeContext(this, dataSegment);
+                var ctx = new RuntimeContext(this, dataSegment);
 
                 ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = file.TextSegment.StartingSegmentAddress;
                 ctx.UserRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
 
                 int programCtr = ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
 
-                while (!file.TextSegment.EndOfFileReached(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value) && !m_TerminationRequested)
+                try 
                 {
-                    DisassembledInstruction instruction = file.TextSegment.FetchInstruction(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value);
-                    IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
-
-                    // if this returns false, then increment the program counter by 4. otherwise, this indicates
-                    // that the instruction needed to change the PC.
-                    if (!interpreter.InterpretInstruction(ctx, instruction.Parameters.ToArray()))
+                    while (!file.TextSegment.EndOfFileReached(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value) && !IsTerminationRequested())
                     {
-                        ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
-                    }
-                }
+                        DisassembledInstruction instruction = file.TextSegment.FetchInstruction(ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value);
+                        IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
 
-                logger.Log(LogLevel.Info, "Execution complete.");
+                        // if this returns false, then increment the program counter by 4. otherwise, this indicates
+                        // that the instruction needed to change the PC.
+                        if (!interpreter.InterpretInstruction(ctx, instruction.Parameters.ToArray()))
+                        {
+                            ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
+                        }
+                    }
+
+                    logger.Log(LogLevel.Info, "Execution complete.");
+                }
+                catch (Exception)
+                {
+                    //TODO: need to add configurable exception handling
+                    throw;
+                }
             }
             catch (Exception ex)
             {
                 logger.Log(LogLevel.Critical, "Runtime exception occurred: " + ex.Message);
+                logger.Log(LogLevel.Critical, "No exception handler found - terminating program.");
             }
         }
 

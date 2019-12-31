@@ -53,9 +53,7 @@ namespace Assembler.Interpreter.InstructionInterpretation
                 { InstructionType.Xori, new XoriInterpreter() },
             };
         }
-
-
-
+        
         /// <summary>
         /// Gets an interpreter for a specified instruction type. Throws an ArgumentException
         /// if the instruction is not recognized.

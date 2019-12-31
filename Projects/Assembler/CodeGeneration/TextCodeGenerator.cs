@@ -23,7 +23,6 @@ namespace Assembler.CodeGeneration
         {
             m_Logger = logger;
             m_ParserFac = procFactory;
-            m_ProcessedInstructions = new Stack<InstructionElement>();
             m_CurrTextAddress = CommonConstants.BASE_TEXT_ADDRESS;
         }
 
@@ -84,7 +83,6 @@ namespace Assembler.CodeGeneration
 
         private readonly ILogger m_Logger;
         private readonly InstructionProcessorFactory m_ParserFac;
-        private readonly Stack<InstructionElement> m_ProcessedInstructions;
         private int m_CurrTextAddress;
     }
 }

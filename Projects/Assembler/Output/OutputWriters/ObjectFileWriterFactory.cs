@@ -12,7 +12,6 @@ namespace Assembler.Output.OutputWriters
         /// <summary>
         /// Creates a new instance of the ObjectFileWriterFactory with the target endianness.
         /// </summary>
-        /// <param name="targetEndianness">The endianness that should be used to generate output.</param>
         public ObjectFileWriterFactory()
         {
             m_WriterTypes = new Dictionary<OutputTypes, IObjectFileWriter>()
