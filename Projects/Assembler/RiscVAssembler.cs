@@ -139,6 +139,15 @@ namespace Assembler
                 }
                 success = false;
             }
+            catch (Exception ex)
+            {
+               logger.Log(LogLevel.Critical, ex.Message);
+               if (ex.InnerException != null)
+               {
+                  logger.Log(LogLevel.Critical, ex.InnerException.Message);
+               }
+               success = false;
+            }
 
             return success;
         }

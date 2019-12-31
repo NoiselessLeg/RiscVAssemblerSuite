@@ -1,5 +1,6 @@
 ﻿using Assembler.Disassembler;
 using Assembler.FormsGui.Commands;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using Assembler.OutputProcessing;
 using System;
@@ -13,14 +14,22 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class DebugWindowViewModel : NotifyPropertyChangedBase
    {
-      public DebugWindowViewModel()
+      public DebugWindowViewModel(MessageManager msgMgr)
       {
+         m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
          m_FileProc = new JefFileProcessor();
          m_RunFileCmd = new RelayCommand(
             (param) => LoadFile(param as string)
          );
+
+         msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
+         m_MsgMgr = msgMgr;
       }
 
+      public IBasicQueue<IBasicMessage> MessageQueue
+      {
+         get { return m_ExternalMsgQueue; }
+      }
 
       public ICommand RunFileCommand
       {
@@ -33,6 +42,11 @@ namespace Assembler.FormsGui.ViewModels
          
 
       }
+
+
+
+      private readonly MessageManager m_MsgMgr;
+      private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
 
       private readonly RelayCommand m_RunFileCmd;
       private readonly JefFileProcessor m_FileProc;

@@ -1,5 +1,6 @@
 ﻿using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.IO;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,9 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class HexExplorerViewModel : NotifyPropertyChangedBase
    {
-      public HexExplorerViewModel()
+      public HexExplorerViewModel(MessageManager msgMgr)
       {
+         m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
          m_OpenFiles = new ObservableCollection<CompiledFileViewModel>();
          m_OpenFileCmd = new RelayCommand((param) => LoadFile(param as string));
          m_SaveFileCmd = new RelayCommand(param => SaveFile(param as string));
@@ -28,6 +30,14 @@ namespace Assembler.FormsGui.ViewModels
 
          });
          m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
+
+         msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
+         m_MsgMgr = msgMgr;
+      }
+
+      public IBasicQueue<IBasicMessage> MessageQueue
+      {
+         get { return m_ExternalMsgQueue; }
       }
       
       public ObservableCollection<CompiledFileViewModel> AllOpenFiles
@@ -101,6 +111,8 @@ namespace Assembler.FormsGui.ViewModels
       }
 
       private int m_ActiveViewModelIdx;
+      private readonly MessageManager m_MsgMgr;
+      private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
       private readonly ObservableCollection<CompiledFileViewModel> m_OpenFiles;
       private readonly RelayCommand m_OpenFileCmd;
       private readonly RelayCommand m_SaveFileCmd;

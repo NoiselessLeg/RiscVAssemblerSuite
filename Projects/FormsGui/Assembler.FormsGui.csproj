@@ -99,6 +99,8 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messaging\IBasicMessage.cs" />
+    <Compile Include="Messaging\MessageManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DialogOptions.cs" />
@@ -110,7 +112,9 @@
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\DelegateProperty.cs" />
     <Compile Include="Utility\DisassemblyManager.cs" />
+    <Compile Include="Utility\IBasicQueue.cs" />
     <Compile Include="Utility\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Utility\ObservableQueue.cs" />
     <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
     <Compile Include="ViewModels\CompiledFileViewModel.cs" />
     <Compile Include="ViewModels\AssemblyEditorViewModel.cs" />
@@ -141,6 +145,9 @@
     </Compile>
     <Compile Include="Views\IBasicView.cs" />
     <Compile Include="Controls\Custom\MenuBarContext.cs" />
+    <Compile Include="Views\ViewBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <EmbeddedResource Include="Controls\ConsoleTextBox.resx">
       <DependentUpon>ConsoleTextBox.cs</DependentUpon>
     </EmbeddedResource>

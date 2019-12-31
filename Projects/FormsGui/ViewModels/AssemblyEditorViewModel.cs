@@ -1,6 +1,7 @@
 ﻿using Assembler.Disassembler;
 using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.IO;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,9 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class AssemblyEditorViewModel : NotifyPropertyChangedBase
    {
-      public AssemblyEditorViewModel()
+      public AssemblyEditorViewModel(MessageManager msgMgr)
       {
+         m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
          m_Disassembler = new DisassemblyManager();
          m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
          m_OpenViewModels.Add(new AssemblyFileViewModel());
@@ -37,6 +39,8 @@ namespace Assembler.FormsGui.ViewModels
          });
          m_DisassembleAndImportCmd = new RelayCommand(param => DisassembleAndImportFile(param as string));
          m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
+         m_MsgMgr = msgMgr;
+         m_MsgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
       }
 
       public int ActiveFileIndex
@@ -60,6 +64,11 @@ namespace Assembler.FormsGui.ViewModels
       public ObservableCollection<AssemblyFileViewModel> AllOpenFiles
       {
          get { return m_OpenViewModels; }
+      }
+
+      public IBasicQueue<IBasicMessage> MessageQueue
+      {
+         get { return m_ExternalMsgQueue; }
       }
 
       public LoggerViewModel LoggerModel
@@ -151,6 +160,9 @@ namespace Assembler.FormsGui.ViewModels
       }
 
       private int m_ActiveViewModelIdx;
+
+      private readonly MessageManager m_MsgMgr;
+      private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
       private readonly ObservableCollection<AssemblyFileViewModel> m_OpenViewModels;
       private readonly RiscVAssembler m_Assembler;
       private readonly DisassemblyManager m_Disassembler;

@@ -1,6 +1,7 @@
 ﻿using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.Controls.Custom;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
@@ -16,11 +17,18 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.Views
 {
-   public partial class HexExplorerView : UserControl, IBasicView
+   public partial class HexExplorerView : ViewBase
    {
       public HexExplorerView()
       {
-         m_ExplorerVm = new HexExplorerViewModel();
+         // designer requires this - do not call from user code.
+         InitializeComponent();
+      }
+
+      public HexExplorerView(MessageManager msgMgr):
+         base("Hex Explorer")
+      {
+         m_ExplorerVm = new HexExplorerViewModel(msgMgr);
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
@@ -103,6 +111,11 @@ namespace Assembler.FormsGui.Views
          CreateDataBindings(m_ExplorerVm);
       }
 
+      public override IBasicQueue<IBasicMessage> MessageQueue
+      {
+         get { return m_ExplorerVm.MessageQueue; }
+      }
+
       private TabPage CreateNewTabPage(CompiledFileViewModel viewModel)
       {
          var newTab = new TabPage();
@@ -124,7 +137,7 @@ namespace Assembler.FormsGui.Views
       }
 
 
-      public MenuBarContext MenuBarMembers
+      public override MenuBarContext MenuBarMembers
       {
          get { return m_Ctx; }
       }

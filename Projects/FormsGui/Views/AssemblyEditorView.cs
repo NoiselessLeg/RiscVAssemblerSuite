@@ -1,6 +1,7 @@
 ﻿using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.Controls.Custom;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
@@ -11,11 +12,18 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.Views
 {
-   public partial class AssemblyEditorView : UserControl, IBasicView
+   public partial class AssemblyEditorView : ViewBase
    {
       public AssemblyEditorView()
       {
-         m_EditorVm = new AssemblyEditorViewModel();
+         // designer requires this - do not call from user code.
+         InitializeComponent();
+      }
+
+      public AssemblyEditorView(MessageManager msgMgr) :
+         base("Assembly Editor")
+      {
+         m_EditorVm = new AssemblyEditorViewModel(msgMgr);
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
@@ -109,7 +117,12 @@ namespace Assembler.FormsGui.Views
          CreateDataBindings(m_EditorVm);
       }
 
-      public MenuBarContext MenuBarMembers => m_Ctx;
+      public override MenuBarContext MenuBarMembers => m_Ctx;
+
+      public override IBasicQueue<IBasicMessage> MessageQueue
+      {
+         get { return m_EditorVm.MessageQueue; }
+      }
 
       private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
       {

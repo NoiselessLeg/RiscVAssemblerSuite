@@ -3,6 +3,7 @@ using Assembler.Common;
 using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.IO;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Views;
 using System;
 using System.Collections.Generic;
@@ -18,36 +19,21 @@ namespace Assembler.FormsGui.ViewModels
    {
       public WindowViewModel()
       {
-         m_Views = new ObservableCollection<IBasicView>();
-         m_SaveFileCommand = new RelayCommand(param => SaveFile(param as AssemblyFileViewModel));
-         m_AssembleCommand = new RelayCommand(param => AssembleFile(param as AssemblyFileViewModel));
+         m_MsgMgr = new MessageManager();
+         m_Views = new ObservableCollection<ViewBase>();
+         
+         m_Views.Add(new AssemblyEditorView(m_MsgMgr));
+         m_Views.Add(new HexExplorerView(m_MsgMgr));
+         m_Views.Add(new DebugView(m_MsgMgr));
       }
 
-      private void SaveFile(AssemblyFileViewModel avm)
-      {
-         avm.SaveFile();
-      }
-
-      private void AssembleFile(AssemblyFileViewModel avm)
-      {
-      }
-      
-      public ICommand SaveFileCommand
-      {
-         get { return m_SaveFileCommand; }
-      }
-
-      public ICommand AssembleFileCommand
-      {
-         get { return m_AssembleCommand; }
-      }
-
-      public ObservableCollection<IBasicView> ViewList
+      public ObservableCollection<ViewBase> ViewList
       {
          get { return m_Views; }
       }
 
-      private readonly ObservableCollection<IBasicView> m_Views;
+      private readonly MessageManager m_MsgMgr;
+      private readonly ObservableCollection<ViewBase> m_Views;
       private readonly RelayCommand m_SaveFileCommand;
       private readonly RelayCommand m_AssembleCommand;
       

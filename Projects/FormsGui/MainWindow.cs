@@ -1,6 +1,7 @@
 ﻿using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Services;
+using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
 using Assembler.FormsGui.Views;
 using System;
@@ -21,12 +22,23 @@ namespace Assembler.FormsGui
       {
          m_ViewModel = new WindowViewModel();
          InitializeComponent();
-
-         IBasicView viewPg = m_TabCtrl.TabPages[0].Controls[0] as IBasicView;
-         UpdateMenuContext(viewPg);
+         CreateDataBindings(m_ViewModel);
       }
 
-      private readonly WindowViewModel m_ViewModel;
+      private void CreateDataBindings(WindowViewModel viewModel)
+      {
+         m_TabCtrl.TabPages.BindToObservableCollection(viewModel.ViewList,
+                                                       (param) => CreateTabPage(param as ViewBase));
+      }
+
+      private TabPage CreateTabPage(ViewBase view)
+      {
+         var page = new TabPage();
+         page.Text = view.ViewName;
+         view.Dock = DockStyle.Fill;
+         page.Controls.Add(view);
+         return page;
+      }
 
       private void UpdateMenuContext(IBasicView activeView)
       {
@@ -38,8 +50,13 @@ namespace Assembler.FormsGui
 
       private void OnTabSelection(object sender, TabControlEventArgs e)
       {
-         IBasicView viewPg = e.TabPage.Controls[0] as IBasicView;
-         UpdateMenuContext(viewPg);
+         if (e.TabPageIndex >= 0)
+         {
+            IBasicView viewPg = m_ViewModel.ViewList[e.TabPageIndex];
+            UpdateMenuContext(viewPg);
+         }
       }
+
+      private readonly WindowViewModel m_ViewModel;
    }
 }
