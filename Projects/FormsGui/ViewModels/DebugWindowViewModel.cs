@@ -30,9 +30,7 @@ namespace Assembler.FormsGui.ViewModels
       private void LoadFile(string fileName)
       {
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
-
-         var exCtx = new Interpreter.ExecutionContext()
-         var executionVm = new ExecutionViewModel()
+         
 
       }
 

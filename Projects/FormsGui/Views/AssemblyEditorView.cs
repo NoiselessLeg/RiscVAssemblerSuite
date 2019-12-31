@@ -26,13 +26,7 @@ namespace Assembler.FormsGui.Views
             {
                var evm = param as AssemblyEditorViewModel;
                System.Diagnostics.Debug.Assert(evm != null);
-               m_EditorVm.AssembleFileCmd.Execute(evm.ActiveFile.FilePath);
-            },
-            (param) =>
-            {
-               var evm = param as AssemblyEditorViewModel;
-               System.Diagnostics.Debug.Assert(evm != null);
-               return evm.ActiveFile.IsFileBackedPhysically;
+               AssembleFileAction(evm.ActiveFile);
             }
          );
 
@@ -321,6 +315,47 @@ namespace Assembler.FormsGui.Views
          catch (Exception ex)
          {
             service.ShowErrorDialog("Import Error", ex.Message);
+         }
+      }
+
+      private void AssembleFileAction(AssemblyFileViewModel viewModel)
+      {
+         bool continueAssembling = true;
+         if (!viewModel.IsFileBackedPhysically)
+         {
+            SaveFileAction();
+
+            // if this is still false, the user may have backed out of the save box.
+            if (!viewModel.IsFileBackedPhysically)
+            {
+               continueAssembling = false;
+            }
+         }
+         else if (viewModel.AreAnyChangedUnsaved)
+         {
+            DialogResult dr = MessageBox.Show(viewModel.FileName + " has unsaved changes. Do you wish to save before running assembler?",
+                                              "Unsaved Changes",
+                                              MessageBoxButtons.YesNoCancel,
+                                              MessageBoxIcon.Question);
+
+            switch (dr)
+            {
+               case DialogResult.Yes:
+               {
+                  SaveFileAction();
+                  break;
+               }
+               case DialogResult.Cancel:
+               {
+                  continueAssembling = false;
+                  break;
+               }
+            }
+         }
+
+         if (continueAssembling)
+         {
+            m_EditorVm.AssembleFileCmd.Execute(viewModel.FilePath);
          }
       }
 
