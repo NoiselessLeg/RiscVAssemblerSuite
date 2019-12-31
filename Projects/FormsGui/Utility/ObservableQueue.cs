@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.Utility
 {
@@ -15,18 +10,17 @@ namespace Assembler.FormsGui.Utility
          m_Queue = new Queue<T>();
       }
 
-      public event EventHandler<CollectionChangeEventArgs> QueueChanged;
+      public event EventHandler<EventArgs> ItemEnqueued;
 
       public void Enqueue(T elem)
       {
          m_Queue.Enqueue(elem);
-         QueueChanged?.Invoke(this, new CollectionChangeEventArgs(CollectionChangeAction.Add, elem));
+         ItemEnqueued?.Invoke(this, new EventArgs());
       }
 
       public T Dequeue()
       {
          T elem = m_Queue.Dequeue();
-         QueueChanged?.Invoke(this, new CollectionChangeEventArgs(CollectionChangeAction.Remove, elem));
          return elem;
       }
 

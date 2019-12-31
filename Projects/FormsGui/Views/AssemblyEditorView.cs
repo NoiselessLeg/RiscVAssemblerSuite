@@ -20,10 +20,10 @@ namespace Assembler.FormsGui.Views
          InitializeComponent();
       }
 
-      public AssemblyEditorView(MessageManager msgMgr) :
-         base("Assembly Editor")
+      public AssemblyEditorView(int viewId, MessageManager msgMgr) :
+         base(viewId, "Assembly Editor", msgMgr)
       {
-         m_EditorVm = new AssemblyEditorViewModel(msgMgr);
+         m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr);
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
@@ -119,10 +119,10 @@ namespace Assembler.FormsGui.Views
 
       public override MenuBarContext MenuBarMembers => m_Ctx;
 
-      public override IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_EditorVm.MessageQueue; }
-      }
+      //public override IBasicQueue<IBasicMessage> MessageQueue
+      //{
+      //   get { return m_EditorVm.MessageQueue; }
+      //}
 
       private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
       {
@@ -391,14 +391,13 @@ namespace Assembler.FormsGui.Views
 
                   var cm = new ContextMenu();
                   cm.MenuItems.Add(new MenuItem("Close Tab", (s, arg) => { m_CloseTabCmd.Execute(tabItr); }));
-                  cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) =>{ m_CloseTabsToRightCmd.Execute(tabItr); }));
+                  cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) => { m_CloseTabsToRightCmd.Execute(tabItr); }));
                   cm.MenuItems.Add(new MenuItem("Close all tabs to left", (s, arg) => { m_CloseTabsToLeftCmd.Execute(tabItr); }));
                   cm.Show(ctrl, e.Location);
                   break;
                }
             }
          }
-
       }
 
       private void TabControl_OnCurrentTabChanged(object sender, TabControlEventArgs e)

@@ -22,10 +22,10 @@ namespace Assembler.FormsGui.Views
          InitializeComponent();
       }
 
-      public DebugView(MessageManager msgMgr) :
-         base("Program Execution")
+      public DebugView(int viewId, MessageManager msgMgr) :
+         base(viewId, "Program Execution", msgMgr)
       {
-         m_ViewModel = new DebugWindowViewModel(msgMgr);
+         m_ViewModel = new DebugWindowViewModel(viewId, msgMgr);
          InitializeComponent();
          m_Ctx = new MenuBarContext();
       }
@@ -39,7 +39,7 @@ namespace Assembler.FormsGui.Views
       {
          get { return m_ViewModel.MessageQueue; }
       }
-
+      
       private readonly DebugWindowViewModel m_ViewModel;
       private readonly MenuBarContext m_Ctx;
    }

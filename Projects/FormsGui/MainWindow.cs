@@ -29,6 +29,18 @@ namespace Assembler.FormsGui
       {
          m_TabCtrl.TabPages.BindToObservableCollection(viewModel.ViewList,
                                                        (param) => CreateTabPage(param as ViewBase));
+
+         m_MenuStrip.CreateBinding(viewModel, ctrl => ctrl.Items, nameof(m_ViewModel.ActiveView),
+            (ctrlItems, vm) =>
+            {
+               IBasicView activeView = vm.ActiveView;
+               ctrlItems.Clear();
+               ctrlItems.AddRange(activeView.MenuBarMembers.AsToolStripItems().ToArray());
+            }
+         );
+
+         m_TabCtrl.DataBindings.Add(new Binding(nameof(m_TabCtrl.SelectedIndex), 
+            viewModel, nameof(viewModel.ActiveViewIndex), true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
       private TabPage CreateTabPage(ViewBase view)
@@ -40,20 +52,11 @@ namespace Assembler.FormsGui
          return page;
       }
 
-      private void UpdateMenuContext(IBasicView activeView)
-      {
-         System.Diagnostics.Debug.Assert(activeView != null);
-         MenuBarContext ctx = activeView.MenuBarMembers;
-         m_MenuStrip.Items.Clear();
-         m_MenuStrip.Items.AddRange(ctx.AsToolStripItems().ToArray());
-      }
-
       private void OnTabSelection(object sender, TabControlEventArgs e)
       {
          if (e.TabPageIndex >= 0)
          {
-            IBasicView viewPg = m_ViewModel.ViewList[e.TabPageIndex];
-            UpdateMenuContext(viewPg);
+            m_ViewModel.ChangeActiveViewCommand.Execute(e.TabPageIndex);
          }
       }
 

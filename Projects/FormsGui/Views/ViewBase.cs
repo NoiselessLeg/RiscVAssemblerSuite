@@ -16,9 +16,13 @@ namespace Assembler.FormsGui.Views
       {
       }
 
-      public ViewBase(string viewName)
+      public ViewBase(int viewId,
+                      string viewName,
+                      MessageManager msgMgr)
       {
+         m_ViewId = viewId;
          m_ViewName = viewName;
+         m_ViewMsgMgr = msgMgr;
       }
 
       // these are virtual primarily so the designer doesn't barf while trying
@@ -40,11 +44,25 @@ namespace Assembler.FormsGui.Views
          }
       }
 
+      protected int ViewId
+      {
+         get { return m_ViewId; }
+      }
+
+      protected void SendMessage(IBasicMessage msg)
+      {
+         m_ViewMsgMgr.BroadcastMessage(msg);
+      }
+         
+
       public string ViewName
       {
          get { return m_ViewName; }
       }
 
       private string m_ViewName;
+
+      private readonly int m_ViewId;
+      private readonly MessageManager m_ViewMsgMgr;
    }
 }

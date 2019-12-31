@@ -14,15 +14,16 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class DebugWindowViewModel : NotifyPropertyChangedBase
    {
-      public DebugWindowViewModel(MessageManager msgMgr)
+      public DebugWindowViewModel(int viewId, MessageManager msgMgr)
       {
          m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
+         m_ExternalMsgQueue.ItemEnqueued += OnExternalMsgReceived;
          m_FileProc = new JefFileProcessor();
          m_RunFileCmd = new RelayCommand(
             (param) => LoadFile(param as string)
          );
 
-         msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
+         m_MsgSenderId = msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
          m_MsgMgr = msgMgr;
       }
 
@@ -39,12 +40,17 @@ namespace Assembler.FormsGui.ViewModels
       private void LoadFile(string fileName)
       {
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
-         
+
 
       }
 
+      private void OnExternalMsgReceived(object sender, EventArgs e)
+      {
+         var msgQ = sender as IBasicQueue<IBasicMessage>;
+         msgQ.Dequeue();
+      }
 
-
+      private readonly int m_MsgSenderId;
       private readonly MessageManager m_MsgMgr;
       private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
 

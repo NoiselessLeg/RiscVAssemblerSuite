@@ -168,6 +168,11 @@ namespace Assembler.FormsGui.Controls.Custom
          m_Menus.Add(elem);
       }
 
+      public IEnumerable<ToolStripItem> ToolStripItems
+      {
+         get { return AsToolStripItems(); }
+      }
+
       private readonly List<BaseMenuBarElement> m_Menus;
 
    }

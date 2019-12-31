@@ -25,10 +25,10 @@ namespace Assembler.FormsGui.Views
          InitializeComponent();
       }
 
-      public HexExplorerView(MessageManager msgMgr):
-         base("Hex Explorer")
+      public HexExplorerView(int viewId, MessageManager msgMgr):
+         base(viewId, "Hex Explorer", msgMgr)
       {
-         m_ExplorerVm = new HexExplorerViewModel(msgMgr);
+         m_ExplorerVm = new HexExplorerViewModel(viewId, msgMgr);
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
@@ -183,6 +183,8 @@ namespace Assembler.FormsGui.Views
             if (okToContinue)
             {
                m_ExplorerVm.LoadFileCommand.Execute(filePath);
+               var activeViewRequest = new ActiveViewRequestMessage(ViewId);
+               SendMessage(activeViewRequest);
             }
          }
          catch (Exception ex)
@@ -288,6 +290,7 @@ namespace Assembler.FormsGui.Views
       {
          Application.Exit();
       }
+
 
       private readonly MenuBarContext m_Ctx;
       private readonly HexExplorerViewModel m_ExplorerVm;

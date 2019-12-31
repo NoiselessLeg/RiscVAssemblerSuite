@@ -6,6 +6,7 @@ using Assembler.FormsGui.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,12 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class AssemblyEditorViewModel : NotifyPropertyChangedBase
    {
-      public AssemblyEditorViewModel(MessageManager msgMgr)
+      public AssemblyEditorViewModel(int viewId, MessageManager msgMgr)
       {
-         m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
+         m_ViewId = viewId;
+         m_MsgQueue = new ObservableQueue<IBasicMessage>();
+         m_MsgQueue.ItemEnqueued += OnExternalMsgReceived;
+
          m_Disassembler = new DisassemblyManager();
          m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
          m_OpenViewModels.Add(new AssemblyFileViewModel());
@@ -40,7 +44,7 @@ namespace Assembler.FormsGui.ViewModels
          m_DisassembleAndImportCmd = new RelayCommand(param => DisassembleAndImportFile(param as string));
          m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
          m_MsgMgr = msgMgr;
-         m_MsgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
+         m_MsgSenderId = m_MsgMgr.RegisterMessageQueue(m_MsgQueue);
       }
 
       public int ActiveFileIndex
@@ -64,11 +68,6 @@ namespace Assembler.FormsGui.ViewModels
       public ObservableCollection<AssemblyFileViewModel> AllOpenFiles
       {
          get { return m_OpenViewModels; }
-      }
-
-      public IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_ExternalMsgQueue; }
       }
 
       public LoggerViewModel LoggerModel
@@ -155,14 +154,36 @@ namespace Assembler.FormsGui.ViewModels
 
       private void AssembleFile(string fileName)
       {
-         Common.AssemblerOptions options = new Common.AssemblerOptions(new[] { fileName });
+         m_LoggerVm.ClearLogCommand.Execute(null);
+         // get the file name with no extension, in case we want intermediate files,
+         // or for our output.
+         string fileNameNoExtension = fileName;
+         if (fileName.Contains("."))
+         {
+            fileNameNoExtension = fileName.Substring(0, fileName.LastIndexOf('.'));
+         }
+
+         //TODO: this will def need to change if we implement more filetypes.
+         string outputFile = fileNameNoExtension + ".jef";
+         Common.AssemblerOptions options = new Common.AssemblerOptions(new[] { fileName }, new[] { outputFile });
          m_Assembler.Assemble(options, m_LoggerVm.Logger);
+
+         var fileAssembledCmd = new FileAssembledMessage(outputFile);
+         m_MsgMgr.BroadcastMessage(m_MsgSenderId, fileAssembledCmd);
       }
 
-      private int m_ActiveViewModelIdx;
+      private void OnExternalMsgReceived(object sender, EventArgs e)
+      {
+         var msgQ = sender as IBasicQueue<IBasicMessage>;
+         msgQ.Dequeue();
+      }
 
+      private int m_ViewId;
+      private int m_ActiveViewModelIdx;
+      private readonly int m_MsgSenderId;
+      
       private readonly MessageManager m_MsgMgr;
-      private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
+      private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
       private readonly ObservableCollection<AssemblyFileViewModel> m_OpenViewModels;
       private readonly RiscVAssembler m_Assembler;
       private readonly DisassemblyManager m_Disassembler;
