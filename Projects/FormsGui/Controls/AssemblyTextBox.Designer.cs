@@ -28,24 +28,26 @@
       /// </summary>
       private void InitializeComponent()
       {
-         this.m_FileTxtBox = new System.Windows.Forms.RichTextBox();
+         this.m_FileTxtBox = new ICSharpCode.TextEditor.TextEditorControl();
          this.SuspendLayout();
          // 
          // m_FileTxtBox
          // 
-         this.m_FileTxtBox.DetectUrls = false;
+         this.m_FileTxtBox.ConvertTabsToSpaces = true;
          this.m_FileTxtBox.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_FileTxtBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.m_FileTxtBox.IndentStyle = ICSharpCode.TextEditor.Document.IndentStyle.None;
+         this.m_FileTxtBox.IsReadOnly = false;
          this.m_FileTxtBox.Location = new System.Drawing.Point(0, 0);
          this.m_FileTxtBox.Name = "m_FileTxtBox";
+         this.m_FileTxtBox.ShowLineNumbers = false;
+         this.m_FileTxtBox.ShowMatchingBracket = false;
          this.m_FileTxtBox.Size = new System.Drawing.Size(392, 324);
          this.m_FileTxtBox.TabIndex = 0;
-         this.m_FileTxtBox.Text = "";
          // 
-         // EditorTextBox
+         // AssemblyTextBox
          // 
          this.Controls.Add(this.m_FileTxtBox);
-         this.Name = "EditorTextBox";
+         this.Name = "AssemblyTextBox";
          this.Size = new System.Drawing.Size(392, 324);
          this.ResumeLayout(false);
 
@@ -53,6 +55,6 @@
 
       #endregion
 
-      private System.Windows.Forms.RichTextBox m_FileTxtBox;
+      private ICSharpCode.TextEditor.TextEditorControl m_FileTxtBox;
    }
 }

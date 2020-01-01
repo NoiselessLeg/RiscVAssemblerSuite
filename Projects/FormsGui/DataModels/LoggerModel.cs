@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.FormsGui.Utility;
+using Assembler.FormsGui.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.DataModels
 {
-   public class LoggerModel : NotifyPropertyChangedBase, ILogger
+   public class LoggerModel : BaseViewModel, ILogger
    {
       public string LoggerOutput
       {

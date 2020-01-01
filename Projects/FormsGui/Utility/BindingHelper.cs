@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.Utility
 {
-   public static class BindingAdapter
+   public static class BindingHelper
    {
       public static void CreateBinding<TControl, TSource, TControlProp>(this TControl control,
                                                                         TSource dataSource,

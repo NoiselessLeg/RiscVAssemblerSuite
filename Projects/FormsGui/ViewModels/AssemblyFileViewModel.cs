@@ -3,13 +3,14 @@ using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class AssemblyFileViewModel : NotifyPropertyChangedBase
+   public class AssemblyFileViewModel : BaseViewModel
    {
       public AssemblyFileViewModel()
       {
@@ -44,6 +45,7 @@ namespace Assembler.FormsGui.ViewModels
             {
                m_AreAnyChangesUnsaved = value;
                OnPropertyChanged();
+               OnPropertyChanged(nameof(FileName));
 
             }
          }
@@ -51,7 +53,7 @@ namespace Assembler.FormsGui.ViewModels
 
       public bool IsFileBackedPhysically
       {
-         get { return !string.IsNullOrEmpty(m_UnderlyingFile.FilePath); }
+         get { return File.Exists(m_UnderlyingFile.FilePath); }
       }
 
       public string FileName
@@ -66,6 +68,11 @@ namespace Assembler.FormsGui.ViewModels
             else
             {
                ret = m_UnderlyingFile.FileName;
+            }
+
+            if (m_AreAnyChangesUnsaved)
+            {
+               ret += "*";
             }
             return ret;
          }

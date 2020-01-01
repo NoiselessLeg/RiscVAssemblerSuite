@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class AssemblyEditorViewModel : NotifyPropertyChangedBase
+   public class AssemblyEditorViewModel : BaseViewModel
    {
       public AssemblyEditorViewModel(int viewId, MessageManager msgMgr)
       {
@@ -43,6 +43,12 @@ namespace Assembler.FormsGui.ViewModels
          });
          m_DisassembleAndImportCmd = new RelayCommand(param => DisassembleAndImportFile(param as string));
          m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
+         m_OpenPreferencesCmd = new RelayCommand(
+            (param) =>
+            {
+               m_MsgMgr.BroadcastMessage(m_MsgSenderId, new ParameterlessMessage(MessageType.ShowOptionsRequest));
+            }
+         );
          m_MsgMgr = msgMgr;
          m_MsgSenderId = m_MsgMgr.RegisterMessageQueue(m_MsgQueue);
       }
@@ -108,6 +114,11 @@ namespace Assembler.FormsGui.ViewModels
       public ICommand DisassembleAndImportCmd
       {
          get { return m_DisassembleAndImportCmd; }
+      }
+
+      public ICommand OpenPreferencesCommand
+      {
+         get { return m_OpenPreferencesCmd; }
       }
 
       private void CreateNewFile()
@@ -197,5 +208,6 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_CloseFileCmd;
       private readonly RelayCommand m_ChangeActiveIdxCmd;
       private readonly RelayCommand m_DisassembleAndImportCmd;
+      private readonly RelayCommand m_OpenPreferencesCmd;
    }
 }

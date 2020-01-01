@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class RegisterViewModel : NotifyPropertyChangedBase
+   public class RegisterViewModel : BaseViewModel
    {
       public RegisterViewModel(int registerIdx, ExecutionContext ctx)
       {

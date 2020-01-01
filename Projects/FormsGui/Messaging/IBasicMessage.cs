@@ -10,7 +10,8 @@ namespace Assembler.FormsGui.Messaging
    public enum MessageType
    {
       FileAssembled,
-      ActiveViewRequest
+      ActiveViewRequest,
+      ShowOptionsRequest
    }
 
    // Can't reuse a class here, because the parameter to ICommand can vary among implementations

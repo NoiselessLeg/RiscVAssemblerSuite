@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class CompiledFileViewModel : NotifyPropertyChangedBase
+   public class CompiledFileViewModel : BaseViewModel
    {
       public CompiledFileViewModel()
       {

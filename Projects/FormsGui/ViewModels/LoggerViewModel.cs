@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class LoggerViewModel : NotifyPropertyChangedBase
+   public class LoggerViewModel : BaseViewModel
    {
       public LoggerViewModel()
       {

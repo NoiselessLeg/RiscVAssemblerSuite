@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.FormsGui.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,14 +8,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.FormsGui.Utility
+namespace Assembler.FormsGui.ViewModels
 {
    /// <summary>
    /// The base class for all view models. Implements a method that
    /// determines which property changed on the fly, and delegates to the
    /// PropertyChanged handler when a property changes.
    /// </summary>
-   public class NotifyPropertyChangedBase : INotifyPropertyChanged
+   public class BaseViewModel : INotifyPropertyChanged
    {
       /// <summary>
       /// The event handler that is called when a property changes.

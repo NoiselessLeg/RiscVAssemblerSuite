@@ -1,5 +1,7 @@
-﻿using Assembler.FormsGui.Utility;
+﻿using Assembler.Common;
+using Assembler.FormsGui.Utility;
 using Assembler.Interpreter;
+using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,21 +11,26 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class ExecutionViewModel : NotifyPropertyChangedBase, IRuntimeEnvironment
+   public class ExecutionViewModel : BaseViewModel, IRuntimeEnvironment
    {
-      public ExecutionViewModel(ExecutionContext ctx)
+      public ExecutionViewModel(ITerminal terminal, DisassembledFile file)
       {
+         m_Ctx = new ExecutionContext(this, terminal, file);
          m_Registers = new ObservableCollection<RegisterViewModel>();
-         m_Ctx = ctx;
          for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
          {
-            m_Registers.Add(new RegisterViewModel(i, ctx));
+            m_Registers.Add(new RegisterViewModel(i, m_Ctx));
          }
       }
 
       public void Terminate()
       {
          m_IsTerminated = true;
+      }
+
+      public int CurrentProgramCounter
+      {
+         get { return Registers[InterpreterCommon.PC_REGISTER].RegisterValue; }
       }
 
       public ObservableCollection<RegisterViewModel> Registers
@@ -33,6 +40,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private readonly ObservableCollection<RegisterViewModel> m_Registers;
       private readonly ExecutionContext m_Ctx;
+      
       private bool m_IsTerminated;
    }
 }

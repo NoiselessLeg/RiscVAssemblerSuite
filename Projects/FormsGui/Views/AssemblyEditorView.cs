@@ -20,9 +20,12 @@ namespace Assembler.FormsGui.Views
          InitializeComponent();
       }
 
-      public AssemblyEditorView(int viewId, MessageManager msgMgr) :
+      public AssemblyEditorView(int viewId, 
+                                MessageManager msgMgr,
+                                EditorPreferencesViewModel preferences) :
          base(viewId, "Assembly Editor", msgMgr)
       {
+         m_Preferences = preferences;
          m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr);
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
@@ -119,16 +122,11 @@ namespace Assembler.FormsGui.Views
 
       public override MenuBarContext MenuBarMembers => m_Ctx;
 
-      //public override IBasicQueue<IBasicMessage> MessageQueue
-      //{
-      //   get { return m_EditorVm.MessageQueue; }
-      //}
-
       private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
       {
          var newTab = new TabPage();
          newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new AssemblyTextBox(viewModel);
+         var tabContent = new AssemblyTextBox(viewModel, m_Preferences);
          tabContent.Dock = DockStyle.Fill;
          newTab.Controls.Add(tabContent);
 
@@ -176,7 +174,12 @@ namespace Assembler.FormsGui.Views
          var fileMenuButton = new CompositeMenuBarElement("File", fileElementList);
          ctx.AddMenuBarElement(fileMenuButton);
 
-         var editMenuButton = new CompositeMenuBarElement("Edit", new List<BaseMenuBarElement>());
+         var editElementList = new List<BaseMenuBarElement>
+         {
+            new MenuBarActionElement("Preferences", m_EditorVm.OpenPreferencesCommand),
+         };
+
+         var editMenuButton = new CompositeMenuBarElement("Edit", editElementList);
          ctx.AddMenuBarElement(editMenuButton);
 
          var asmElementList = new List<BaseMenuBarElement>
@@ -410,6 +413,7 @@ namespace Assembler.FormsGui.Views
 
       private readonly MenuBarContext m_Ctx;
       private readonly AssemblyEditorViewModel m_EditorVm;
+      private readonly EditorPreferencesViewModel m_Preferences;
 
       private readonly RelayCommand m_OpenFileCmd;
       private readonly RelayCommand m_SaveFileCmd;

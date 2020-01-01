@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class HexExplorerViewModel : NotifyPropertyChangedBase
+   public class HexExplorerViewModel : BaseViewModel
    {
       public HexExplorerViewModel(int viewId, MessageManager msgMgr)
       {
@@ -116,18 +116,6 @@ namespace Assembler.FormsGui.ViewModels
       {
          var msgQ = sender as IBasicQueue<IBasicMessage>;
          IBasicMessage msg = msgQ.Dequeue();
-         switch (msg.MessageType)
-         {
-            case MessageType.FileAssembled:
-            {
-               msg.HandleMessage(LoadFileCommand);
-
-               // once we load the file, set us as the active view.
-               var activeRequest = new ActiveViewRequestMessage(m_ViewId);
-               m_MsgMgr.BroadcastMessage(m_MsgSenderId, activeRequest);
-               break;
-            }
-         }
       }
 
 
