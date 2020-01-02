@@ -62,14 +62,6 @@ namespace Assembler.FormsGui.ViewModels
       {
          var msgQ = sender as IBasicQueue<IBasicMessage>;
          IBasicMessage msg = msgQ.Dequeue();
-         switch (msg.MessageType)
-         {
-            case MessageType.FileAssembled:
-            {
-               msg.HandleMessage(m_LoadFileCmd);
-               break;
-            }
-         }
       }
 
       private readonly int m_MsgSenderId;

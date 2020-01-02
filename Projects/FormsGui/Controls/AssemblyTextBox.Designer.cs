@@ -39,9 +39,9 @@
          this.m_FileTxtBox.IsReadOnly = false;
          this.m_FileTxtBox.Location = new System.Drawing.Point(0, 0);
          this.m_FileTxtBox.Name = "m_FileTxtBox";
-         this.m_FileTxtBox.ShowLineNumbers = false;
          this.m_FileTxtBox.ShowMatchingBracket = false;
          this.m_FileTxtBox.Size = new System.Drawing.Size(392, 324);
+         this.m_FileTxtBox.TabIndent = 3;
          this.m_FileTxtBox.TabIndex = 0;
          // 
          // AssemblyTextBox

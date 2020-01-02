@@ -177,10 +177,11 @@ namespace Assembler.FormsGui.ViewModels
          //TODO: this will def need to change if we implement more filetypes.
          string outputFile = fileNameNoExtension + ".jef";
          Common.AssemblerOptions options = new Common.AssemblerOptions(new[] { fileName }, new[] { outputFile });
-         m_Assembler.Assemble(options, m_LoggerVm.Logger);
-
-         var fileAssembledCmd = new FileAssembledMessage(outputFile);
-         m_MsgMgr.BroadcastMessage(m_MsgSenderId, fileAssembledCmd);
+         if (m_Assembler.Assemble(options, m_LoggerVm.Logger))
+         {
+            var fileAssembledCmd = new FileAssembledMessage(outputFile);
+            m_MsgMgr.BroadcastMessage(m_MsgSenderId, fileAssembledCmd);
+         }
       }
 
       private void OnExternalMsgReceived(object sender, EventArgs e)

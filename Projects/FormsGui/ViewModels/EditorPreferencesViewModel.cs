@@ -12,6 +12,9 @@ namespace Assembler.FormsGui.ViewModels
       public EditorPreferencesViewModel()
       {
          m_Model = new AssemblyEditorPreferences();
+         ReplaceTabsWithSpaces = true;
+         NumSpacesToReplaceTabWith = 3;
+         ShowLineNumbers = true;
       }
 
       public bool ReplaceTabsWithSpaces
