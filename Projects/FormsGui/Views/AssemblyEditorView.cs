@@ -138,11 +138,13 @@ namespace Assembler.FormsGui.Views
          m_OpenFileTabs.TabPages.BindToObservableCollection(m_EditorVm.AllOpenFiles,
                                                             (avm) => CreateNewTabPage(avm));
 
-         m_OpenFileTabs.DataBindings.Add(new Binding(nameof(m_OpenFileTabs.SelectedIndex), m_EditorVm, nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
-         m_LogTxt.DataBindings.Add(new Binding(nameof(m_LogTxt.Text), m_EditorVm.LoggerModel, nameof(m_EditorVm.LoggerModel.LogText),
-            true, DataSourceUpdateMode.OnPropertyChanged));
+         m_OpenFileTabs.DataBindings.Add(new Binding(nameof(m_OpenFileTabs.SelectedIndex), m_EditorVm, 
+            nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
+         m_LogTxt.DataBindings.Add(new Binding(nameof(m_LogTxt.Text), m_EditorVm.LoggerModel, 
+            nameof(m_EditorVm.LoggerModel.LogText), true, DataSourceUpdateMode.OnPropertyChanged));
 
-         m_NumericValue.DataBindings.Add(new Binding(nameof(m_NumericValue.Text), m_EditorVm, nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
+         m_NumericValue.DataBindings.Add(new Binding(nameof(m_NumericValue.Text), m_EditorVm, 
+            nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
       private MenuBarContext GenerateMenuContext()
@@ -176,6 +178,8 @@ namespace Assembler.FormsGui.Views
 
          var editElementList = new List<BaseMenuBarElement>
          {
+            //new MenuBarActionElement("Undo", m_EditorVm.ActiveFile.UndoCommand, Keys.Control | Keys.Z),
+            //new MenuBarActionElement("Redo", m_EditorVm.ActiveFile.RedoCommand, Keys.Control | Keys.Y),
             new MenuBarActionElement("Preferences", m_EditorVm.OpenPreferencesCommand),
          };
 

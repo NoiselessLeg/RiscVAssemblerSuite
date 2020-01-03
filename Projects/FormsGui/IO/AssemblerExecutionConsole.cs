@@ -29,23 +29,30 @@ namespace Assembler.FormsGui.ViewModels
       public void PrintString(string value)
       {
          m_OutputWriter.Write(value);
-         m_OutputWriter.Flush();
       }
 
       public char ReadChar()
       {
+         m_OutputWriter.Flush();
          return (char) m_InputReader.Read();
       }
 
       public int ReadInt()
       {
+         m_OutputWriter.Flush();
          string line = m_InputReader.ReadLine();
          return Convert.ToInt32(line);
       }
 
       public string ReadString()
       {
+         m_OutputWriter.Flush();
          return m_InputReader.ReadLine();
+      }
+
+      public void RequestOutputFlush()
+      {
+         m_OutputWriter.Flush();
       }
 
       public void Dispose()

@@ -20,6 +20,7 @@ namespace Assembler.FormsGui.ViewModels
    {
       public ExecutionViewModel(ITerminal terminal, DisassembledFile file)
       {
+         m_Terminal = terminal;
          m_Registers = new RegisterViewModel[InterpreterCommon.MAX_REGISTERS];
          for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
          {
@@ -90,6 +91,7 @@ namespace Assembler.FormsGui.ViewModels
             m_Ctx.ExecuteNextInstruction();
          }
 
+         m_Terminal.RequestOutputFlush();
          IsRunning = false;
       }
 
@@ -129,6 +131,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      private readonly ITerminal m_Terminal;
       private readonly RelayCommand m_ExecuteFileCmd;
       private readonly RelayCommand m_TerminateExecutionCmd;
       private readonly RelayCommand m_SwitchRepresentationCmd;

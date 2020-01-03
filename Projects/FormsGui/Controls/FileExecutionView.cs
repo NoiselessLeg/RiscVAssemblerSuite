@@ -55,5 +55,13 @@ namespace Assembler.FormsGui.Controls
             menu.Show(gridView, new Point(e.X, e.Y));
          }
       }
+
+      private void OnCodeWindowClicked(object sender, MouseEventArgs e)
+      {
+         var codeWindow = sender as ICSharpCode.TextEditor.TextEditorControl;
+         if (e.Button == MouseButtons.Left)
+         {
+         }
+      }
    }
 }

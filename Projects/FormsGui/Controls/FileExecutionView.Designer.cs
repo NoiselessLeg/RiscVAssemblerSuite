@@ -88,6 +88,7 @@
          this.m_DisassemblyTxtBox.ShowVRuler = false;
          this.m_DisassemblyTxtBox.Size = new System.Drawing.Size(257, 288);
          this.m_DisassemblyTxtBox.TabIndex = 0;
+         this.m_DisassemblyTxtBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnCodeWindowClicked);
          // 
          // m_RegisterData
          // 

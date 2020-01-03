@@ -208,6 +208,7 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyFileViewModel.datasource" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.DebugWindowViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.ExecutionViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.HexExplorerViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.JefFileViewModel.datasource" />

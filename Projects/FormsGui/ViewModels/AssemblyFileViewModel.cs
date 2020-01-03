@@ -1,6 +1,8 @@
-﻿using Assembler.FormsGui.DataModels;
+﻿using Assembler.FormsGui.Commands;
+using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Utility;
+using ICSharpCode.TextEditor.Document;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +24,7 @@ namespace Assembler.FormsGui.ViewModels
       {
          m_AreAnyChangesUnsaved = false;  
          m_UnderlyingFile = file;
+
       }
 
       public void SaveFileAs(string filePath)
@@ -109,20 +112,13 @@ namespace Assembler.FormsGui.ViewModels
       public AssemblyFile UnderlyingFile
       {
          get { return m_UnderlyingFile; }
-         set
-         {
-            if (m_UnderlyingFile != value)
-            {
-               m_UnderlyingFile = value;
-               OnPropertyChanged();
-               OnPropertyChanged(nameof(FilePath));
-               OnPropertyChanged(nameof(FileText));
-            }
-         }
       }
 
       private bool m_AreAnyChangesUnsaved;
-      private AssemblyFile m_UnderlyingFile;
-      
+
+      private readonly AssemblyFile m_UnderlyingFile;
+
+      private readonly RelayCommand m_UndoCmd;
+      private readonly RelayCommand m_RedoCmd;
    }
 }

@@ -26,9 +26,6 @@ namespace Assembler.FormsGui.ViewModels
          m_LoadFileCmd = new RelayCommand(
             (param) => LoadFile(param as string)
          );
-         m_RunFileCmd = new RelayCommand(
-            (param) => RunFile(param as string)
-         );
 
          m_MsgSenderId = msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
          m_MsgMgr = msgMgr;
@@ -49,6 +46,19 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_RunFileCmd; }
       }
 
+      public int ActiveTabIdx
+      {
+         get { return m_ActiveTabIdx; }
+         set
+         {
+            if (m_ActiveTabIdx != value)
+            {
+               m_ActiveTabIdx = value;
+               OnPropertyChanged();
+            }
+         }
+      }
+
       public ObservableCollection<JefFileViewModel> FilesToExecute
       {
          get { return m_FilesToExecute; }
@@ -59,11 +69,7 @@ namespace Assembler.FormsGui.ViewModels
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          m_FilesToExecute.Add(new JefFileViewModel(fileName, disassembly, file));
-      }
-
-      private void RunFile(string fileName)
-      {
-
+         ActiveTabIdx = (m_FilesToExecute.Count - 1);
       }
 
       private void OnExternalMsgReceived(object sender, EventArgs e)
@@ -82,6 +88,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      private int m_ActiveTabIdx;
       private readonly int m_ViewId;
       private readonly int m_MsgSenderId;
       private readonly MessageManager m_MsgMgr;

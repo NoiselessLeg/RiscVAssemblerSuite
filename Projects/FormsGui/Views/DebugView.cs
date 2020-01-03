@@ -46,6 +46,10 @@ namespace Assembler.FormsGui.Views
       {
          m_OpenFilesTabCtrl.TabPages.BindToObservableCollection(vm.FilesToExecute,
             (param) => CreateTabPage(param as JefFileViewModel));
+
+         m_OpenFilesTabCtrl.DataBindings.Add(
+            new Binding(nameof(m_OpenFilesTabCtrl.SelectedIndex), vm, nameof(vm.ActiveTabIdx),
+            true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
       private TabPage CreateTabPage(JefFileViewModel file)
