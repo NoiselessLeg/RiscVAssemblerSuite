@@ -17,7 +17,7 @@ namespace Assembler.FormsGui.ViewModels
       public DebugWindowViewModel(int viewId, MessageManager msgMgr)
       {
          m_ViewId = viewId;
-         m_DisassemblyMgr = new DisassemblyManager();
+         m_DisassemblyMgr = new DisassemblyToTextHelper();
          m_LoggerVm = new LoggerViewModel();
          m_FilesToExecute = new ObservableCollection<JefFileViewModel>();
          m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
@@ -92,7 +92,7 @@ namespace Assembler.FormsGui.ViewModels
       private readonly int m_ViewId;
       private readonly int m_MsgSenderId;
       private readonly MessageManager m_MsgMgr;
-      private readonly DisassemblyManager m_DisassemblyMgr;
+      private readonly DisassemblyToTextHelper m_DisassemblyMgr;
       private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
 
       private readonly RelayCommand m_LoadFileCmd;

@@ -33,7 +33,7 @@ namespace Assembler.FormsGui.ViewModels
    {
       public RegisterViewModel(int registerIdx)
       {
-         m_RegisterName = Common.ReverseRegisterMap.GetStringifiedRegisterValue(registerIdx);
+         m_RegisterName = Assembler.Common.ReverseRegisterMap.GetStringifiedRegisterValue(registerIdx);
          Value = 0;
       }
 
@@ -76,7 +76,7 @@ namespace Assembler.FormsGui.ViewModels
          }
          set
          {
-            if (Common.IntExtensions.TryParseEx(value, out int iVal))
+            if (Assembler.Common.IntExtensions.TryParseEx(value, out int iVal))
             {
                if (Value != iVal)
                {

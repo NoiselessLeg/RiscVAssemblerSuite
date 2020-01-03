@@ -1,5 +1,6 @@
 ﻿using Assembler.Disassembler;
 using Assembler.FormsGui.Commands;
+using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
@@ -10,75 +11,63 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class AssemblyEditorViewModel : BaseViewModel
+   public class AssemblyEditorViewModel : MessagingViewModel
    {
-      public AssemblyEditorViewModel(int viewId, MessageManager msgMgr)
+      public AssemblyEditorViewModel(int viewId, MessageManager msgMgr, PreferencesViewModel systemPrefs):
+         base(msgMgr)
       {
          m_ViewId = viewId;
-         m_MsgQueue = new ObservableQueue<IBasicMessage>();
-         m_MsgQueue.ItemEnqueued += OnExternalMsgReceived;
+         m_SystemPrefsVm = systemPrefs;
 
-         m_Disassembler = new DisassemblyManager();
-         m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
-         m_OpenViewModels.Add(new AssemblyFileViewModel());
+         m_TabPageList = new BindingList<TabPage>
+         {
+            new ViewTabPage<AssemblyTextBox>(new AssemblyTextBox(systemPrefs))
+         };
+
+         m_Disassembler = new DisassemblyToTextHelper();
 
          m_Assembler = new RiscVAssembler();
          m_LoggerVm = new LoggerViewModel();
+
          m_AssembleFileCmd = new RelayCommand(param => AssembleFile(param as string));
          m_NewFileCmd = new RelayCommand(param => CreateNewFile());
          m_OpenFileCmd = new RelayCommand(param => OpenFile(param as string));
          m_SaveFileCmd = new RelayCommand(param => SaveFile(param as string));
          m_CloseFileCmd = new RelayCommand(param =>
          {
-            int? iParm = param as int?;
-            System.Diagnostics.Debug.Assert(iParm.HasValue);
-            if (iParm.HasValue)
-            {
-               CloseFile(iParm.Value);
-            }
-
+            int iParm = (int)param;
+            CloseFile(iParm);
          });
+
          m_DisassembleAndImportCmd = new RelayCommand(param => DisassembleAndImportFile(param as string));
-         m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
          m_OpenPreferencesCmd = new RelayCommand(
             (param) =>
             {
-               m_MsgMgr.BroadcastMessage(m_MsgSenderId, new ParameterlessMessage(MessageType.ShowOptionsRequest));
+               SendExternalMessage(new ParameterlessMessage(MessageType.ShowOptionsRequest));
             }
          );
-         m_MsgMgr = msgMgr;
-         m_MsgSenderId = m_MsgMgr.RegisterMessageQueue(m_MsgQueue);
       }
 
-      public int ActiveFileIndex
+      public BindingList<TabPage> OpenTabPages
       {
-         get { return m_ActiveViewModelIdx; }
-         private set
+         get { return m_TabPageList; }
+      }
+
+      public int SelectedTabIndex
+      {
+         get { return m_SelectedTabIdx; }
+         set
          {
-            if (m_ActiveViewModelIdx != value)
+            if (m_SelectedTabIdx != value)
             {
-               m_ActiveViewModelIdx = value;
+               m_SelectedTabIdx = value;
                OnPropertyChanged();
             }
          }
-      }
-
-      public AssemblyFileViewModel ActiveFile
-      {
-         get { return m_OpenViewModels[ActiveFileIndex]; }
-      }
-
-      public ObservableCollection<AssemblyFileViewModel> AllOpenFiles
-      {
-         get { return m_OpenViewModels; }
-      }
-
-      public LoggerViewModel LoggerModel
-      {
-         get { return m_LoggerVm; }
       }
 
       public ICommand NewFileCommand
@@ -101,11 +90,6 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_CloseFileCmd; }
       }
 
-      public ICommand ChangeActiveIndexCommand
-      {
-         get { return m_ChangeActiveIdxCmd; }
-      }
-
       public ICommand AssembleFileCmd
       {
          get { return m_AssembleFileCmd; }
@@ -123,13 +107,15 @@ namespace Assembler.FormsGui.ViewModels
 
       private void CreateNewFile()
       {
-         var newVm = new AssemblyFileViewModel(new DataModels.AssemblyFile());
-         m_OpenViewModels.Add(newVm);
-         ActiveFileIndex = m_OpenViewModels.Count - 1;
+         var tabPage = new ViewTabPage<AssemblyTextBox>(new AssemblyTextBox(m_SystemPrefsVm));
+         m_TabPageList.Add(tabPage);
+         SelectedTabIndex = m_TabPageList.Count - 1;
       }
 
       private void OpenFile(string fileName)
       {
+         if (TryFindViewModelForFile(fileName, out AssemblyFileViewModel assemblyFile
+         /*
          // see if we already have this file open.
          if (!m_OpenViewModels.Contains((vm) => vm.FilePath == fileName))
          {
@@ -142,25 +128,32 @@ namespace Assembler.FormsGui.ViewModels
          {
             ActiveFileIndex = m_OpenViewModels.IndexOf(vm => vm.FileName == fileName);
          }
+         */
       }
 
       private void SaveFile(string fileName)
       {
+         /*
          AssemblyFileViewModel targetVm = m_OpenViewModels[ActiveFileIndex];
          targetVm.SaveFileAs(fileName);
+         */
       }
 
       private void DisassembleAndImportFile(string fileName)
       {
+         /*
          DataModels.AssemblyFile asmFile = m_Disassembler.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          var newVm = new AssemblyFileViewModel(asmFile);
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
+         */
       }
 
       private void CloseFile(int fileIndex)
       {
+         /*
          m_OpenViewModels.RemoveAt(fileIndex);
+         */
       }
 
       private void AssembleFile(string fileName)
@@ -176,30 +169,39 @@ namespace Assembler.FormsGui.ViewModels
 
          //TODO: this will def need to change if we implement more filetypes.
          string outputFile = fileNameNoExtension + ".jef";
-         Common.AssemblerOptions options = new Common.AssemblerOptions(new[] { fileName }, new[] { outputFile });
+         Assembler.Common.AssemblerOptions options = new Assembler.Common.AssemblerOptions(new[] { fileName }, new[] { outputFile });
          if (m_Assembler.Assemble(options, m_LoggerVm.Logger))
          {
             var fileAssembledCmd = new FileAssembledMessage(outputFile);
-            m_MsgMgr.BroadcastMessage(m_MsgSenderId, fileAssembledCmd);
+            SendExternalMessage(fileAssembledCmd);
          }
       }
 
-      private void OnExternalMsgReceived(object sender, EventArgs e)
+      private bool TryFindTabIndexForFile(string fileName, out int tabIdx)
       {
-         var msgQ = sender as IBasicQueue<IBasicMessage>;
-         msgQ.Dequeue();
+         bool found = false;
+         fileModel = default(AssemblyFileViewModel);
+         for (int i = 0; i < m_TabPageList.Count && !found; ++i)
+         {
+            var castedTabPage = m_TabPageList[i] as ViewTabPage<AssemblyTextBox>;
+            if (castedTabPage.PrimaryControl.ViewModel.FilePath == fileName)
+            {
+               fileModel = castedTabPage.PrimaryControl.ViewModel;
+               found = true;
+            }
+         }
+
+         return found;
       }
 
-      private int m_ViewId;
-      private int m_ActiveViewModelIdx;
-      private readonly int m_MsgSenderId;
+      private readonly int m_ViewId;
       
-      private readonly MessageManager m_MsgMgr;
-      private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
-      private readonly ObservableCollection<AssemblyFileViewModel> m_OpenViewModels;
+      private readonly BindingList<TabPage> m_TabPageList;
+      
       private readonly RiscVAssembler m_Assembler;
-      private readonly DisassemblyManager m_Disassembler;
-      
+      private readonly DisassemblyToTextHelper m_Disassembler;
+
+      private readonly PreferencesViewModel m_SystemPrefsVm;
       private readonly LoggerViewModel m_LoggerVm;
 
       private readonly RelayCommand m_NewFileCmd;
@@ -207,8 +209,9 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_AssembleFileCmd;
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_CloseFileCmd;
-      private readonly RelayCommand m_ChangeActiveIdxCmd;
       private readonly RelayCommand m_DisassembleAndImportCmd;
       private readonly RelayCommand m_OpenPreferencesCmd;
+
+      private int m_SelectedTabIdx;
    }
 }

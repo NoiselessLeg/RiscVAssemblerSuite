@@ -14,10 +14,11 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class AssemblyFileViewModel : BaseViewModel
    {
-      public AssemblyFileViewModel()
+      public AssemblyFileViewModel(IDocument document)
       {
          m_AreAnyChangesUnsaved = false;
          m_UnderlyingFile = new AssemblyFile();
+         m_Document = document;
       }
 
       public AssemblyFileViewModel(AssemblyFile file)
@@ -117,8 +118,6 @@ namespace Assembler.FormsGui.ViewModels
       private bool m_AreAnyChangesUnsaved;
 
       private readonly AssemblyFile m_UnderlyingFile;
-
-      private readonly RelayCommand m_UndoCmd;
-      private readonly RelayCommand m_RedoCmd;
+      private readonly IDocument m_Document;
    }
 }

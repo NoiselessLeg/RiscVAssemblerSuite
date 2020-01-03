@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Common\IFileBindable.cs" />
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -75,6 +76,9 @@
     </Compile>
     <Compile Include="Controls\AssemblyTextBox.Designer.cs">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ViewTabPage.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\FileExecutionView.cs">
       <SubType>UserControl</SubType>
@@ -121,6 +125,7 @@
     <Compile Include="Services\DialogServiceFactory.cs" />
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\Win32DialogService.cs" />
+    <Compile Include="Utility\BindingAdapter.cs" />
     <Compile Include="Utility\BindingHelper.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\ControlHelper.cs" />
@@ -129,6 +134,7 @@
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
     <Compile Include="ViewModels\JefFileViewModel.cs" />
+    <Compile Include="ViewModels\MessagingViewModel.cs" />
     <Compile Include="ViewModels\NotifyPropertyChangedBase.cs" />
     <Compile Include="Utility\ObservableQueue.cs" />
     <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
@@ -207,6 +213,7 @@
       <DependentUpon>PreferencesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyEditorViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyFileViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.DebugWindowViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.ExecutionViewModel.datasource" />
@@ -254,5 +261,6 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

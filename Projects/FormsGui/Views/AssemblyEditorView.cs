@@ -26,8 +26,17 @@ namespace Assembler.FormsGui.Views
          base(viewId, "Assembly Editor", msgMgr)
       {
          m_Preferences = preferences;
-         m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr);
+         m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr, preferences);
+         InitializeComponent();
+         m_ViewModelBindingSource.DataSource = m_EditorVm;
+         m_OpenFileTabs.TabPages.CreateListBinding(m_EditorVm.OpenTabPages);
+         m_OpenFileTabs.DataBindings.Add(new Binding(nameof(m_OpenFileTabs.SelectedIndex), m_EditorVm, nameof(m_EditorVm.SelectedTabIndex)));
+
+         m_Ctx = GenerateMenuContext();
+
+
          m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
+         /*
          m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
          m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
          m_ImportFileCmd = new RelayCommand((param) => ImportFileAction());
@@ -37,7 +46,6 @@ namespace Assembler.FormsGui.Views
             {
                var evm = param as AssemblyEditorViewModel;
                System.Diagnostics.Debug.Assert(evm != null);
-               AssembleFileAction(evm.ActiveFile);
             }
          );
 
@@ -47,15 +55,6 @@ namespace Assembler.FormsGui.Views
             {
                int? iParm = param as int?;
                System.Diagnostics.Debug.Assert(iParm.HasValue);
-
-               // if we're removing everything to the right, the AllOpenFiles
-               // Count value will change. we'll just wait until that Count property
-               // is one above our target tab (since that'd be the theoretic last tab).
-               int targetCount = iParm.Value + 1;
-               while (m_EditorVm.AllOpenFiles.Count > targetCount)
-               {
-                  CloseTabAction(iParm.Value + 1);
-               }
             });
 
          m_CloseTabsToLeftCmd = new RelayCommand(
@@ -67,11 +66,7 @@ namespace Assembler.FormsGui.Views
                {
                   CloseTabAction(i);
                }
-
-               // set the active tab index to 0. the tab changed
-               // event doesn't seem to be getting called. it hasn't
-               // crashed yet, but that seems like it'd be in a bad state.
-               m_EditorVm.ChangeActiveIndexCommand.Execute(0);
+               
             });
 
          // this will be passed either a tab index or a view model.
@@ -88,64 +83,16 @@ namespace Assembler.FormsGui.Views
                   {
                      var evm = param as AssemblyEditorViewModel;
                      System.Diagnostics.Debug.Assert(evm != null);
-                     CloseTabAction(evm.ActiveFileIndex);
                   }
-               },
-               (param) =>
-               {
-                  bool canExecute = false;
-                  int? iParm = param as int?;
-                  if (iParm.HasValue)
-                  {
-                     if (iParm.Value < m_EditorVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  else
-                  {
-                     var evm = param as AssemblyEditorViewModel;
-                     System.Diagnostics.Debug.Assert(evm != null);
-                     if (evm.ActiveFileIndex < m_EditorVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  return canExecute;
                });
          m_CloseWindowCmd = new RelayCommand((param) => CloseWindow());
 
-         m_Ctx = GenerateMenuContext();
-         InitializeComponent();
          CreateDataBindings(m_EditorVm);
+         */
+
       }
 
       public override MenuBarContext MenuBarMembers => m_Ctx;
-
-      private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
-      {
-         var newTab = new TabPage();
-         newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new AssemblyTextBox(viewModel, m_Preferences);
-         tabContent.Dock = DockStyle.Fill;
-         newTab.Controls.Add(tabContent);
-
-         return newTab;
-      }
-
-      private void CreateDataBindings(AssemblyEditorViewModel viewModel)
-      {
-         m_OpenFileTabs.TabPages.BindToObservableCollection(m_EditorVm.AllOpenFiles,
-                                                            (avm) => CreateNewTabPage(avm));
-
-         m_OpenFileTabs.DataBindings.Add(new Binding(nameof(m_OpenFileTabs.SelectedIndex), m_EditorVm, 
-            nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
-         m_LogTxt.DataBindings.Add(new Binding(nameof(m_LogTxt.Text), m_EditorVm.LoggerModel, 
-            nameof(m_EditorVm.LoggerModel.LogText), true, DataSourceUpdateMode.OnPropertyChanged));
-
-         m_NumericValue.DataBindings.Add(new Binding(nameof(m_NumericValue.Text), m_EditorVm, 
-            nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
-      }
 
       private MenuBarContext GenerateMenuContext()
       {
@@ -226,6 +173,7 @@ namespace Assembler.FormsGui.Views
          IDialogService service = DialogServiceFactory.GetServiceInstance();
          try
          {
+            /*
             bool okToContinue = true;
             string filePath = m_EditorVm.ActiveFile.FilePath;
             if (!m_EditorVm.ActiveFile.IsFileBackedPhysically)
@@ -244,6 +192,7 @@ namespace Assembler.FormsGui.Views
             {
                m_EditorVm.SaveFileCommand.Execute(filePath);
             }
+               */
          }
          catch (Exception ex)
          {
@@ -256,6 +205,7 @@ namespace Assembler.FormsGui.Views
          IDialogService service = DialogServiceFactory.GetServiceInstance();
          try
          {
+            /*
             string defaultFileName = m_EditorVm.ActiveFile.FileName;
             if (string.IsNullOrEmpty(defaultFileName))
             {
@@ -274,6 +224,7 @@ namespace Assembler.FormsGui.Views
             {
                m_EditorVm.SaveFileCommand.Execute(filePath);
             }
+            */
          }
          catch (Exception ex)
          {
@@ -283,6 +234,7 @@ namespace Assembler.FormsGui.Views
 
       private void CloseTabAction(int tabIdx)
       {
+         /*
          bool continueClosing = true;
          AssemblyFileViewModel avm = m_EditorVm.AllOpenFiles[tabIdx];
 
@@ -312,6 +264,7 @@ namespace Assembler.FormsGui.Views
          {
             m_EditorVm.CloseFileCommand.Execute(tabIdx);
          }
+         */
       }
 
       private void ImportFileAction()
@@ -394,8 +347,6 @@ namespace Assembler.FormsGui.Views
                Rectangle headerRect = ctrl.GetTabRect(tabItr);
                if (headerRect.Contains(e.Location))
                {
-                  m_EditorVm.ChangeActiveIndexCommand.Execute(tabItr);
-
                   var cm = new ContextMenu();
                   cm.MenuItems.Add(new MenuItem("Close Tab", (s, arg) => { m_CloseTabCmd.Execute(tabItr); }));
                   cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) => { m_CloseTabsToRightCmd.Execute(tabItr); }));
@@ -406,13 +357,15 @@ namespace Assembler.FormsGui.Views
             }
          }
       }
+      
+      private void OnTabAdded(object sender, ControlEventArgs e)
+      {
+         var tabCtrl = sender as TabControl;
+         tabCtrl.SelectedTab = e.Control as TabPage;
+      }
 
       private void TabControl_OnCurrentTabChanged(object sender, TabControlEventArgs e)
       {
-         if (e.TabPageIndex >= 0)
-         {
-            m_EditorVm.ChangeActiveIndexCommand.Execute(e.TabPageIndex);
-         }
       }
 
       private readonly MenuBarContext m_Ctx;

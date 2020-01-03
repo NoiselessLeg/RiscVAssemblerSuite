@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.Utility
 {
-   public class DisassemblyManager
+   public class DisassemblyToTextHelper
    {
-      public DisassemblyManager()
+      public DisassemblyToTextHelper()
       {
          m_Dsm = new RiscVDisassembler();
       }

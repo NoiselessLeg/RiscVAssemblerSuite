@@ -28,17 +28,20 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this.m_EditorLoggerSplitContainer = new System.Windows.Forms.SplitContainer();
          this.m_OpenFileTabs = new System.Windows.Forms.TabControl();
-         this.m_LogTxt = new System.Windows.Forms.TextBox();
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
          this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-         this.m_NumericValue = new Controls.BindableToolStripStatusLabel();
+         this.m_NumericValue = new Assembler.FormsGui.Controls.BindableToolStripStatusLabel();
+         this.m_LogTxt = new System.Windows.Forms.TextBox();
+         this.m_ViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
          ((System.ComponentModel.ISupportInitialize)(this.m_EditorLoggerSplitContainer)).BeginInit();
          this.m_EditorLoggerSplitContainer.Panel1.SuspendLayout();
          this.m_EditorLoggerSplitContainer.Panel2.SuspendLayout();
          this.m_EditorLoggerSplitContainer.SuspendLayout();
          this.statusStrip1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_ViewModelBindingSource)).BeginInit();
          this.SuspendLayout();
          // 
          // m_EditorLoggerSplitContainer
@@ -68,19 +71,6 @@
          this.m_OpenFileTabs.SelectedIndex = 0;
          this.m_OpenFileTabs.Size = new System.Drawing.Size(446, 272);
          this.m_OpenFileTabs.TabIndex = 2;
-         this.m_OpenFileTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControl_OnCurrentTabChanged);
-         this.m_OpenFileTabs.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TabControl_OnMouseUp);
-         // 
-         // m_LogTxt
-         // 
-         this.m_LogTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_LogTxt.Location = new System.Drawing.Point(0, 0);
-         this.m_LogTxt.Multiline = true;
-         this.m_LogTxt.Name = "m_LogTxt";
-         this.m_LogTxt.ReadOnly = true;
-         this.m_LogTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-         this.m_LogTxt.Size = new System.Drawing.Size(446, 100);
-         this.m_LogTxt.TabIndex = 1;
          // 
          // statusStrip1
          // 
@@ -105,12 +95,27 @@
          this.m_NumericValue.Size = new System.Drawing.Size(13, 17);
          this.m_NumericValue.Text = "0";
          // 
-         // EditorView
+         // m_LogTxt
+         // 
+         this.m_LogTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_LogTxt.Location = new System.Drawing.Point(0, 0);
+         this.m_LogTxt.Multiline = true;
+         this.m_LogTxt.Name = "m_LogTxt";
+         this.m_LogTxt.ReadOnly = true;
+         this.m_LogTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+         this.m_LogTxt.Size = new System.Drawing.Size(446, 100);
+         this.m_LogTxt.TabIndex = 1;
+         // 
+         // m_ViewModelBindingSource
+         // 
+         this.m_ViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.AssemblyEditorViewModel);
+         // 
+         // AssemblyEditorView
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.Controls.Add(this.m_EditorLoggerSplitContainer);
-         this.Name = "EditorView";
+         this.Name = "AssemblyEditorView";
          this.Size = new System.Drawing.Size(446, 376);
          this.m_EditorLoggerSplitContainer.Panel1.ResumeLayout(false);
          this.m_EditorLoggerSplitContainer.Panel2.ResumeLayout(false);
@@ -119,6 +124,7 @@
          this.m_EditorLoggerSplitContainer.ResumeLayout(false);
          this.statusStrip1.ResumeLayout(false);
          this.statusStrip1.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_ViewModelBindingSource)).EndInit();
          this.ResumeLayout(false);
 
       }
@@ -131,5 +137,6 @@
       private System.Windows.Forms.StatusStrip statusStrip1;
       private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
       private Controls.BindableToolStripStatusLabel m_NumericValue;
+      private System.Windows.Forms.BindingSource m_ViewModelBindingSource;
    }
 }

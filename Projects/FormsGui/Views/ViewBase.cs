@@ -54,7 +54,6 @@ namespace Assembler.FormsGui.Views
          m_ViewMsgMgr.BroadcastMessage(msg);
       }
          
-
       public string ViewName
       {
          get { return m_ViewName; }
