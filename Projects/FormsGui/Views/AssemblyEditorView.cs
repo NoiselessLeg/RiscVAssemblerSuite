@@ -22,7 +22,7 @@ namespace Assembler.FormsGui.Views
 
       public AssemblyEditorView(int viewId, 
                                 MessageManager msgMgr,
-                                EditorPreferencesViewModel preferences) :
+                                PreferencesViewModel preferences) :
          base(viewId, "Assembly Editor", msgMgr)
       {
          m_Preferences = preferences;
@@ -413,7 +413,7 @@ namespace Assembler.FormsGui.Views
 
       private readonly MenuBarContext m_Ctx;
       private readonly AssemblyEditorViewModel m_EditorVm;
-      private readonly EditorPreferencesViewModel m_Preferences;
+      private readonly PreferencesViewModel m_Preferences;
 
       private readonly RelayCommand m_OpenFileCmd;
       private readonly RelayCommand m_SaveFileCmd;

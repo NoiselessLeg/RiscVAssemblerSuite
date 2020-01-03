@@ -28,13 +28,27 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this.m_WindowLayout = new System.Windows.Forms.TableLayoutPanel();
          this.m_BtnLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
          this.m_CancelBtn = new System.Windows.Forms.Button();
          this.m_OkBtn = new System.Windows.Forms.Button();
          this.m_OptionsTabs = new System.Windows.Forms.TabControl();
+         this.m_EditorOptionsPage = new System.Windows.Forms.TabPage();
+         this.m_EditorOptionsLayout = new System.Windows.Forms.TableLayoutPanel();
+         this.m_ShowLineNumsChkBox = new System.Windows.Forms.CheckBox();
+         this.preferencesViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+         this.m_UseSpacesChkBox = new System.Windows.Forms.CheckBox();
+         this.m_NumSpacesTxtBox = new System.Windows.Forms.TextBox();
+         this.m_NumSpacesLbl = new System.Windows.Forms.Label();
+         this.m_ErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
          this.m_WindowLayout.SuspendLayout();
          this.m_BtnLayoutPanel.SuspendLayout();
+         this.m_OptionsTabs.SuspendLayout();
+         this.m_EditorOptionsPage.SuspendLayout();
+         this.m_EditorOptionsLayout.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.preferencesViewModelBindingSource)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_ErrorProvider)).BeginInit();
          this.SuspendLayout();
          // 
          // m_WindowLayout
@@ -85,12 +99,101 @@
          // 
          // m_OptionsTabs
          // 
+         this.m_OptionsTabs.Controls.Add(this.m_EditorOptionsPage);
          this.m_OptionsTabs.Dock = System.Windows.Forms.DockStyle.Fill;
          this.m_OptionsTabs.Location = new System.Drawing.Point(3, 3);
          this.m_OptionsTabs.Name = "m_OptionsTabs";
          this.m_OptionsTabs.SelectedIndex = 0;
          this.m_OptionsTabs.Size = new System.Drawing.Size(794, 408);
          this.m_OptionsTabs.TabIndex = 1;
+         // 
+         // m_EditorOptionsPage
+         // 
+         this.m_EditorOptionsPage.Controls.Add(this.m_EditorOptionsLayout);
+         this.m_EditorOptionsPage.Location = new System.Drawing.Point(4, 22);
+         this.m_EditorOptionsPage.Name = "m_EditorOptionsPage";
+         this.m_EditorOptionsPage.Size = new System.Drawing.Size(786, 382);
+         this.m_EditorOptionsPage.TabIndex = 0;
+         this.m_EditorOptionsPage.Text = "Assembly Editor Options";
+         this.m_EditorOptionsPage.UseVisualStyleBackColor = true;
+         // 
+         // m_EditorOptionsLayout
+         // 
+         this.m_EditorOptionsLayout.ColumnCount = 2;
+         this.m_EditorOptionsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+         this.m_EditorOptionsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+         this.m_EditorOptionsLayout.Controls.Add(this.m_ShowLineNumsChkBox, 0, 0);
+         this.m_EditorOptionsLayout.Controls.Add(this.m_UseSpacesChkBox, 0, 1);
+         this.m_EditorOptionsLayout.Controls.Add(this.m_NumSpacesTxtBox, 1, 2);
+         this.m_EditorOptionsLayout.Controls.Add(this.m_NumSpacesLbl, 0, 2);
+         this.m_EditorOptionsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_EditorOptionsLayout.Location = new System.Drawing.Point(0, 0);
+         this.m_EditorOptionsLayout.Name = "m_EditorOptionsLayout";
+         this.m_EditorOptionsLayout.RowCount = 3;
+         this.m_EditorOptionsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+         this.m_EditorOptionsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+         this.m_EditorOptionsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+         this.m_EditorOptionsLayout.Size = new System.Drawing.Size(786, 382);
+         this.m_EditorOptionsLayout.TabIndex = 0;
+         // 
+         // m_ShowLineNumsChkBox
+         // 
+         this.m_ShowLineNumsChkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+         this.m_ShowLineNumsChkBox.AutoSize = true;
+         this.m_ShowLineNumsChkBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+         this.m_EditorOptionsLayout.SetColumnSpan(this.m_ShowLineNumsChkBox, 2);
+         this.m_ShowLineNumsChkBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.preferencesViewModelBindingSource, "ShowLineNumbers", true));
+         this.m_ShowLineNumsChkBox.Location = new System.Drawing.Point(335, 55);
+         this.m_ShowLineNumsChkBox.Name = "m_ShowLineNumsChkBox";
+         this.m_ShowLineNumsChkBox.Size = new System.Drawing.Size(115, 17);
+         this.m_ShowLineNumsChkBox.TabIndex = 0;
+         this.m_ShowLineNumsChkBox.Text = "Show line numbers";
+         this.m_ShowLineNumsChkBox.UseVisualStyleBackColor = true;
+         // 
+         // preferencesViewModelBindingSource
+         // 
+         this.preferencesViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.PreferencesViewModel);
+         // 
+         // m_UseSpacesChkBox
+         // 
+         this.m_UseSpacesChkBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+         this.m_UseSpacesChkBox.AutoSize = true;
+         this.m_UseSpacesChkBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+         this.m_EditorOptionsLayout.SetColumnSpan(this.m_UseSpacesChkBox, 2);
+         this.m_UseSpacesChkBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.preferencesViewModelBindingSource, "ReplaceTabsWithSpaces", true));
+         this.m_UseSpacesChkBox.Location = new System.Drawing.Point(316, 182);
+         this.m_UseSpacesChkBox.Name = "m_UseSpacesChkBox";
+         this.m_UseSpacesChkBox.Size = new System.Drawing.Size(154, 17);
+         this.m_UseSpacesChkBox.TabIndex = 1;
+         this.m_UseSpacesChkBox.Text = "Use spaces instead of tabs";
+         this.m_UseSpacesChkBox.UseVisualStyleBackColor = true;
+         this.m_UseSpacesChkBox.CheckedChanged += new System.EventHandler(this.m_UseSpacesChkBox_CheckedChanged);
+         // 
+         // m_NumSpacesTxtBox
+         // 
+         this.m_NumSpacesTxtBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+         this.m_NumSpacesTxtBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.preferencesViewModelBindingSource, "NumSpacesToReplaceTabWith", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+         this.m_NumSpacesTxtBox.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.preferencesViewModelBindingSource, "ReplaceTabsWithSpaces", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+         this.m_NumSpacesTxtBox.Location = new System.Drawing.Point(396, 308);
+         this.m_NumSpacesTxtBox.Name = "m_NumSpacesTxtBox";
+         this.m_NumSpacesTxtBox.Size = new System.Drawing.Size(54, 20);
+         this.m_NumSpacesTxtBox.TabIndex = 2;
+         this.m_NumSpacesTxtBox.Validating += new System.ComponentModel.CancelEventHandler(this.m_NumSpacesTxtBox_Validating);
+         // 
+         // m_NumSpacesLbl
+         // 
+         this.m_NumSpacesLbl.Anchor = System.Windows.Forms.AnchorStyles.Right;
+         this.m_NumSpacesLbl.AutoSize = true;
+         this.m_NumSpacesLbl.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.preferencesViewModelBindingSource, "ReplaceTabsWithSpaces", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+         this.m_NumSpacesLbl.Location = new System.Drawing.Point(194, 311);
+         this.m_NumSpacesLbl.Name = "m_NumSpacesLbl";
+         this.m_NumSpacesLbl.Size = new System.Drawing.Size(196, 13);
+         this.m_NumSpacesLbl.TabIndex = 3;
+         this.m_NumSpacesLbl.Text = "Number of spaces to substitute tab with:";
+         // 
+         // m_ErrorProvider
+         // 
+         this.m_ErrorProvider.ContainerControl = this;
          // 
          // PreferencesWindow
          // 
@@ -107,6 +210,12 @@
          this.Text = "Preferences";
          this.m_WindowLayout.ResumeLayout(false);
          this.m_BtnLayoutPanel.ResumeLayout(false);
+         this.m_OptionsTabs.ResumeLayout(false);
+         this.m_EditorOptionsPage.ResumeLayout(false);
+         this.m_EditorOptionsLayout.ResumeLayout(false);
+         this.m_EditorOptionsLayout.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.preferencesViewModelBindingSource)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_ErrorProvider)).EndInit();
          this.ResumeLayout(false);
 
       }
@@ -118,5 +227,13 @@
       private System.Windows.Forms.Button m_CancelBtn;
       private System.Windows.Forms.Button m_OkBtn;
       private System.Windows.Forms.TabControl m_OptionsTabs;
+      private System.Windows.Forms.TabPage m_EditorOptionsPage;
+      private System.Windows.Forms.TableLayoutPanel m_EditorOptionsLayout;
+      private System.Windows.Forms.CheckBox m_ShowLineNumsChkBox;
+      private System.Windows.Forms.CheckBox m_UseSpacesChkBox;
+      private System.Windows.Forms.TextBox m_NumSpacesTxtBox;
+      private System.Windows.Forms.Label m_NumSpacesLbl;
+      private System.Windows.Forms.BindingSource preferencesViewModelBindingSource;
+      private System.Windows.Forms.ErrorProvider m_ErrorProvider;
    }
 }

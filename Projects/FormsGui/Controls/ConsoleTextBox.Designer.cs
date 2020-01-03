@@ -34,12 +34,17 @@
          // m_UnderlyingTxt
          // 
          this.m_UnderlyingTxt.AcceptsReturn = true;
+         this.m_UnderlyingTxt.BackColor = System.Drawing.Color.Black;
          this.m_UnderlyingTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_UnderlyingTxt.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         this.m_UnderlyingTxt.ForeColor = System.Drawing.Color.White;
          this.m_UnderlyingTxt.Location = new System.Drawing.Point(0, 0);
          this.m_UnderlyingTxt.Multiline = true;
          this.m_UnderlyingTxt.Name = "m_UnderlyingTxt";
-         this.m_UnderlyingTxt.Size = new System.Drawing.Size(150, 150);
+         this.m_UnderlyingTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+         this.m_UnderlyingTxt.Size = new System.Drawing.Size(568, 283);
          this.m_UnderlyingTxt.TabIndex = 1;
+         this.m_UnderlyingTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
          // 
          // ConsoleTextBox
          // 
@@ -47,6 +52,7 @@
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.Controls.Add(this.m_UnderlyingTxt);
          this.Name = "ConsoleTextBox";
+         this.Size = new System.Drawing.Size(568, 283);
          this.ResumeLayout(false);
          this.PerformLayout();
 

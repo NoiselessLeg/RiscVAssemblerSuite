@@ -9,7 +9,7 @@ namespace Assembler.Interpreter
     /// <summary>
     /// Simulates a simple 32-bit register.
     /// </summary>
-    public class Register
+    public class Register : IRegister
     {
         /// <summary>
         /// Creates a register with a default value of zero.

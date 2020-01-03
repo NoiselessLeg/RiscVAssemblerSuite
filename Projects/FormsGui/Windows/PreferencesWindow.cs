@@ -16,15 +16,51 @@ namespace Assembler.FormsGui.Windows
       public PreferencesWindow()
       {
          InitializeComponent();
-         m_AllPreferences = new SystemPreferencesViewModel();
+         m_SystemPreferences = new PreferencesViewModel();
       }
 
-      public PreferencesWindow(SystemPreferencesViewModel systemPreferences)
+      public PreferencesWindow(PreferencesViewModel systemPreferences)
       {
          InitializeComponent();
-         m_AllPreferences = systemPreferences;
+
+         m_SystemPreferences = new PreferencesViewModel();
+         m_SystemPreferences.CloneValues(systemPreferences);
+         preferencesViewModelBindingSource.DataSource = m_SystemPreferences;
       }
 
-      private readonly SystemPreferencesViewModel m_AllPreferences;
+      public PreferencesViewModel ActivePreferences
+      {
+         get { return m_SystemPreferences; }
+      }
+
+      private void m_UseSpacesChkBox_CheckedChanged(object sender, EventArgs e)
+      {
+         var chkBox = sender as CheckBox;
+         m_SystemPreferences.ReplaceTabsWithSpaces = chkBox.Checked;
+      }
+
+      private void m_NumSpacesTxtBox_Validating(object sender, CancelEventArgs e)
+      {
+         var txtBox = sender as TextBox;
+         if (!int.TryParse(txtBox.Text, out int dummy))
+         {
+            e.Cancel = true;
+            m_ErrorProvider.SetError(txtBox, "Value is not an integer.");
+         }
+         else
+         {
+            if (dummy > 0)
+            {
+               m_ErrorProvider.SetError(txtBox, string.Empty);
+            }
+            else
+            {
+               e.Cancel = true;
+               m_ErrorProvider.SetError(txtBox, "Value must be greater than zero.");
+            }
+         }
+      }
+
+      private readonly PreferencesViewModel m_SystemPreferences;
    }
 }

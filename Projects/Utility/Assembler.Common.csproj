@@ -72,6 +72,7 @@
     <Compile Include="DisassemblerOptions.cs" />
     <Compile Include="Endianness.cs" />
     <Compile Include="InterpreterOptions.cs" />
+    <Compile Include="IntExtensions.cs" />
     <Compile Include="ITerminal.cs" />
     <Compile Include="LoggerBase.cs" />
     <Compile Include="ILogger.cs" />

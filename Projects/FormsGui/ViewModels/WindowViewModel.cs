@@ -21,7 +21,16 @@ namespace Assembler.FormsGui.ViewModels
    {
       public WindowViewModel()
       {
-         m_Preferences = new SystemPreferencesViewModel();
+         m_Preferences = new PreferencesViewModel();
+         try
+         {
+            var settingsLoader = new SettingsFileLoader(PREFS_FILENAME);
+            m_Preferences.LoadFromStorage(settingsLoader);
+         }
+         catch (Exception ex)
+         {
+            MessageBox.Show(ex.Message, "Preferences Load Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+         }
          m_MsgQueue = new ObservableQueue<IBasicMessage>();
          m_MsgQueue.ItemEnqueued += OnExternalMsgEnqueued;
          m_MsgMgr = new MessageManager();
@@ -30,7 +39,7 @@ namespace Assembler.FormsGui.ViewModels
          m_Views = new ObservableCollection<ViewBase>();
 
          int viewIdCtr = 0;
-         m_Views.Add(new AssemblyEditorView(viewIdCtr++, m_MsgMgr, m_Preferences.AssemblyEditorPreferences));
+         m_Views.Add(new AssemblyEditorView(viewIdCtr++, m_MsgMgr, m_Preferences));
          m_Views.Add(new HexExplorerView(viewIdCtr++, m_MsgMgr));
          m_Views.Add(new DebugView(viewIdCtr++, m_MsgMgr));
 
@@ -47,7 +56,17 @@ namespace Assembler.FormsGui.ViewModels
             (param) =>
             {
                var prefsWindow = new PreferencesWindow(m_Preferences);
-               prefsWindow.ShowDialog();
+               DialogResult dr = prefsWindow.ShowDialog();
+               switch (dr)
+               {
+                  case DialogResult.OK:
+                  {
+                     var fileSaver = new SettingsFileSaver();
+                     m_Preferences.CloneValues(prefsWindow.ActivePreferences);
+                     m_Preferences.SaveSettings(PREFS_FILENAME, fileSaver);
+                     break;
+                  }
+               }
             }
          );
       }
@@ -106,11 +125,13 @@ namespace Assembler.FormsGui.ViewModels
       private readonly MessageManager m_MsgMgr;
       private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
 
-      private readonly SystemPreferencesViewModel m_Preferences;
+      private readonly PreferencesViewModel m_Preferences;
       private readonly ObservableCollection<ViewBase> m_Views;
       private readonly RelayCommand m_ChangeActiveIdxCmd;
 
       private readonly RelayCommand m_ShowPreferencesCmd;
+
+      private const string PREFS_FILENAME = "prefs.ini";
       
    }
 }

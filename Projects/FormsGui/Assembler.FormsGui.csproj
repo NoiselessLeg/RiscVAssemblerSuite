@@ -32,9 +32,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="ConsoleControlAPI, Version=1.2.1.0, Culture=neutral, PublicKeyToken=7c86b8a36b9c33e2, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ConsoleControlAPI.1.2.1\lib\net40\ConsoleControlAPI.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
@@ -55,9 +61,6 @@
   <ItemGroup>
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Controls\BindableByteViewer.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -85,7 +88,6 @@
     <Compile Include="Controls\HexValueGrid.Designer.cs">
       <DependentUpon>HexValueGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TwoWayDelegateBinder.cs" />
     <Compile Include="DataModels\AssemblyEditorPreferences.cs" />
     <Compile Include="DataModels\AssemblyFile.cs" />
     <Compile Include="DataModels\CompiledFile.cs" />
@@ -93,10 +95,15 @@
     <Compile Include="DataModels\LoggerModel.cs" />
     <Compile Include="DataModels\Project.cs" />
     <Compile Include="DataModels\ProjectFileVersion.cs" />
+    <Compile Include="Formatters\HexDisplayFormatter.cs" />
     <Compile Include="IO\AssemblyFileLoader.cs" />
     <Compile Include="IO\AssemblyFileSaver.cs" />
     <Compile Include="IO\BinaryFileLoader.cs" />
     <Compile Include="IO\BinaryFileSaver.cs" />
+    <Compile Include="IO\InputStream.cs" />
+    <Compile Include="IO\ObservableStream.cs" />
+    <Compile Include="IO\SettingsFileLoader.cs" />
+    <Compile Include="IO\SettingsFileSaver.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,9 +123,12 @@
     <Compile Include="Services\Win32DialogService.cs" />
     <Compile Include="Utility\BindingHelper.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
+    <Compile Include="Utility\ControlHelper.cs" />
     <Compile Include="Utility\DisassemblyManager.cs" />
     <Compile Include="Utility\IBasicQueue.cs" />
-    <Compile Include="ViewModels\EditorPreferencesViewModel.cs" />
+    <Compile Include="Utility\StringHelper.cs" />
+    <Compile Include="IO\AssemblerExecutionConsole.cs" />
+    <Compile Include="ViewModels\JefFileViewModel.cs" />
     <Compile Include="ViewModels\NotifyPropertyChangedBase.cs" />
     <Compile Include="Utility\ObservableQueue.cs" />
     <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
@@ -129,15 +139,8 @@
     <Compile Include="ViewModels\HexExplorerViewModel.cs" />
     <Compile Include="ViewModels\LoggerViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
-    <Compile Include="ViewModels\SystemPreferencesViewModel.cs" />
-    <Compile Include="ViewModels\TerminalViewModel.cs" />
+    <Compile Include="ViewModels\PreferencesViewModel.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />
-    <Compile Include="Views\AssemblyEditorPrefsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\AssemblyEditorPrefsView.Designer.cs">
-      <DependentUpon>AssemblyEditorPrefsView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\DebugView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -191,9 +194,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\AssemblyEditorPrefsView.resx">
-      <DependentUpon>AssemblyEditorPrefsView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\AssemblyEditorView.resx">
       <DependentUpon>AssemblyEditorView.cs</DependentUpon>
     </EmbeddedResource>
@@ -207,9 +207,12 @@
       <DependentUpon>PreferencesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyFileViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.ExecutionViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.HexExplorerViewModel.datasource" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.JefFileViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.OpenFilesViewModel.datasource" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.PreferencesViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.TabPageViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -250,6 +253,5 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

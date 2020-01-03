@@ -16,7 +16,10 @@ namespace Assembler.FormsGui.ViewModels
    {
       public DebugWindowViewModel(int viewId, MessageManager msgMgr)
       {
+         m_ViewId = viewId;
+         m_DisassemblyMgr = new DisassemblyManager();
          m_LoggerVm = new LoggerViewModel();
+         m_FilesToExecute = new ObservableCollection<JefFileViewModel>();
          m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
          m_ExternalMsgQueue.ItemEnqueued += OnExternalMsgReceived;
          m_FileProc = new JefFileProcessor();
@@ -46,11 +49,16 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_RunFileCmd; }
       }
 
+      public ObservableCollection<JefFileViewModel> FilesToExecute
+      {
+         get { return m_FilesToExecute; }
+      }
+
       private void LoadFile(string fileName)
       {
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
-
-
+         DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
+         m_FilesToExecute.Add(new JefFileViewModel(fileName, disassembly, file));
       }
 
       private void RunFile(string fileName)
@@ -62,10 +70,22 @@ namespace Assembler.FormsGui.ViewModels
       {
          var msgQ = sender as IBasicQueue<IBasicMessage>;
          IBasicMessage msg = msgQ.Dequeue();
+         switch (msg.MessageType)
+         {
+            case MessageType.FileAssembled:
+            {
+               msg.HandleMessage(LoadFileCommand);
+               var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
+               m_MsgMgr.BroadcastMessage(m_MsgSenderId, activeViewRequest);
+               break;
+            }
+         }
       }
 
+      private readonly int m_ViewId;
       private readonly int m_MsgSenderId;
       private readonly MessageManager m_MsgMgr;
+      private readonly DisassemblyManager m_DisassemblyMgr;
       private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
 
       private readonly RelayCommand m_LoadFileCmd;
@@ -73,7 +93,6 @@ namespace Assembler.FormsGui.ViewModels
       private readonly JefFileProcessor m_FileProc;
       private readonly LoggerViewModel m_LoggerVm;
 
-
-      private readonly ObservableCollection<ExecutionViewModel> m_ExecutingFiles;
+      private readonly ObservableCollection<JefFileViewModel> m_FilesToExecute;
    }
 }

@@ -47,6 +47,7 @@ namespace Assembler.Common
                 { 29, "t4" },
                 { 30, "t5" },
                 { 31, "t6" },
+                { 32, "pc" }
             };
         }
 

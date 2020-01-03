@@ -8,13 +8,83 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class RegisterViewModel : BaseViewModel
+   public enum RegisterDisplayType
    {
-      public RegisterViewModel(int registerIdx, ExecutionContext ctx)
+      Decimal,
+      Hexadecimal
+   }
+
+   public class ZeroRegisterViewModel : RegisterViewModel
+   {
+      public ZeroRegisterViewModel():
+         base(0)
       {
-         m_Idx = registerIdx;
-         m_Ctx = ctx;
+      }
+
+      public override int Value
+      {
+         get { return 0; }
+         set { }
+      }
+   }
+
+
+   public class RegisterViewModel : BaseViewModel, IRegister
+   {
+      public RegisterViewModel(int registerIdx)
+      {
          m_RegisterName = Common.ReverseRegisterMap.GetStringifiedRegisterValue(registerIdx);
+         Value = 0;
+      }
+
+      public RegisterDisplayType DisplayType
+      {
+         get { return m_DisplayType; }
+         set
+         {
+            if (m_DisplayType != value)
+            {
+               m_DisplayType = value;
+               OnPropertyChanged();
+               OnPropertyChanged(nameof(Value));
+               OnPropertyChanged(nameof(ValueStr));
+            }
+         }
+      }
+
+      public string ValueStr
+      {
+         get
+         {
+            string dispStr = string.Empty;
+            switch (m_DisplayType)
+            {
+               case RegisterDisplayType.Decimal:
+               {
+                  dispStr = Value.ToString();
+                  break;
+               }
+
+               case RegisterDisplayType.Hexadecimal:
+               {
+                  dispStr = "0x" + Value.ToString("x4");
+                  break;
+               }
+            }
+
+            return dispStr;
+         }
+         set
+         {
+            if (Common.IntExtensions.TryParseEx(value, out int iVal))
+            {
+               if (Value != iVal)
+               {
+                  Value = iVal;
+                  OnPropertyChanged();
+               }
+            }
+         }
       }
 
       public string RegisterName
@@ -22,21 +92,22 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_RegisterName; }
       }
 
-      public int RegisterValue
+      public virtual int Value
       {
-         get { return m_Ctx.UserRegisters[m_Idx].Value; }
+         get { return m_RegValue; }
          set
          {
-            if (m_Ctx.UserRegisters[m_Idx].Value != value)
+            if (m_RegValue != value)
             {
-               m_Ctx.UserRegisters[m_Idx].Value = value;
+               m_RegValue = value;
                OnPropertyChanged();
+               OnPropertyChanged(nameof(ValueStr));
             }
          }
       }
-
+      
       private readonly string m_RegisterName;
-      private readonly int m_Idx;
-      private readonly ExecutionContext m_Ctx;
+      private int m_RegValue;
+      private RegisterDisplayType m_DisplayType;
    }
 }

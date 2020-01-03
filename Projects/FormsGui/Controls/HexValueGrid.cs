@@ -81,8 +81,6 @@ namespace Assembler.FormsGui.Controls
          m_ViewModel = new CompiledFileViewModel();
          InitializeComponent();
          m_HexEditor.ByteProvider = new HexEditorByteProvider(m_ViewModel);
-         //m_ByteViewer = new BindableByteViewer();
-         //InitializeByteViewer(m_ByteViewer, m_ViewModel);
 
       }
 
@@ -91,18 +89,7 @@ namespace Assembler.FormsGui.Controls
          m_ViewModel = vm;
          InitializeComponent();
          m_HexEditor.ByteProvider = new HexEditorByteProvider(vm);
-         //m_ByteViewer = new BindableByteViewer();
-         //InitializeByteViewer(m_ByteViewer, vm);
       }
-
-      private void InitializeByteViewer(BindableByteViewer viewer, CompiledFileViewModel viewModel)
-      {
-         Controls.Add(viewer);
-         viewer.SetDisplayMode(DisplayMode.Auto);
-         viewer.Dock = DockStyle.Fill;
-         viewer.DataBindings.Add(new Binding(nameof(viewer.File), viewModel, nameof(viewModel.FilePath), true, DataSourceUpdateMode.OnPropertyChanged));
-      }
-
       
       private readonly CompiledFileViewModel m_ViewModel;
 

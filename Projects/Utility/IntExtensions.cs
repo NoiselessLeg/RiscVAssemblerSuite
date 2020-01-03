@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Util
+namespace Assembler.Common
 {
-    static class IntExtensions
+    public static class IntExtensions
     {
         /// <summary>
         /// Tries to parse a 16-bit integer from a string. This method should handle hexadecimal values

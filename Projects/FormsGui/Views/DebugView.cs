@@ -1,4 +1,5 @@
-﻿using Assembler.FormsGui.Controls.Custom;
+﻿using Assembler.FormsGui.Controls;
+using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
@@ -28,6 +29,7 @@ namespace Assembler.FormsGui.Views
          m_ViewModel = new DebugWindowViewModel(viewId, msgMgr);
          InitializeComponent();
          m_Ctx = new MenuBarContext();
+         CreateDataBindings(m_ViewModel);
       }
 
       public override MenuBarContext MenuBarMembers
@@ -39,7 +41,24 @@ namespace Assembler.FormsGui.Views
       {
          get { return m_ViewModel.MessageQueue; }
       }
-      
+
+      private void CreateDataBindings(DebugWindowViewModel vm)
+      {
+         m_OpenFilesTabCtrl.TabPages.BindToObservableCollection(vm.FilesToExecute,
+            (param) => CreateTabPage(param as JefFileViewModel));
+      }
+
+      private TabPage CreateTabPage(JefFileViewModel file)
+      {
+         var newTabPage = new TabPage();
+         var tabContent = new FileExecutionView(file);
+         tabContent.Dock = DockStyle.Fill;
+         newTabPage.DataBindings.Add(new Binding(nameof(newTabPage.Text), file, nameof(file.FileName)));
+         newTabPage.Dock = DockStyle.Fill;
+         newTabPage.Controls.Add(tabContent);
+         return newTabPage;
+      }
+
       private readonly DebugWindowViewModel m_ViewModel;
       private readonly MenuBarContext m_Ctx;
    }

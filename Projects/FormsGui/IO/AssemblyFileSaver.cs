@@ -17,7 +17,7 @@ namespace Assembler.FormsGui.IO
 
       public static void SaveFile(AssemblyFile file)
       {
-         using (var fileStream = new FileStream(file.FilePath, FileMode.OpenOrCreate))
+         using (var fileStream = new FileStream(file.FilePath, FileMode.Create))
          {
             using (var writer = new StreamWriter(fileStream))
             {

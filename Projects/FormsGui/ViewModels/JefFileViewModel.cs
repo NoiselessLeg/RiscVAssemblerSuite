@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.FormsGui.DataModels
+namespace Assembler.FormsGui.ViewModels
 {
-   public class CompiledFile
+   public class JefFileViewModel : BaseViewModel
    {
-      public CompiledFile()
+      public JefFileViewModel(string fileName,
+                              DataModels.AssemblyFile disassembly,
+                              OutputProcessing.DisassembledFile runtimeFile)
       {
-         m_Bytes = new List<byte>();
+         m_FilePath = fileName;
+         m_AssemblyFile = disassembly;
+         m_UnderlyingFile = runtimeFile;
       }
-
-      /// <summary>
-      /// Gets the file name without the prefixed path information.
-      /// </summary>
+      
       public string FileName
       {
          get
@@ -35,28 +36,32 @@ namespace Assembler.FormsGui.DataModels
          }
       }
 
-      /// <summary>
-      /// Gets or sets the full path of the file being modeled.
-      /// </summary>
       public string FilePath
       {
          get { return m_FilePath; }
-         set
+         private set
          {
             if (m_FilePath != value)
             {
                m_FilePath = value;
+               OnPropertyChanged();
+               OnPropertyChanged(nameof(FileName));
             }
-
          }
       }
 
-      public IList<byte> Bytes
+      public string DisassembledText
       {
-         get { return m_Bytes; }
+         get { return m_AssemblyFile.FileText; }
+      }
+
+      public OutputProcessing.DisassembledFile FileData
+      {
+         get { return m_UnderlyingFile; }
       }
 
       private string m_FilePath;
-      private readonly IList<byte> m_Bytes;
+      private readonly DataModels.AssemblyFile m_AssemblyFile;
+      private readonly OutputProcessing.DisassembledFile m_UnderlyingFile;
    }
 }

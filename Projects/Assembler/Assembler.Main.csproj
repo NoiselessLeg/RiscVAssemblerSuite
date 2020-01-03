@@ -157,7 +157,6 @@
     <Compile Include="Util\StringUtils.cs" />
     <Compile Include="InstructionProcessing\OriProcessor.cs" />
     <Compile Include="InstructionProcessing\OrProcessor.cs" />
-    <Compile Include="Util\IntExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
