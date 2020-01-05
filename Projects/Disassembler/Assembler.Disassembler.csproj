@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InstructionData.cs" />
+    <Compile Include="DisassemblerServices.cs" />
     <Compile Include="InstructionGenerators\EcallStringifier.cs" />
     <Compile Include="InstructionGenerators\ImmediateParamStringifier.cs" />
     <Compile Include="InstructionGenerators\IParameterStringifier.cs" />

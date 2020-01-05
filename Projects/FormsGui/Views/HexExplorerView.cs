@@ -29,9 +29,9 @@ namespace Assembler.FormsGui.Views
          base(viewId, "Hex Explorer", msgMgr)
       {
          m_ExplorerVm = new HexExplorerViewModel(viewId, msgMgr);
-         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
-         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
-         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
+         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction(), true);
+         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction(), true);
+         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction(), true);
 
          
          m_CloseTabsToRightCmd = new RelayCommand(
@@ -48,7 +48,7 @@ namespace Assembler.FormsGui.Views
                {
                   CloseTabAction(iParm.Value + 1);
                }
-            });
+            }, false);
 
          m_CloseTabsToLeftCmd = new RelayCommand(
             (param) =>
@@ -64,7 +64,7 @@ namespace Assembler.FormsGui.Views
                // event doesn't seem to be getting called. it hasn't
                // crashed yet, but that seems like it'd be in a bad state.
                m_ExplorerVm.ChangeActiveIndexCommand.Execute(0);
-            });
+            }, false);
 
          // this will be passed either a tab index or a view model.
          // need to differentiate on the fly when we're called.
@@ -82,38 +82,11 @@ namespace Assembler.FormsGui.Views
                      System.Diagnostics.Debug.Assert(evm != null);
                      CloseTabAction(evm.ActiveFileIndex);
                   }
-               },
-               (param) =>
-               {
-                  bool canExecute = false;
-                  int? iParm = param as int?;
-                  if (iParm.HasValue)
-                  {
-                     if (iParm.Value < m_ExplorerVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  else
-                  {
-                     var evm = param as HexExplorerViewModel;
-                     System.Diagnostics.Debug.Assert(evm != null);
-                     if (evm.ActiveFileIndex < m_ExplorerVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  return canExecute;
-               });
-         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow());
+               }, false);
+         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow(), true);
          InitializeComponent();
          m_Ctx = CreateMenuBarContext();
          CreateDataBindings(m_ExplorerVm);
-      }
-
-      public override IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_ExplorerVm.MessageQueue; }
       }
 
       private TabPage CreateNewTabPage(CompiledFileViewModel viewModel)

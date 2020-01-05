@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.FormsGui.Commands;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Assembler.FormsGui.Utility
 {
    public static class ControlHelper
    {
+
       public static void InvokeIfRequired(this ISynchronizeInvoke ctrl, MethodInvoker action)
       {
          if (ctrl.InvokeRequired)

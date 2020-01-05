@@ -61,7 +61,13 @@
   <ItemGroup>
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\BindableToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\BufferedDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ConsoleTextBox.cs">
@@ -76,11 +82,11 @@
     <Compile Include="Controls\AssemblyTextBox.Designer.cs">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileExecutionView.cs">
+    <Compile Include="Controls\FileExecutionTabPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\FileExecutionView.Designer.cs">
-      <DependentUpon>FileExecutionView.cs</DependentUpon>
+    <Compile Include="Controls\FileExecutionTabPage.Designer.cs">
+      <DependentUpon>FileExecutionTabPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\HexValueGrid.cs">
       <SubType>UserControl</SubType>
@@ -129,6 +135,7 @@
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
     <Compile Include="ViewModels\JefFileViewModel.cs" />
+    <Compile Include="ViewModels\MessagingViewModel.cs" />
     <Compile Include="ViewModels\NotifyPropertyChangedBase.cs" />
     <Compile Include="Utility\ObservableQueue.cs" />
     <Compile Include="ViewModels\AssemblyFileViewModel.cs" />
@@ -138,6 +145,7 @@
     <Compile Include="ViewModels\ExecutionViewModel.cs" />
     <Compile Include="ViewModels\HexExplorerViewModel.cs" />
     <Compile Include="ViewModels\LoggerViewModel.cs" />
+    <Compile Include="ViewModels\ProgramInstructionViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\PreferencesViewModel.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />
@@ -176,8 +184,8 @@
     <EmbeddedResource Include="Controls\AssemblyTextBox.resx">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\FileExecutionView.resx">
-      <DependentUpon>FileExecutionView.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\FileExecutionTabPage.resx">
+      <DependentUpon>FileExecutionTabPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HexValueGrid.resx">
       <DependentUpon>HexValueGrid.cs</DependentUpon>
@@ -229,10 +237,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assembler.Linker\Assembler.Linker.csproj">
-      <Project>{28ed32b0-76e7-48cd-9664-e045f5fb073e}</Project>
-      <Name>Assembler.Linker</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Assembler\Assembler.Main.csproj">
       <Project>{71d5c5f0-ee31-47be-a430-76dc2c24d87f}</Project>
       <Name>Assembler.Main</Name>

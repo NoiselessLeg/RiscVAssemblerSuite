@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,43 +8,68 @@ using System.Windows.Input;
 
 namespace Assembler.FormsGui.Commands
 {
-
    public class RelayCommand : ICommand
-    {
-        public RelayCommand(Action<object> executionAction) :
-            this(executionAction, null)
-        {
+   {
+      public RelayCommand(Action<object> executionAction, bool defaultExecutionState)
+      {
+         m_ExecutionAction = executionAction ?? throw new ArgumentNullException("executionAction");
+         m_CanExecute = defaultExecutionState;
+      }
 
-        }
-
-        public RelayCommand(Action<object> executionAction, Predicate<object> canExecute)
-        {
-            if (executionAction == null)
+      public bool CanExecute
+      {
+         get { return m_CanExecute; }
+         set
+         {
+            if (m_CanExecute != value)
             {
-                throw new ArgumentNullException("executionAction");
+               m_CanExecute = value;
+               PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanExecute)));
             }
+         }
+      }
 
-            m_ExecutionAction = executionAction;
-            m_CanExecute = canExecute;
-        }
+      public void Execute(object parameter)
+      {
+         m_ExecutionAction(parameter);
+      }
 
-        public bool CanExecute(object parameter)
-        {
-            bool canExecute = true;
-            if (m_CanExecute != null)
+      private readonly Action<object> m_ExecutionAction;
+      private bool m_CanExecute;
+
+      public event PropertyChangedEventHandler PropertyChanged;
+
+   }
+
+   public class RelayCommand<TExecArg> : ICommand
+   {
+      public RelayCommand(Action<TExecArg> executionAction, bool defaultExecutionState)
+      {
+         m_ExecutionAction = executionAction ?? throw new ArgumentNullException("executionAction");
+         m_CanExecute = defaultExecutionState;
+      }
+
+      public bool CanExecute
+      {
+         get { return m_CanExecute; }
+         set
+         {
+            if (m_CanExecute != value)
             {
-                canExecute = m_CanExecute(parameter);
+               m_CanExecute = value;
+               PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanExecute)));
             }
+         }
+      }
 
-            return canExecute;
-        }
+      public void Execute(object parameter)
+      {
+         m_ExecutionAction((TExecArg) parameter);
+      }
 
-        public void Execute(object parameter)
-        {
-            m_ExecutionAction(parameter);
-        }
+      private readonly Action<TExecArg> m_ExecutionAction;
+      private bool m_CanExecute;
 
-        private readonly Action<object> m_ExecutionAction;
-        private readonly Predicate<object> m_CanExecute;
-    }
+      public event PropertyChangedEventHandler PropertyChanged;
+   }
 }

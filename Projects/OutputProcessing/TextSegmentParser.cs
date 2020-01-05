@@ -25,7 +25,7 @@ namespace Assembler.OutputProcessing
                 IParameterDecoder paramDecoder = ParamDecoderTable.GetDecoderFor(iType);
                 IEnumerable<int> parameters = paramDecoder.DecodeParameters(elem);
 
-                instructionList.Add(new DisassembledInstruction(iType, parameters));
+                instructionList.Add(new DisassembledInstruction(elem, iType, parameters));
             }
 
             return instructionList;

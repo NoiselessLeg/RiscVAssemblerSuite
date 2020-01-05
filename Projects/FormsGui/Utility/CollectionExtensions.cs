@@ -8,6 +8,14 @@ namespace Assembler.FormsGui.Utility
 {
    public static class CollectionExtensions
    {
+      public static void ApplyFunc<T>(this IEnumerable<T> enumerable, Func<T, object> lambda)
+      {
+         foreach (var item in enumerable)
+         {
+            lambda(item);
+         }
+      }
+
       public static bool Remove<T>(this ICollection<T> collection, int index)
       {
          bool canRemove = false;

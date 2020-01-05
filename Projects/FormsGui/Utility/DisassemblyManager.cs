@@ -19,7 +19,6 @@ namespace Assembler.FormsGui.Utility
 
       public AssemblyFile DiassembleCompiledFile(string inputFile, ILogger loggerInput)
       {
-         // first, keep repeatedly testing to see if we have a free file
          try
          {
             string tmpPath = Path.GetTempFileName();

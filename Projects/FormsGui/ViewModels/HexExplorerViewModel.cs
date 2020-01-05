@@ -11,35 +11,17 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class HexExplorerViewModel : BaseViewModel
+   public class HexExplorerViewModel : MessagingViewModel
    {
-      public HexExplorerViewModel(int viewId, MessageManager msgMgr)
+      public HexExplorerViewModel(int viewId, MessageManager msgMgr):
+         base(msgMgr)
       {
          m_ViewId = viewId;
-         m_MsgQueue = new ObservableQueue<IBasicMessage>();
-         m_MsgQueue.ItemEnqueued += OnExternalMsgReceived;
          m_OpenFiles = new ObservableCollection<CompiledFileViewModel>();
-         m_OpenFileCmd = new RelayCommand((param) => LoadFile(param as string));
-         m_SaveFileCmd = new RelayCommand(param => SaveFile(param as string));
-         m_CloseFileCmd = new RelayCommand(param =>
-         {
-            int? iParm = param as int?;
-            System.Diagnostics.Debug.Assert(iParm.HasValue);
-            if (iParm.HasValue)
-            {
-               CloseFile(iParm.Value);
-            }
-
-         });
-         m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
-
-         m_MsgSenderId = msgMgr.RegisterMessageQueue(m_MsgQueue);
-         m_MsgMgr = msgMgr;
-      }
-
-      public IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_MsgQueue; }
+         m_OpenFileCmd = new RelayCommand<string>((param) => LoadFile(param), true);
+         m_SaveFileCmd = new RelayCommand<string>(param => SaveFile(param), true);
+         m_CloseFileCmd = new RelayCommand<int>(param => CloseFile(param), true);
+         m_ChangeActiveIdxCmd = new RelayCommand<int>(param => ActiveFileIndex = param, true);
       }
       
       public ObservableCollection<CompiledFileViewModel> AllOpenFiles
@@ -112,22 +94,13 @@ namespace Assembler.FormsGui.ViewModels
          m_OpenFiles.RemoveAt(fileIndex);
       }
 
-      private void OnExternalMsgReceived(object sender, EventArgs e)
-      {
-         var msgQ = sender as IBasicQueue<IBasicMessage>;
-         IBasicMessage msg = msgQ.Dequeue();
-      }
-
 
       private int m_ActiveViewModelIdx;
       private readonly int m_ViewId;
-      private readonly int m_MsgSenderId;
-      private readonly MessageManager m_MsgMgr;
-      private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
       private readonly ObservableCollection<CompiledFileViewModel> m_OpenFiles;
-      private readonly RelayCommand m_OpenFileCmd;
-      private readonly RelayCommand m_SaveFileCmd;
-      private readonly RelayCommand m_CloseFileCmd;
-      private readonly RelayCommand m_ChangeActiveIdxCmd;
+      private readonly RelayCommand<string> m_OpenFileCmd;
+      private readonly RelayCommand<string> m_SaveFileCmd;
+      private readonly RelayCommand<int> m_CloseFileCmd;
+      private readonly RelayCommand<int> m_ChangeActiveIdxCmd;
    }
 }

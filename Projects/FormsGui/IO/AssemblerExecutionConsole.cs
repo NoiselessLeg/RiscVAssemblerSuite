@@ -50,6 +50,13 @@ namespace Assembler.FormsGui.ViewModels
          return m_InputReader.ReadLine();
       }
 
+      public void InterruptInputOperation()
+      {
+         // write a null byte to the input reader buffer and flush it.
+         m_InputReader.BaseStream.Write(new byte[] { 0 }, 0, 1);
+         m_InputReader.BaseStream.Flush();
+      }
+
       public void RequestOutputFlush()
       {
          m_OutputWriter.Flush();

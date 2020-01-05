@@ -41,6 +41,8 @@
       /// <returns>The character that was read.</returns>
       char ReadChar();
 
+      void InterruptInputOperation();
+
       /// <summary>
       /// Requests that all terminal output be dumped to the output stream.
       /// An implementor need not necessarily do anything, as this is only

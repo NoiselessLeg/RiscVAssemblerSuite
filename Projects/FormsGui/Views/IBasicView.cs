@@ -12,6 +12,5 @@ namespace Assembler.FormsGui.Views
    public interface IBasicView
    {
       MenuBarContext MenuBarMembers { get; }
-      IBasicQueue<IBasicMessage> MessageQueue { get; }
    }
 }

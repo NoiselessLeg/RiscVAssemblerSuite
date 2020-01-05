@@ -12,38 +12,26 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class DebugWindowViewModel : BaseViewModel
+   public class DebugWindowViewModel : MessagingViewModel
    {
-      public DebugWindowViewModel(int viewId, MessageManager msgMgr)
+      public DebugWindowViewModel(int viewId, MessageManager msgMgr):
+         base(msgMgr)
       {
          m_ViewId = viewId;
          m_DisassemblyMgr = new DisassemblyManager();
          m_LoggerVm = new LoggerViewModel();
          m_FilesToExecute = new ObservableCollection<JefFileViewModel>();
-         m_ExternalMsgQueue = new ObservableQueue<IBasicMessage>();
-         m_ExternalMsgQueue.ItemEnqueued += OnExternalMsgReceived;
          m_FileProc = new JefFileProcessor();
-         m_LoadFileCmd = new RelayCommand(
-            (param) => LoadFile(param as string)
-         );
+         m_LoadFileCmd = new RelayCommand<string>((param) => LoadFile(param), true);
 
-         m_MsgSenderId = msgMgr.RegisterMessageQueue(m_ExternalMsgQueue);
-         m_MsgMgr = msgMgr;
-      }
+         m_HandleAssembledFileCmd = new RelayCommand<string>((compiledFileName) => HandleFileAssembledMsg(compiledFileName), true);
 
-      public IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_ExternalMsgQueue; }
+         SubscribeToMessageType(MessageType.FileAssembled, m_HandleAssembledFileCmd);
       }
 
       public ICommand LoadFileCommand
       {
          get { return m_LoadFileCmd; }
-      }
-
-      public ICommand RunFileCommand
-      {
-         get { return m_RunFileCmd; }
       }
 
       public int ActiveTabIdx
@@ -68,35 +56,23 @@ namespace Assembler.FormsGui.ViewModels
       {
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
-         m_FilesToExecute.Add(new JefFileViewModel(fileName, disassembly, file));
+         m_FilesToExecute.Add(new JefFileViewModel(fileName, file));
          ActiveTabIdx = (m_FilesToExecute.Count - 1);
       }
 
-      private void OnExternalMsgReceived(object sender, EventArgs e)
+      private void HandleFileAssembledMsg(string compiledFileName)
       {
-         var msgQ = sender as IBasicQueue<IBasicMessage>;
-         IBasicMessage msg = msgQ.Dequeue();
-         switch (msg.MessageType)
-         {
-            case MessageType.FileAssembled:
-            {
-               msg.HandleMessage(LoadFileCommand);
-               var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
-               m_MsgMgr.BroadcastMessage(m_MsgSenderId, activeViewRequest);
-               break;
-            }
-         }
+         LoadFile(compiledFileName);
+         var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
+         BroadcastMessage(activeViewRequest);
       }
 
       private int m_ActiveTabIdx;
       private readonly int m_ViewId;
-      private readonly int m_MsgSenderId;
-      private readonly MessageManager m_MsgMgr;
       private readonly DisassemblyManager m_DisassemblyMgr;
-      private readonly ObservableQueue<IBasicMessage> m_ExternalMsgQueue;
 
-      private readonly RelayCommand m_LoadFileCmd;
-      private readonly RelayCommand m_RunFileCmd;
+      private readonly RelayCommand<string> m_LoadFileCmd;
+      private readonly RelayCommand<string> m_HandleAssembledFileCmd;
       private readonly JefFileProcessor m_FileProc;
       private readonly LoggerViewModel m_LoggerVm;
 

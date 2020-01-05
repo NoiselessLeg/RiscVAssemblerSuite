@@ -44,6 +44,11 @@ namespace Assembler.Interpreter
          get { return m_Ctx.UserRegisters; }
       }
 
+      public void AbortUserInputOperation()
+      {
+         m_Terminal.RequestOutputFlush();
+      }
+
       public void ExecuteNextInstruction()
       {
          try
@@ -65,6 +70,11 @@ namespace Assembler.Interpreter
             m_Terminal.PrintString(ex.StackTrace);
             m_Environment.Terminate();
          }
+      }
+
+      public void IncrementInstructionPointer()
+      {
+         m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
       }
 
       private readonly TextSegmentAccessor m_TextSegment;

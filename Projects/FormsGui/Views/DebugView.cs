@@ -37,11 +37,6 @@ namespace Assembler.FormsGui.Views
          get { return m_Ctx; }
       }
 
-      public override IBasicQueue<IBasicMessage> MessageQueue
-      {
-         get { return m_ViewModel.MessageQueue; }
-      }
-
       private void CreateDataBindings(DebugWindowViewModel vm)
       {
          m_OpenFilesTabCtrl.TabPages.BindToObservableCollection(vm.FilesToExecute,
@@ -55,7 +50,7 @@ namespace Assembler.FormsGui.Views
       private TabPage CreateTabPage(JefFileViewModel file)
       {
          var newTabPage = new TabPage();
-         var tabContent = new FileExecutionView(file);
+         var tabContent = new FileExecutionTabPage(file);
          tabContent.Dock = DockStyle.Fill;
          newTabPage.DataBindings.Add(new Binding(nameof(newTabPage.Text), file, nameof(file.FileName)));
          newTabPage.Dock = DockStyle.Fill;

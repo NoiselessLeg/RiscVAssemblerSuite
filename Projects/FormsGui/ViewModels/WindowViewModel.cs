@@ -17,9 +17,10 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class WindowViewModel : BaseViewModel
+   public class WindowViewModel : MessagingViewModel
    {
-      public WindowViewModel()
+      public WindowViewModel() :
+         base(MessageManager.GetInstance())
       {
          m_Preferences = new PreferencesViewModel();
          try
@@ -31,17 +32,15 @@ namespace Assembler.FormsGui.ViewModels
          {
             MessageBox.Show(ex.Message, "Preferences Load Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
          }
-         m_MsgQueue = new ObservableQueue<IBasicMessage>();
-         m_MsgQueue.ItemEnqueued += OnExternalMsgEnqueued;
-         m_MsgMgr = new MessageManager();
-         m_MsgQueueId = m_MsgMgr.RegisterMessageQueue(m_MsgQueue);
 
          m_Views = new ObservableCollection<ViewBase>();
 
          int viewIdCtr = 0;
-         m_Views.Add(new AssemblyEditorView(viewIdCtr++, m_MsgMgr, m_Preferences));
-         m_Views.Add(new HexExplorerView(viewIdCtr++, m_MsgMgr));
-         m_Views.Add(new DebugView(viewIdCtr++, m_MsgMgr));
+         MessageManager mgr = MessageManager.GetInstance();
+
+         m_Views.Add(new AssemblyEditorView(viewIdCtr++, mgr, m_Preferences));
+         m_Views.Add(new HexExplorerView(viewIdCtr++, mgr));
+         m_Views.Add(new DebugView(viewIdCtr++, mgr));
 
          m_ChangeActiveIdxCmd = new RelayCommand(
             (param) =>
@@ -49,7 +48,7 @@ namespace Assembler.FormsGui.ViewModels
                int? idx = param as int?;
                System.Diagnostics.Debug.Assert(idx.HasValue);
                ActiveViewIndex = idx.Value;
-            }
+            }, true
          );
 
          m_ShowPreferencesCmd = new RelayCommand(
@@ -67,8 +66,11 @@ namespace Assembler.FormsGui.ViewModels
                      break;
                   }
                }
-            }
+            }, true
          );
+         
+         SubscribeToMessageType(MessageType.ActiveViewRequest, ChangeActiveViewCommand);
+         SubscribeToMessageType(MessageType.ShowOptionsRequest, m_ShowPreferencesCmd);
       }
 
       public IBasicView ActiveView
@@ -100,31 +102,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      private void OnExternalMsgEnqueued(object sender, EventArgs e)
-      {
-         IBasicMessage msg = m_MsgQueue.Dequeue();
-         switch (msg.MessageType)
-         {
-            case MessageType.ActiveViewRequest:
-            {
-               msg.HandleMessage(ChangeActiveViewCommand);
-               break;
-            }
-
-            case MessageType.ShowOptionsRequest:
-            {
-               msg.HandleMessage(m_ShowPreferencesCmd);
-               break;
-            }
-         }
-
-      }
-
       private int m_ActiveIdx;
-      private readonly int m_MsgQueueId;
-      private readonly MessageManager m_MsgMgr;
-      private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
-
       private readonly PreferencesViewModel m_Preferences;
       private readonly ObservableCollection<ViewBase> m_Views;
       private readonly RelayCommand m_ChangeActiveIdxCmd;

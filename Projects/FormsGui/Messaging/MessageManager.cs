@@ -9,7 +9,17 @@ namespace Assembler.FormsGui.Messaging
 {
    public class MessageManager
    {
-      public MessageManager()
+      public static MessageManager GetInstance()
+      {
+         if (s_Instance == null)
+         {
+            s_Instance = new MessageManager();
+         }
+
+         return s_Instance;
+      }
+
+      private MessageManager()
       {
          m_MsgQueues = new List<IBasicQueue<IBasicMessage>>();
       }
@@ -61,6 +71,7 @@ namespace Assembler.FormsGui.Messaging
          return m_NextId++;
       }
 
+      private static MessageManager s_Instance;
       private readonly List<IBasicQueue<IBasicMessage>> m_MsgQueues;
       private int m_NextId;
    }

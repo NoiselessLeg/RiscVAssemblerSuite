@@ -149,6 +149,7 @@ namespace Assembler.FormsGui.Controls
          byte[] writtenBytes = new byte[e.NumBytesWritten];
          stream.Read(writtenBytes, 0, e.NumBytesWritten);
          string value = Encoding.ASCII.GetString(writtenBytes);
+         value.Replace("\n", Environment.NewLine);
 
          m_UnderlyingTxt.InvokeIfRequired(() =>
             {

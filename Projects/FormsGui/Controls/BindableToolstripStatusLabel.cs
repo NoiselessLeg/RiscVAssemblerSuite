@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,14 @@ namespace Assembler.FormsGui.Controls
          m_DataBindings = new ControlBindingsCollection(this);
       }
 
+      [Browsable(false)]
       public BindingContext BindingContext
       {
          get { return m_Ctx; }
          set { m_Ctx = value; }
       }
+
+      [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
       public ControlBindingsCollection DataBindings
       {
          get { return m_DataBindings; }

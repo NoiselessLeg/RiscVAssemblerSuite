@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Assembler.Disassembler;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +11,16 @@ namespace Assembler.FormsGui.ViewModels
    public class JefFileViewModel : BaseViewModel
    {
       public JefFileViewModel(string fileName,
-                              DataModels.AssemblyFile disassembly,
                               OutputProcessing.DisassembledFile runtimeFile)
       {
-         m_FilePath = fileName;
-         m_AssemblyFile = disassembly;
          m_UnderlyingFile = runtimeFile;
+         m_Instructions = new BindingList<ProgramInstructionViewModel>();
+         m_FilePath = fileName;
+         IEnumerable<InstructionData> programInstructions = DisassemblerServices.GenerateInstructionData(runtimeFile.SymbolTable, runtimeFile.TextSegment);
+         foreach (InstructionData instructionElem in programInstructions)
+         {
+            m_Instructions.Add(new ProgramInstructionViewModel(instructionElem));
+         }
       }
       
       public string FileName
@@ -50,18 +56,18 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public string DisassembledText
-      {
-         get { return m_AssemblyFile.FileText; }
-      }
-
       public OutputProcessing.DisassembledFile FileData
       {
          get { return m_UnderlyingFile; }
       }
 
+      public BindingList<ProgramInstructionViewModel> InstructionList
+      {
+         get { return m_Instructions; }
+      }
+
       private string m_FilePath;
-      private readonly DataModels.AssemblyFile m_AssemblyFile;
       private readonly OutputProcessing.DisassembledFile m_UnderlyingFile;
+      private readonly BindingList<ProgramInstructionViewModel> m_Instructions;
    }
 }

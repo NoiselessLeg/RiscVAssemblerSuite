@@ -94,9 +94,6 @@ namespace Assembler.FormsGui.Controls.Custom
 
       private void OnMenuItemPaint(object sender, PaintEventArgs e)
       {
-         var menuItem = sender as ToolStripMenuItem;
-         System.Diagnostics.Debug.Assert(menuItem != null);
-         menuItem.Enabled = m_Cmd.CanExecute(m_PredParams);
       }
 
       private readonly string m_Text;

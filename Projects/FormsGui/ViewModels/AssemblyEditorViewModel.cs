@@ -13,44 +13,32 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class AssemblyEditorViewModel : BaseViewModel
+   public class AssemblyEditorViewModel : MessagingViewModel
    {
-      public AssemblyEditorViewModel(int viewId, MessageManager msgMgr)
+      public AssemblyEditorViewModel(int viewId, MessageManager msgMgr):
+         base(msgMgr)
       {
          m_ViewId = viewId;
-         m_MsgQueue = new ObservableQueue<IBasicMessage>();
-         m_MsgQueue.ItemEnqueued += OnExternalMsgReceived;
-
          m_Disassembler = new DisassemblyManager();
          m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
          m_OpenViewModels.Add(new AssemblyFileViewModel());
 
          m_Assembler = new RiscVAssembler();
          m_LoggerVm = new LoggerViewModel();
-         m_AssembleFileCmd = new RelayCommand(param => AssembleFile(param as string));
-         m_NewFileCmd = new RelayCommand(param => CreateNewFile());
-         m_OpenFileCmd = new RelayCommand(param => OpenFile(param as string));
-         m_SaveFileCmd = new RelayCommand(param => SaveFile(param as string));
-         m_CloseFileCmd = new RelayCommand(param =>
-         {
-            int? iParm = param as int?;
-            System.Diagnostics.Debug.Assert(iParm.HasValue);
-            if (iParm.HasValue)
-            {
-               CloseFile(iParm.Value);
-            }
-
-         });
-         m_DisassembleAndImportCmd = new RelayCommand(param => DisassembleAndImportFile(param as string));
-         m_ChangeActiveIdxCmd = new RelayCommand(param => ActiveFileIndex = (param as int?).Value);
+         m_AssembleFileCmd = new RelayCommand<string>(param => AssembleFile(param), false);
+         m_NewFileCmd = new RelayCommand(param => CreateNewFile(), true);
+         m_OpenFileCmd = new RelayCommand<string>(param => OpenFile(param), true);
+         m_SaveFileCmd = new RelayCommand<string>(param => SaveFile(param), true);
+         m_CloseFileCmd = new RelayCommand<int>(param => CloseFile(param), false);
+         m_DisassembleAndImportCmd = new RelayCommand<string>(param => DisassembleAndImportFile(param), true);
+         m_ChangeActiveIdxCmd = new RelayCommand<int>(param => ActiveFileIndex = param, true);
          m_OpenPreferencesCmd = new RelayCommand(
             (param) =>
             {
-               m_MsgMgr.BroadcastMessage(m_MsgSenderId, new ParameterlessMessage(MessageType.ShowOptionsRequest));
-            }
+               BroadcastMessage(new ParameterlessMessage(MessageType.ShowOptionsRequest));
+            },
+            true
          );
-         m_MsgMgr = msgMgr;
-         m_MsgSenderId = m_MsgMgr.RegisterMessageQueue(m_MsgQueue);
       }
 
       public int ActiveFileIndex
@@ -126,6 +114,7 @@ namespace Assembler.FormsGui.ViewModels
          var newVm = new AssemblyFileViewModel(new DataModels.AssemblyFile());
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
+         m_CloseFileCmd.CanExecute = true;
       }
 
       private void OpenFile(string fileName)
@@ -161,6 +150,14 @@ namespace Assembler.FormsGui.ViewModels
       private void CloseFile(int fileIndex)
       {
          m_OpenViewModels.RemoveAt(fileIndex);
+         if (m_OpenViewModels.Any())
+         {
+            m_CloseFileCmd.CanExecute = true;
+         }
+         else
+         {
+            m_CloseFileCmd.CanExecute = false;
+         }
       }
 
       private void AssembleFile(string fileName)
@@ -180,22 +177,13 @@ namespace Assembler.FormsGui.ViewModels
          if (m_Assembler.Assemble(options, m_LoggerVm.Logger))
          {
             var fileAssembledCmd = new FileAssembledMessage(outputFile);
-            m_MsgMgr.BroadcastMessage(m_MsgSenderId, fileAssembledCmd);
+            BroadcastMessage(fileAssembledCmd);
          }
       }
-
-      private void OnExternalMsgReceived(object sender, EventArgs e)
-      {
-         var msgQ = sender as IBasicQueue<IBasicMessage>;
-         msgQ.Dequeue();
-      }
-
-      private int m_ViewId;
-      private int m_ActiveViewModelIdx;
-      private readonly int m_MsgSenderId;
       
-      private readonly MessageManager m_MsgMgr;
-      private readonly ObservableQueue<IBasicMessage> m_MsgQueue;
+      private int m_ActiveViewModelIdx;
+
+      private readonly int m_ViewId;      
       private readonly ObservableCollection<AssemblyFileViewModel> m_OpenViewModels;
       private readonly RiscVAssembler m_Assembler;
       private readonly DisassemblyManager m_Disassembler;
@@ -203,12 +191,12 @@ namespace Assembler.FormsGui.ViewModels
       private readonly LoggerViewModel m_LoggerVm;
 
       private readonly RelayCommand m_NewFileCmd;
-      private readonly RelayCommand m_OpenFileCmd;
-      private readonly RelayCommand m_AssembleFileCmd;
-      private readonly RelayCommand m_SaveFileCmd;
-      private readonly RelayCommand m_CloseFileCmd;
-      private readonly RelayCommand m_ChangeActiveIdxCmd;
-      private readonly RelayCommand m_DisassembleAndImportCmd;
+      private readonly RelayCommand<string> m_OpenFileCmd;
+      private readonly RelayCommand<string> m_AssembleFileCmd;
+      private readonly RelayCommand<string> m_SaveFileCmd;
+      private readonly RelayCommand<int> m_CloseFileCmd;
+      private readonly RelayCommand<int> m_ChangeActiveIdxCmd;
+      private readonly RelayCommand<string> m_DisassembleAndImportCmd;
       private readonly RelayCommand m_OpenPreferencesCmd;
    }
 }

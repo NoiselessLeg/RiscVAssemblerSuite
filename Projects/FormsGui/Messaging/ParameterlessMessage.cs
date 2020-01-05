@@ -21,7 +21,7 @@ namespace Assembler.FormsGui.Messaging
 
       public void HandleMessage(ICommand handlerCmd)
       {
-         if (handlerCmd.CanExecute(null))
+         if (handlerCmd.CanExecute)
          {
             handlerCmd.Execute(null);
          }

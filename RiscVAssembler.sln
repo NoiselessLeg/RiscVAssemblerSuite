@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Interpreter", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Disassembler", "Projects\Disassembler\Assembler.Disassembler.csproj", "{EE846CEC-7720-4C0D-AF2A-283870AE8BEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.Linker", "Projects\Assembler.Linker\Assembler.Linker.csproj", "{28ED32B0-76E7-48CD-9664-E045F5FB073E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler.FormsGui", "Projects\FormsGui\Assembler.FormsGui.csproj", "{63D29618-58E3-45A7-9E10-8393A9C7F05C}"
 EndProject
 Global
@@ -35,14 +33,6 @@ Global
 		{71D5C5F0-EE31-47BE-A430-76DC2C24D87F}.Disassembly Debug|Any CPU.Build.0 = Disassembly Debug|Any CPU
 		{71D5C5F0-EE31-47BE-A430-76DC2C24D87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71D5C5F0-EE31-47BE-A430-76DC2C24D87F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Assembly Debug|Any CPU.ActiveCfg = Assembly Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Assembly Debug|Any CPU.Build.0 = Assembly Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Disassembly Debug|Any CPU.ActiveCfg = Disassembly Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Disassembly Debug|Any CPU.Build.0 = Disassembly Debug|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9982789A-0FFF-4AC0-B7BE-213E189C7A52}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF03A47D-4E1F-41E3-8E12-70D1A54B727C}.Assembly Debug|Any CPU.ActiveCfg = Assembly Debug|Any CPU
 		{FF03A47D-4E1F-41E3-8E12-70D1A54B727C}.Assembly Debug|Any CPU.Build.0 = Assembly Debug|Any CPU
 		{FF03A47D-4E1F-41E3-8E12-70D1A54B727C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -83,14 +73,6 @@ Global
 		{EE846CEC-7720-4C0D-AF2A-283870AE8BEC}.Disassembly Debug|Any CPU.Build.0 = Disassembly Debug|Any CPU
 		{EE846CEC-7720-4C0D-AF2A-283870AE8BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE846CEC-7720-4C0D-AF2A-283870AE8BEC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Assembly Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Assembly Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Disassembly Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Disassembly Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28ED32B0-76E7-48CD-9664-E045F5FB073E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{63D29618-58E3-45A7-9E10-8393A9C7F05C}.Assembly Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{63D29618-58E3-45A7-9E10-8393A9C7F05C}.Assembly Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63D29618-58E3-45A7-9E10-8393A9C7F05C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

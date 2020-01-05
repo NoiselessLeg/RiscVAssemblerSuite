@@ -40,5 +40,10 @@ namespace Assembler.CmdLine
       public void RequestOutputFlush()
       {
       }
+
+      public void InterruptInputOperation()
+      {
+
+      }
    }
 }

@@ -27,93 +27,13 @@ namespace Assembler.FormsGui.Views
       {
          m_Preferences = preferences;
          m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr);
-         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction());
-         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction());
-         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction());
-         m_ImportFileCmd = new RelayCommand((param) => ImportFileAction());
+         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction(), true);
+         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction(), true);
+         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction(), true);
+         m_ImportFileCmd = new RelayCommand((param) => ImportFileAction(), true);
 
-         m_AssembleFileCmd = new RelayCommand(
-            (param) =>
-            {
-               var evm = param as AssemblyEditorViewModel;
-               System.Diagnostics.Debug.Assert(evm != null);
-               AssembleFileAction(evm.ActiveFile);
-            }
-         );
-
-
-         m_CloseTabsToRightCmd = new RelayCommand(
-            (param) =>
-            {
-               int? iParm = param as int?;
-               System.Diagnostics.Debug.Assert(iParm.HasValue);
-
-               // if we're removing everything to the right, the AllOpenFiles
-               // Count value will change. we'll just wait until that Count property
-               // is one above our target tab (since that'd be the theoretic last tab).
-               int targetCount = iParm.Value + 1;
-               while (m_EditorVm.AllOpenFiles.Count > targetCount)
-               {
-                  CloseTabAction(iParm.Value + 1);
-               }
-            });
-
-         m_CloseTabsToLeftCmd = new RelayCommand(
-            (param) =>
-            {
-               int? iParm = param as int?;
-               System.Diagnostics.Debug.Assert(iParm.HasValue);
-               for (int i = iParm.Value - 1; i >= 0; --i)
-               {
-                  CloseTabAction(i);
-               }
-
-               // set the active tab index to 0. the tab changed
-               // event doesn't seem to be getting called. it hasn't
-               // crashed yet, but that seems like it'd be in a bad state.
-               m_EditorVm.ChangeActiveIndexCommand.Execute(0);
-            });
-
-         // this will be passed either a tab index or a view model.
-         // need to differentiate on the fly when we're called.
-         m_CloseTabCmd = new RelayCommand(
-               (param) =>
-               {
-                  int? iParm = param as int?;
-                  if (iParm.HasValue)
-                  {
-                     CloseTabAction(iParm.Value);
-                  }
-                  else
-                  {
-                     var evm = param as AssemblyEditorViewModel;
-                     System.Diagnostics.Debug.Assert(evm != null);
-                     CloseTabAction(evm.ActiveFileIndex);
-                  }
-               },
-               (param) =>
-               {
-                  bool canExecute = false;
-                  int? iParm = param as int?;
-                  if (iParm.HasValue)
-                  {
-                     if (iParm.Value < m_EditorVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  else
-                  {
-                     var evm = param as AssemblyEditorViewModel;
-                     System.Diagnostics.Debug.Assert(evm != null);
-                     if (evm.ActiveFileIndex < m_EditorVm.AllOpenFiles.Count)
-                     {
-                        canExecute = true;
-                     }
-                  }
-                  return canExecute;
-               });
-         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow());
+         m_AssembleFileCmd = new RelayCommand((param) => AssembleActiveFileAction(), true);
+         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow(), true);
 
          m_Ctx = GenerateMenuContext();
          InitializeComponent();
@@ -166,7 +86,7 @@ namespace Assembler.FormsGui.Views
 
             // need to pass the whole view model here, so that way the latest ActiveTabIndex will be used
             // (instead of a copy). differentiate the types in the RelayCommand implementation.
-            new MenuBarActionElement("Close File", m_CloseTabCmd, m_EditorVm, m_EditorVm),
+            //new MenuBarActionElement("Close File", m_CloseTabCmd, m_EditorVm, m_EditorVm),
             new SeparatorMenuBarElement(),
             new CompositeMenuBarElement("Import", importElementList),
             new SeparatorMenuBarElement(),
@@ -338,8 +258,9 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void AssembleFileAction(AssemblyFileViewModel viewModel)
+      private void AssembleActiveFileAction()
       {
+         AssemblyFileViewModel viewModel = m_EditorVm.ActiveFile;
          bool continueAssembling = true;
          if (!viewModel.IsFileBackedPhysically)
          {
@@ -397,9 +318,9 @@ namespace Assembler.FormsGui.Views
                   m_EditorVm.ChangeActiveIndexCommand.Execute(tabItr);
 
                   var cm = new ContextMenu();
-                  cm.MenuItems.Add(new MenuItem("Close Tab", (s, arg) => { m_CloseTabCmd.Execute(tabItr); }));
-                  cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) => { m_CloseTabsToRightCmd.Execute(tabItr); }));
-                  cm.MenuItems.Add(new MenuItem("Close all tabs to left", (s, arg) => { m_CloseTabsToLeftCmd.Execute(tabItr); }));
+                  //cm.MenuItems.Add(new MenuItem("Close Tab", (s, arg) => { m_CloseTabCmd.Execute(tabItr); }));
+                  //cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) => { m_CloseTabsToRightCmd.Execute(tabItr); }));
+                  //cm.MenuItems.Add(new MenuItem("Close all tabs to left", (s, arg) => { m_CloseTabsToLeftCmd.Execute(tabItr); }));
                   cm.Show(ctrl, e.Location);
                   break;
                }
@@ -423,10 +344,6 @@ namespace Assembler.FormsGui.Views
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_ImportFileCmd;
-
-      private readonly RelayCommand m_CloseTabCmd;
-      private readonly RelayCommand m_CloseTabsToLeftCmd;
-      private readonly RelayCommand m_CloseTabsToRightCmd;
 
       private readonly RelayCommand m_CloseWindowCmd;
       private readonly RelayCommand m_AssembleFileCmd;

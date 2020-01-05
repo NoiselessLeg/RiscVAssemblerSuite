@@ -15,7 +15,7 @@ namespace Assembler.FormsGui.ViewModels
       public LoggerViewModel()
       {
          m_Model = new LoggerModel();
-         m_ClearLogCmd = new RelayCommand((param) => ClearLogOutput());
+         m_ClearLogCmd = new RelayCommand((param) => ClearLogOutput(), true);
 
          // this is different than how we're doing binding on other view models.
          // theoretically (not that the assembler is doing this now :)) the logger
