@@ -1,5 +1,6 @@
 ﻿using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.IO;
+using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
@@ -22,44 +23,58 @@ namespace Assembler.FormsGui
       {
          m_ViewModel = new WindowViewModel();
          InitializeComponent();
-         CreateDataBindings(m_ViewModel);
+         m_DisplayPanel.Dispose();
+
+         m_DisplayPanel = new DisplayPanel(m_ViewModel);
+         m_LayoutPanel.Controls.Remove(m_DisplayPanel);
+         m_DisplayPanel.Dock = DockStyle.Fill;
+         m_DisplayPanel.Location = new Point(0, 24);
+         m_DisplayPanel.Name = "displayPanel1";
+         m_DisplayPanel.Size = new Size(800, 426);
+         m_DisplayPanel.TabIndex = 1;
+         m_LayoutPanel.Controls.Add(m_DisplayPanel, 0, 1);
       }
 
-      private void CreateDataBindings(WindowViewModel viewModel)
+      private void newAssemblerFileToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         m_TabCtrl.TabPages.BindToObservableCollection(viewModel.ViewList,
-                                                       (param) => CreateTabPage(param as ViewBase));
-
-         m_MenuStrip.CreateBinding(viewModel, ctrl => ctrl.Items, nameof(m_ViewModel.ActiveView),
-            (ctrlItems, vm) =>
-            {
-               IBasicView activeView = vm.ActiveView;
-               ctrlItems.Clear();
-               ctrlItems.AddRange(activeView.MenuBarMembers.AsToolStripItems().ToArray());
-            }
-         );
-
-         m_TabCtrl.DataBindings.Add(new Binding(nameof(m_TabCtrl.SelectedIndex), 
-            viewModel, nameof(viewModel.ActiveViewIndex), true, DataSourceUpdateMode.OnPropertyChanged));
-      }
-
-      private TabPage CreateTabPage(ViewBase view)
-      {
-         var page = new TabPage();
-         page.Text = view.ViewName;
-         view.Dock = DockStyle.Fill;
-         page.Controls.Add(view);
-         return page;
-      }
-
-      private void OnTabSelection(object sender, TabControlEventArgs e)
-      {
-         if (e.TabPageIndex >= 0)
-         {
-            m_ViewModel.ChangeActiveViewCommand.Execute(e.TabPageIndex);
-         }
+         m_ViewModel.CreateNewFileCommand.Execute(null);
       }
 
       private readonly WindowViewModel m_ViewModel;
+
+      private void openAssemblerFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.OpenFileCommand.Execute(null);
+      }
+
+      private void saveAssemblerFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.SaveFileCommand.Execute(null);
+      }
+
+      private void saveAssemblerFileAsToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.SaveFileAsCommand.Execute(null);
+      }
+
+      private void importToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.DisassembleCommand.Execute(null);
+      }
+
+      private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         Application.Exit();
+      }
+
+      private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.ShowPreferencesCommand.Execute(null);
+      }
+
+      private void assembleFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.AssembleFileCommand.Execute(null);
+      }
    }
 }

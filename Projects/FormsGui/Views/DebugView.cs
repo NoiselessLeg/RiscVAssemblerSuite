@@ -24,17 +24,14 @@ namespace Assembler.FormsGui.Views
       }
 
       public DebugView(int viewId, MessageManager msgMgr) :
-         base(viewId, "Program Execution", msgMgr)
+         base(viewId, "Execution View", msgMgr)
       {
          m_ViewModel = new DebugWindowViewModel(viewId, msgMgr);
          InitializeComponent();
          m_Ctx = new MenuBarContext();
          CreateDataBindings(m_ViewModel);
-      }
 
-      public override MenuBarContext MenuBarMembers
-      {
-         get { return m_Ctx; }
+         SubscribeToMessageType(MessageType.FileAssembled, m_ViewModel.HandleFileAssembledCommand);
       }
 
       private void CreateDataBindings(DebugWindowViewModel vm)

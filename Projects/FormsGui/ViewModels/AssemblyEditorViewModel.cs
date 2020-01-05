@@ -2,6 +2,7 @@
 using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
+using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using System;
 using System.Collections.Generic;
@@ -26,16 +27,16 @@ namespace Assembler.FormsGui.ViewModels
          m_Assembler = new RiscVAssembler();
          m_LoggerVm = new LoggerViewModel();
          m_AssembleFileCmd = new RelayCommand<string>(param => AssembleFile(param), false);
-         m_NewFileCmd = new RelayCommand(param => CreateNewFile(), true);
-         m_OpenFileCmd = new RelayCommand<string>(param => OpenFile(param), true);
-         m_SaveFileCmd = new RelayCommand<string>(param => SaveFile(param), true);
+         m_NewFileCmd = new RelayCommand(() => CreateNewFile(), true);
+         m_OpenFileCmd = new RelayCommand<string>((fileName) => OpenFile(fileName), true);
+         m_SaveFileCmd = new RelayCommand<string>((fileName) => SaveFile(fileName), true);
          m_CloseFileCmd = new RelayCommand<int>(param => CloseFile(param), false);
          m_DisassembleAndImportCmd = new RelayCommand<string>(param => DisassembleAndImportFile(param), true);
          m_ChangeActiveIdxCmd = new RelayCommand<int>(param => ActiveFileIndex = param, true);
          m_OpenPreferencesCmd = new RelayCommand(
-            (param) =>
+            () =>
             {
-               BroadcastMessage(new ParameterlessMessage(MessageType.ShowOptionsRequest));
+               BroadcastMessage(new BasicMessage(MessageType.ShowOptionsRequest));
             },
             true
          );
@@ -115,6 +116,54 @@ namespace Assembler.FormsGui.ViewModels
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
          m_CloseFileCmd.CanExecute = true;
+      }
+
+      private void ShowDialogAndOpenFile()
+      { 
+         IDialogService service = DialogServiceFactory.GetServiceInstance();
+         try
+         {
+            var options = new DialogOptions()
+            {
+               FileFilter = "RISC-V Assembly File (*.asm)|*.asm",
+               WindowTitle = "Open File"
+            };
+
+            bool okToContinue = service.ShowOpenFileDialog(options, out string filePath);
+
+            if (okToContinue)
+            {
+               OpenFile(filePath);
+            }
+         }
+         catch (Exception ex)
+         {
+            service.ShowErrorDialog("Open error", ex.Message);
+         }
+      }
+
+      private void ShowDialogAndSaveFile()
+      {
+         IDialogService service = DialogServiceFactory.GetServiceInstance();
+         try
+         {
+            var options = new DialogOptions()
+            {
+               FileFilter = "RISC-V Assembly File (*.asm)|*.asm",
+               WindowTitle = "Save File"
+            };
+
+            bool okToContinue = service.ShowSaveFileDialog(options, out string filePath);
+
+            if (okToContinue)
+            {
+               OpenFile(filePath);
+            }
+         }
+         catch (Exception ex)
+         {
+            service.ShowErrorDialog("Save error", ex.Message);
+         }
       }
 
       private void OpenFile(string fileName)

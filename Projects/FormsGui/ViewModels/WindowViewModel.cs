@@ -22,6 +22,7 @@ namespace Assembler.FormsGui.ViewModels
       public WindowViewModel() :
          base(MessageManager.GetInstance())
       {
+
          m_Preferences = new PreferencesViewModel();
          try
          {
@@ -36,41 +37,25 @@ namespace Assembler.FormsGui.ViewModels
          m_Views = new ObservableCollection<ViewBase>();
 
          int viewIdCtr = 0;
+
          MessageManager mgr = MessageManager.GetInstance();
+         var assemblyEditorView = new AssemblyEditorView(viewIdCtr++, mgr, m_Preferences);
+         var dbgView = new DebugView(viewIdCtr++, mgr);
+         var hexEditorView = new HexExplorerView(viewIdCtr++, mgr);
 
-         m_Views.Add(new AssemblyEditorView(viewIdCtr++, mgr, m_Preferences));
-         m_Views.Add(new HexExplorerView(viewIdCtr++, mgr));
-         m_Views.Add(new DebugView(viewIdCtr++, mgr));
+         m_Views.Add(assemblyEditorView);
+         m_Views.Add(dbgView);
+         m_Views.Add(hexEditorView);
 
-         m_ChangeActiveIdxCmd = new RelayCommand(
-            (param) =>
-            {
-               int? idx = param as int?;
-               System.Diagnostics.Debug.Assert(idx.HasValue);
-               ActiveViewIndex = idx.Value;
-            }, true
-         );
+         m_ChangeActiveIdxCmd = new RelayCommand<int>((param) => ActiveViewIndex = param, true);
+         m_NewFileCmd = new RelayCommand(() => SendFileMessage(MessageType.CreateFileRequest), true);
+         m_OpenFileCmd = new RelayCommand(() => SendFileMessage(MessageType.OpenFileRequest), true);
+         m_SaveFileCmd = new RelayCommand(() => SendFileMessage(MessageType.SaveFileRequest), true);
+         m_SaveFileAsCmd = new RelayCommand(() => SendFileMessage(MessageType.SaveFileAsRequest), true);
+         m_DisassembleFileCmd = new RelayCommand(() => SendFileMessage(MessageType.DisassembleFileRequest), true);
+         m_AssembleFileCmd = new RelayCommand(() => SendFileMessage(MessageType.AssembleFileRequest), true);
 
-         m_ShowPreferencesCmd = new RelayCommand(
-            (param) =>
-            {
-               var prefsWindow = new PreferencesWindow(m_Preferences);
-               DialogResult dr = prefsWindow.ShowDialog();
-               switch (dr)
-               {
-                  case DialogResult.OK:
-                  {
-                     var fileSaver = new SettingsFileSaver();
-                     m_Preferences.CloneValues(prefsWindow.ActivePreferences);
-                     m_Preferences.SaveSettings(PREFS_FILENAME, fileSaver);
-                     break;
-                  }
-               }
-            }, true
-         );
-         
-         SubscribeToMessageType(MessageType.ActiveViewRequest, ChangeActiveViewCommand);
-         SubscribeToMessageType(MessageType.ShowOptionsRequest, m_ShowPreferencesCmd);
+         m_ShowPreferencesCmd = new RelayCommand(() => ShowPreferences(), true);
       }
 
       public IBasicView ActiveView
@@ -88,6 +73,41 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_ChangeActiveIdxCmd; }
       }
 
+      public ICommand CreateNewFileCommand
+      {
+         get { return m_NewFileCmd; }
+      }
+
+      public ICommand OpenFileCommand
+      {
+         get { return m_OpenFileCmd; }
+      }
+
+      public ICommand SaveFileCommand
+      {
+         get { return m_SaveFileCmd; }
+      }
+
+      public ICommand SaveFileAsCommand
+      {
+         get { return m_SaveFileAsCmd; }
+      }
+
+      public ICommand ShowPreferencesCommand
+      {
+         get { return m_ShowPreferencesCmd; }
+      }
+
+      public ICommand AssembleFileCommand
+      {
+         get { return m_AssembleFileCmd; }
+      }
+
+      public ICommand DisassembleCommand
+      {
+         get { return m_DisassembleFileCmd; }
+      }
+
       public int ActiveViewIndex
       {
          get { return m_ActiveIdx; }
@@ -102,10 +122,39 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      private void ShowPreferences()
+      {
+         var prefsWindow = new PreferencesWindow(m_Preferences);
+         DialogResult dr = prefsWindow.ShowDialog();
+         switch (dr)
+         {
+            case DialogResult.OK:
+            {
+               var fileSaver = new SettingsFileSaver();
+               m_Preferences.CloneValues(prefsWindow.ActivePreferences);
+               m_Preferences.SaveSettings(PREFS_FILENAME, fileSaver);
+               break;
+            }
+         }
+      }
+
+      private void SendFileMessage(MessageType action)
+      {
+         BroadcastMessage(new BasicMessage(action));
+      }
+
       private int m_ActiveIdx;
       private readonly PreferencesViewModel m_Preferences;
       private readonly ObservableCollection<ViewBase> m_Views;
-      private readonly RelayCommand m_ChangeActiveIdxCmd;
+      private readonly RelayCommand<int> m_ChangeActiveIdxCmd;
+
+      private readonly RelayCommand m_NewFileCmd;
+      private readonly RelayCommand m_OpenFileCmd;
+      private readonly RelayCommand m_SaveFileCmd;
+      private readonly RelayCommand m_SaveFileAsCmd;
+      private readonly RelayCommand m_DisassembleFileCmd;
+      private readonly RelayCommand m_AssembleFileCmd;
+      private readonly RelayCommand m_ExitCommand;
 
       private readonly RelayCommand m_ShowPreferencesCmd;
 

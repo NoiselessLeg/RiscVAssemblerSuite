@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,12 +57,12 @@ namespace Assembler.FormsGui.ViewModels
             m_DefaultRegValues[i] = new Register(m_Ctx.UserRegisters[i].Value);
          }
 
-         m_ExecuteFileCmd = new RelayCommand((param) => OnExecutionTaskBegin(), true);
-         m_TerminateExecutionCmd = new RelayCommand((param) => CancelExecution(), false);
+         m_ExecuteFileCmd = new RelayCommand(() => OnExecutionTaskBegin(), true);
+         m_TerminateExecutionCmd = new RelayCommand(() => CancelExecution(), false);
          m_SwitchRepresentationCmd = new RelayCommand<RegisterDisplayType>((param) => SwitchRegisterDisplayType(param), true);
-         m_PauseExecutionCmd = new RelayCommand((param) => PauseExecution(), false);
-         m_ResumeExecutionCmd = new RelayCommand((param) => ResumeExecution(), false);
-         m_InstructionStepCmd = new RelayCommand((param) => TemporarilyUnblockExecutionTask(), false);
+         m_PauseExecutionCmd = new RelayCommand(() => PauseExecution(), false);
+         m_ResumeExecutionCmd = new RelayCommand(() => ResumeExecution(), false);
+         m_InstructionStepCmd = new RelayCommand(() => TemporarilyUnblockExecutionTask(), false);
          m_SetBreakpointCmd = new RelayCommand<int>(param => SetProgramBreakpoint(param), true);
          m_UnsetBreakpointCmd = new RelayCommand<int>(param => UnsetProgramBreakpoint(param), true);
 
@@ -177,7 +178,6 @@ namespace Assembler.FormsGui.ViewModels
          if (!IsRunning)
          {
             m_ExecuteFileCmd.CanExecute = false;
-            m_InstructionStepCmd.CanExecute = true;
             m_TerminateExecutionCmd.CanExecute = true;
             m_PauseExecutionCmd.CanExecute = true;
             Task.Run(() => ExecuteUntilEnd());
@@ -195,6 +195,7 @@ namespace Assembler.FormsGui.ViewModels
       {
          ExecutionState = PrgmExecutionState.Paused;
          m_ExecutionPauseEvent.Reset();
+         m_InstructionStepCmd.CanExecute = true;
          m_ResumeExecutionCmd.CanExecute = true;
          m_PauseExecutionCmd.CanExecute = false;
       }
@@ -208,6 +209,7 @@ namespace Assembler.FormsGui.ViewModels
       {
          ExecutionState = PrgmExecutionState.Running;
          m_ExecutionPauseEvent.Set();
+         m_InstructionStepCmd.CanExecute = false;
          m_ResumeExecutionCmd.CanExecute = false;
          m_PauseExecutionCmd.CanExecute = true;
       }
@@ -222,9 +224,11 @@ namespace Assembler.FormsGui.ViewModels
 
       private void ExecuteUntilEnd()
       {
+         var runTimer = new Stopwatch();
          ExecutionState = PrgmExecutionState.Running;
          ResetProgramContext();
 
+         runTimer.Start();
          while (IsRunning && !m_Ctx.EndOfFile)
          {
             // double check this here, to see if the user paused it
@@ -242,6 +246,8 @@ namespace Assembler.FormsGui.ViewModels
             m_ExecutionPauseEvent.WaitOne();
             ExecuteNextInstruction();
          }
+         runTimer.Stop();
+         m_Terminal.PrintString("\n\nINFO: Execution completed in " + runTimer.Elapsed);
 
          m_Terminal.RequestOutputFlush();
          m_ExecutionState = PrgmExecutionState.Stopped;

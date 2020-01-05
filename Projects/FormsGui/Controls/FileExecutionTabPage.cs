@@ -118,6 +118,33 @@ namespace Assembler.FormsGui.Controls
       {
          m_SrcGrid.Rows[rowIndex].DefaultCellStyle.SelectionBackColor = Color.Yellow;
          m_SrcGrid.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+         
+         // invoking this in our run loop is HYPER expensive. This is literally just
+         // to move the selected index so it's visible to the user if it goes offscreen,
+         // so only do that if we're confident the selection moved off screen.
+         if (CurrentElemIndexIsOffscreen(rowIndex))
+         {
+            m_SrcGrid.InvokeIfRequired(() => m_SrcGrid.FirstDisplayedScrollingRowIndex = rowIndex);
+         }
+      }
+      
+      private bool CurrentElemIndexIsOffscreen(int rowIndex)
+      {
+         // calculate the highlighted row index to see if it scrolled outside of the display.
+         int dgvSizeInCells = m_SrcGrid.Height / m_SrcGrid.CurrentCell.Size.Height;
+
+         int firstDisplayedCell = m_SrcGrid.FirstDisplayedScrollingRowIndex;
+
+         // in case the current row index goes back up above our first displayed cell.
+         int indexFromFirstDisplayedCell = Math.Abs(rowIndex - firstDisplayedCell);
+         bool elemOffscreen = false;
+         if (indexFromFirstDisplayedCell > dgvSizeInCells ||
+             indexFromFirstDisplayedCell < 0)
+         {
+            elemOffscreen = true;
+         }
+         
+         return elemOffscreen;
       }
 
       // used for restoring rows to their former luster when the selected index

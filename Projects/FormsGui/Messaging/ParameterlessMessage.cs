@@ -7,9 +7,9 @@ using Assembler.FormsGui.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {
-   public class ParameterlessMessage : IBasicMessage
+   public class BasicMessage : IBasicMessage
    {
-      public ParameterlessMessage(MessageType type)
+      public BasicMessage(MessageType type)
       {
          m_Type = type;
       }

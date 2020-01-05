@@ -27,20 +27,23 @@ namespace Assembler.FormsGui.Views
       {
          m_Preferences = preferences;
          m_EditorVm = new AssemblyEditorViewModel(viewId, msgMgr);
-         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction(), true);
-         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction(), true);
-         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction(), true);
-         m_ImportFileCmd = new RelayCommand((param) => ImportFileAction(), true);
+         m_CreateNewFileCmd = new RelayCommand(() => NewFileAction(), true);
+         m_OpenFileCmd = new RelayCommand(() => LoadFileAction(), true);
+         m_SaveFileAsCmd = new RelayCommand(() => SaveFileAsAction(), true);
+         m_SaveFileCmd = new RelayCommand(() => SaveFileAction(), true);
+         m_ImportFileCmd = new RelayCommand(() => ImportFileAction(), true);
+         m_AssembleFileCmd = new RelayCommand(() => AssembleActiveFileAction(), true);
 
-         m_AssembleFileCmd = new RelayCommand((param) => AssembleActiveFileAction(), true);
-         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow(), true);
-
-         m_Ctx = GenerateMenuContext();
          InitializeComponent();
          CreateDataBindings(m_EditorVm);
-      }
 
-      public override MenuBarContext MenuBarMembers => m_Ctx;
+         SubscribeToMessageType(MessageType.CreateFileRequest, m_CreateNewFileCmd);
+         SubscribeToMessageType(MessageType.OpenFileRequest, m_OpenFileCmd);
+         SubscribeToMessageType(MessageType.SaveFileRequest, m_SaveFileCmd);
+         SubscribeToMessageType(MessageType.SaveFileAsRequest, m_SaveFileAsCmd);
+         SubscribeToMessageType(MessageType.DisassembleFileRequest, m_ImportFileCmd);
+         SubscribeToMessageType(MessageType.AssembleFileRequest, m_AssembleFileCmd);
+      }
 
       private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
       {
@@ -67,54 +70,9 @@ namespace Assembler.FormsGui.Views
             nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
-      private MenuBarContext GenerateMenuContext()
+      private void NewFileAction()
       {
-         MenuBarContext ctx = new MenuBarContext();
-
-         var importElementList = new List<BaseMenuBarElement>
-         {
-            new MenuBarActionElement("From Disassembly", m_ImportFileCmd)
-         };
-
-         var fileElementList = new List<BaseMenuBarElement>
-         {
-            new MenuBarActionElement("New File", m_EditorVm.NewFileCommand, Keys.Control | Keys.N),
-            new MenuBarActionElement("Open File", m_OpenFileCmd, Keys.Control | Keys.O),
-            new MenuBarActionElement("Save", m_SaveFileCmd, Keys.Control | Keys.S),
-            new MenuBarActionElement("Save As", m_SaveFileAsCmd),
-            new SeparatorMenuBarElement(),
-
-            // need to pass the whole view model here, so that way the latest ActiveTabIndex will be used
-            // (instead of a copy). differentiate the types in the RelayCommand implementation.
-            //new MenuBarActionElement("Close File", m_CloseTabCmd, m_EditorVm, m_EditorVm),
-            new SeparatorMenuBarElement(),
-            new CompositeMenuBarElement("Import", importElementList),
-            new SeparatorMenuBarElement(),
-            new MenuBarActionElement("Exit", m_CloseWindowCmd, Keys.Alt | Keys.F4)
-         };
-
-         var fileMenuButton = new CompositeMenuBarElement("File", fileElementList);
-         ctx.AddMenuBarElement(fileMenuButton);
-
-         var editElementList = new List<BaseMenuBarElement>
-         {
-            //new MenuBarActionElement("Undo", m_EditorVm.ActiveFile.UndoCommand, Keys.Control | Keys.Z),
-            //new MenuBarActionElement("Redo", m_EditorVm.ActiveFile.RedoCommand, Keys.Control | Keys.Y),
-            new MenuBarActionElement("Preferences", m_EditorVm.OpenPreferencesCommand),
-         };
-
-         var editMenuButton = new CompositeMenuBarElement("Edit", editElementList);
-         ctx.AddMenuBarElement(editMenuButton);
-
-         var asmElementList = new List<BaseMenuBarElement>
-         {
-            new MenuBarActionElement("Assemble Current File", m_AssembleFileCmd, m_EditorVm, m_EditorVm)
-         };
-
-         var asmMenuButton = new CompositeMenuBarElement("Assembler", asmElementList);
-         ctx.AddMenuBarElement(asmMenuButton);
-
-         return ctx;
+         m_EditorVm.NewFileCommand.Execute(null);
       }
 
       private void LoadFileAction()
@@ -201,10 +159,11 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void CloseTabAction(int tabIdx)
+      private void CloseTabAction()
       {
          bool continueClosing = true;
-         AssemblyFileViewModel avm = m_EditorVm.AllOpenFiles[tabIdx];
+         AssemblyFileViewModel avm = m_EditorVm.ActiveFile;
+         int activeTabIdx = m_EditorVm.ActiveFileIndex;
 
          if (avm.AreAnyChangedUnsaved)
          {
@@ -230,7 +189,7 @@ namespace Assembler.FormsGui.Views
 
          if (continueClosing)
          {
-            m_EditorVm.CloseFileCommand.Execute(tabIdx);
+            m_EditorVm.CloseFileCommand.Execute(activeTabIdx);
          }
       }
 
@@ -300,11 +259,6 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void CloseWindow()
-      {
-         Application.Exit();
-      }
-
       private void TabControl_OnMouseUp(object sender, MouseEventArgs e)
       {
          if (e.Button == MouseButtons.Right)
@@ -340,6 +294,7 @@ namespace Assembler.FormsGui.Views
       private readonly AssemblyEditorViewModel m_EditorVm;
       private readonly PreferencesViewModel m_Preferences;
 
+      private readonly RelayCommand m_CreateNewFileCmd;
       private readonly RelayCommand m_OpenFileCmd;
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_SaveFileAsCmd;

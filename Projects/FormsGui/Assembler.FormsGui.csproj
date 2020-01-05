@@ -101,6 +101,12 @@
     <Compile Include="DataModels\LoggerModel.cs" />
     <Compile Include="DataModels\Project.cs" />
     <Compile Include="DataModels\ProjectFileVersion.cs" />
+    <Compile Include="DisplayPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DisplayPanel.Designer.cs">
+      <DependentUpon>DisplayPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formatters\HexDisplayFormatter.cs" />
     <Compile Include="IO\AssemblyFileLoader.cs" />
     <Compile Include="IO\AssemblyFileSaver.cs" />
@@ -189,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HexValueGrid.resx">
       <DependentUpon>HexValueGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayPanel.resx">
+      <DependentUpon>DisplayPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

@@ -10,10 +10,15 @@ namespace Assembler.FormsGui.Commands
 {
    public class RelayCommand : ICommand
    {
-      public RelayCommand(Action<object> executionAction, bool defaultExecutionState)
+      public RelayCommand(Action executionAction, bool defaultExecutionState)
       {
          m_ExecutionAction = executionAction ?? throw new ArgumentNullException("executionAction");
          m_CanExecute = defaultExecutionState;
+      }
+
+      public void Execute(object parameter)
+      {
+         m_ExecutionAction();
       }
 
       public bool CanExecute
@@ -29,16 +34,10 @@ namespace Assembler.FormsGui.Commands
          }
       }
 
-      public void Execute(object parameter)
-      {
-         m_ExecutionAction(parameter);
-      }
-
-      private readonly Action<object> m_ExecutionAction;
+      private readonly Action m_ExecutionAction;
       private bool m_CanExecute;
 
       public event PropertyChangedEventHandler PropertyChanged;
-
    }
 
    public class RelayCommand<TExecArg> : ICommand
@@ -61,9 +60,13 @@ namespace Assembler.FormsGui.Commands
             }
          }
       }
-
+      
       public void Execute(object parameter)
       {
+         if (parameter == null)
+         {
+            throw new ArgumentNullException(nameof(parameter));
+         }
          m_ExecutionAction((TExecArg) parameter);
       }
 

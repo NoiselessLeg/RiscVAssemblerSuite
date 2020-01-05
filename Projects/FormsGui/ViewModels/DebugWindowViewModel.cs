@@ -25,13 +25,16 @@ namespace Assembler.FormsGui.ViewModels
          m_LoadFileCmd = new RelayCommand<string>((param) => LoadFile(param), true);
 
          m_HandleAssembledFileCmd = new RelayCommand<string>((compiledFileName) => HandleFileAssembledMsg(compiledFileName), true);
-
-         SubscribeToMessageType(MessageType.FileAssembled, m_HandleAssembledFileCmd);
       }
 
       public ICommand LoadFileCommand
       {
          get { return m_LoadFileCmd; }
+      }
+
+      public ICommand HandleFileAssembledCommand
+      {
+         get { return m_HandleAssembledFileCmd; }
       }
 
       public int ActiveTabIdx

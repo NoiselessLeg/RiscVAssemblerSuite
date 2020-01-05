@@ -95,8 +95,6 @@ namespace Assembler.FormsGui.Controls
              e.KeyCode != Keys.Back)
          {
             char newChar = ConvertToAsciiChar(e.KeyCode, e.Shift);
-            byte[] byteVal = new byte[1] { (byte)newChar };
-            m_InputStream.Write(byteVal, 0, 1);
             m_CurrUserCmd += newChar;
             ++m_NumInputChars;
          }
@@ -106,7 +104,8 @@ namespace Assembler.FormsGui.Controls
          }
          else if (e.KeyCode == Keys.Return)
          {
-            m_Cmds.Push(m_CurrUserCmd);
+            byte[] byteVal = Encoding.ASCII.GetBytes(m_CurrUserCmd);
+            m_InputStream.Write(byteVal, 0, 1);
             m_CurrUserCmd = string.Empty;
             m_NumInputChars = 0;
          }
@@ -149,7 +148,7 @@ namespace Assembler.FormsGui.Controls
          byte[] writtenBytes = new byte[e.NumBytesWritten];
          stream.Read(writtenBytes, 0, e.NumBytesWritten);
          string value = Encoding.ASCII.GetString(writtenBytes);
-         value.Replace("\n", Environment.NewLine);
+         value = value.Replace("\n", Environment.NewLine);
 
          m_UnderlyingTxt.InvokeIfRequired(() =>
             {
@@ -162,7 +161,7 @@ namespace Assembler.FormsGui.Controls
 
       private readonly InputStream m_InputStream;
       private readonly ObservableStream m_OutputStream;
-
+      
       private readonly Stack<string> m_Cmds;
 
       private string m_CurrUserCmd;

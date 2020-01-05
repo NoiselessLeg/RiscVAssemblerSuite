@@ -29,33 +29,28 @@ namespace Assembler.FormsGui.Views
          base(viewId, "Hex Explorer", msgMgr)
       {
          m_ExplorerVm = new HexExplorerViewModel(viewId, msgMgr);
-         m_OpenFileCmd = new RelayCommand((param) => LoadFileAction(), true);
-         m_SaveFileAsCmd = new RelayCommand((param) => SaveFileAsAction(), true);
-         m_SaveFileCmd = new RelayCommand((param) => SaveFileAction(), true);
+         m_OpenFileCmd = new RelayCommand(() => LoadFileAction(), true);
+         m_SaveFileAsCmd = new RelayCommand(() => SaveFileAsAction(), true);
+         m_SaveFileCmd = new RelayCommand(() => SaveFileAction(), true);
 
          
-         m_CloseTabsToRightCmd = new RelayCommand(
+         m_CloseTabsToRightCmd = new RelayCommand<int>(
             (param) =>
             {
-               int? iParm = param as int?;
-               System.Diagnostics.Debug.Assert(iParm.HasValue);
-
                // if we're removing everything to the right, the AllOpenFiles
                // Count value will change. we'll just wait until that Count property
                // is one above our target tab (since that'd be the theoretic last tab).
-               int targetCount = iParm.Value + 1;
+               int targetCount = param + 1;
                while (m_ExplorerVm.AllOpenFiles.Count > targetCount)
                {
-                  CloseTabAction(iParm.Value + 1);
+                  CloseTabAction(param + 1);
                }
             }, false);
 
-         m_CloseTabsToLeftCmd = new RelayCommand(
+         m_CloseTabsToLeftCmd = new RelayCommand<int>(
             (param) =>
             {
-               int? iParm = param as int?;
-               System.Diagnostics.Debug.Assert(iParm.HasValue);
-               for (int i = iParm.Value - 1; i >= 0; --i)
+               for (int i = param - 1; i >= 0; --i)
                {
                   CloseTabAction(i);
                }
@@ -68,7 +63,7 @@ namespace Assembler.FormsGui.Views
 
          // this will be passed either a tab index or a view model.
          // need to differentiate on the fly when we're called.
-         m_CloseTabCmd = new RelayCommand(
+         m_CloseTabCmd = new RelayCommand<object>(
                (param) =>
                {
                   int? iParm = param as int?;
@@ -83,7 +78,7 @@ namespace Assembler.FormsGui.Views
                      CloseTabAction(evm.ActiveFileIndex);
                   }
                }, false);
-         m_CloseWindowCmd = new RelayCommand((param) => CloseWindow(), true);
+         m_CloseWindowCmd = new RelayCommand(() => CloseWindow(), true);
          InitializeComponent();
          m_Ctx = CreateMenuBarContext();
          CreateDataBindings(m_ExplorerVm);
@@ -107,12 +102,6 @@ namespace Assembler.FormsGui.Views
 
          m_FileTabCtrl.DataBindings.Add(new Binding(nameof(m_FileTabCtrl.SelectedIndex), viewModel, nameof(viewModel.ActiveFileIndex), 
             true, DataSourceUpdateMode.OnPropertyChanged));
-      }
-
-
-      public override MenuBarContext MenuBarMembers
-      {
-         get { return m_Ctx; }
       }
 
       private MenuBarContext CreateMenuBarContext()
@@ -272,9 +261,9 @@ namespace Assembler.FormsGui.Views
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_SaveFileAsCmd;
 
-      private readonly RelayCommand m_CloseTabCmd;
-      private readonly RelayCommand m_CloseTabsToLeftCmd;
-      private readonly RelayCommand m_CloseTabsToRightCmd;
+      private readonly RelayCommand<object> m_CloseTabCmd;
+      private readonly RelayCommand<int> m_CloseTabsToLeftCmd;
+      private readonly RelayCommand<int> m_CloseTabsToRightCmd;
 
       private readonly RelayCommand m_CloseWindowCmd;
    }

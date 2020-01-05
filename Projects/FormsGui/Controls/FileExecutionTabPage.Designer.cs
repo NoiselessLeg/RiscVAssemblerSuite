@@ -34,41 +34,41 @@
          this.m_TopHalfSplit = new System.Windows.Forms.SplitContainer();
          this.m_SrcGrid = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-         this.m_RegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
-         this.RegName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.m_RegisterGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-         this.m_ShowDecValuesItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.m_ShowHexValuesItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.m_HorizontalSplitContainer = new System.Windows.Forms.SplitContainer();
-         this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-         this.m_StartBtn = new System.Windows.Forms.ToolStripMenuItem();
-         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.jefFileViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+         this.m_RegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
+         this.RegName = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.valueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.m_RegisterGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.m_ShowDecValuesItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.m_ShowHexValuesItem = new System.Windows.Forms.ToolStripMenuItem();
          this.executionViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+         this.m_HorizontalSplitContainer = new System.Windows.Forms.SplitContainer();
          this.m_ConsoleTxt = new Assembler.FormsGui.Controls.ConsoleTextBox();
+         this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+         this.m_StartBtn = new System.Windows.Forms.ToolStripMenuItem();
          this.m_PauseBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_ResumeBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_StepBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_TerminateBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
+         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
          this.m_TopHalfSplit.Panel1.SuspendLayout();
          this.m_TopHalfSplit.Panel2.SuspendLayout();
          this.m_TopHalfSplit.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).BeginInit();
          this.m_RegisterGridCtxMenu.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.m_HorizontalSplitContainer)).BeginInit();
          this.m_HorizontalSplitContainer.Panel1.SuspendLayout();
          this.m_HorizontalSplitContainer.Panel2.SuspendLayout();
          this.m_HorizontalSplitContainer.SuspendLayout();
          this.menuStrip1.SuspendLayout();
          this.tableLayoutPanel1.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).BeginInit();
          this.SuspendLayout();
          // 
          // m_TopHalfSplit
@@ -120,6 +120,8 @@
          this.m_SrcGrid.Location = new System.Drawing.Point(0, 0);
          this.m_SrcGrid.Name = "m_SrcGrid";
          this.m_SrcGrid.RowHeadersVisible = false;
+         this.m_SrcGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+         this.m_SrcGrid.ShowEditingIcon = false;
          this.m_SrcGrid.Size = new System.Drawing.Size(257, 288);
          this.m_SrcGrid.TabIndex = 0;
          this.m_SrcGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OnBreakpointSet);
@@ -129,6 +131,31 @@
          this.IsBreakpointApplied.DataPropertyName = "IsBreakpointApplied";
          this.IsBreakpointApplied.HeaderText = "Bkpt";
          this.IsBreakpointApplied.Name = "IsBreakpointApplied";
+         // 
+         // programCounterLocationStrDataGridViewTextBoxColumn
+         // 
+         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
+         // 
+         // rawBytesStrDataGridViewTextBoxColumn
+         // 
+         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
+         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
+         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
+         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
+         // 
+         // instructionTextDataGridViewTextBoxColumn
+         // 
+         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
+         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Instruction";
+         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
+         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
+         // 
+         // jefFileViewModelBindingSource
+         // 
+         this.jefFileViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.JefFileViewModel);
          // 
          // m_RegisterData
          // 
@@ -156,6 +183,12 @@
          this.RegName.Name = "RegName";
          this.RegName.ReadOnly = true;
          // 
+         // valueDataGridViewTextBoxColumn
+         // 
+         this.valueDataGridViewTextBoxColumn.DataPropertyName = "ValueStr";
+         this.valueDataGridViewTextBoxColumn.HeaderText = "Value";
+         this.valueDataGridViewTextBoxColumn.Name = "valueDataGridViewTextBoxColumn";
+         // 
          // m_RegisterGridCtxMenu
          // 
          this.m_RegisterGridCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -181,6 +214,11 @@
          this.m_ShowHexValuesItem.Size = new System.Drawing.Size(246, 22);
          this.m_ShowHexValuesItem.Text = "Display all values in hexadecimal";
          // 
+         // executionViewModelBindingSource
+         // 
+         this.executionViewModelBindingSource.DataMember = "Registers";
+         this.executionViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
+         // 
          // m_HorizontalSplitContainer
          // 
          this.m_HorizontalSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -198,6 +236,14 @@
          this.m_HorizontalSplitContainer.Size = new System.Drawing.Size(515, 405);
          this.m_HorizontalSplitContainer.SplitterDistance = 288;
          this.m_HorizontalSplitContainer.TabIndex = 2;
+         // 
+         // m_ConsoleTxt
+         // 
+         this.m_ConsoleTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_ConsoleTxt.Location = new System.Drawing.Point(0, 0);
+         this.m_ConsoleTxt.Name = "m_ConsoleTxt";
+         this.m_ConsoleTxt.Size = new System.Drawing.Size(515, 113);
+         this.m_ConsoleTxt.TabIndex = 0;
          // 
          // menuStrip1
          // 
@@ -219,65 +265,6 @@
          this.m_StartBtn.Size = new System.Drawing.Size(98, 20);
          this.m_StartBtn.Text = "Start Execution";
          this.m_StartBtn.Click += new System.EventHandler(this.OnStartButtonClicked);
-         // 
-         // tableLayoutPanel1
-         // 
-         this.tableLayoutPanel1.ColumnCount = 1;
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.Controls.Add(this.m_HorizontalSplitContainer, 0, 1);
-         this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
-         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.RowCount = 2;
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
-         this.tableLayoutPanel1.TabIndex = 1;
-         // 
-         // programCounterLocationStrDataGridViewTextBoxColumn
-         // 
-         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
-         // 
-         // rawBytesStrDataGridViewTextBoxColumn
-         // 
-         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
-         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
-         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
-         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
-         // 
-         // instructionTextDataGridViewTextBoxColumn
-         // 
-         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
-         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Instruction";
-         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
-         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
-         // 
-         // jefFileViewModelBindingSource
-         // 
-         this.jefFileViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.JefFileViewModel);
-         // 
-         // valueDataGridViewTextBoxColumn
-         // 
-         this.valueDataGridViewTextBoxColumn.DataPropertyName = "ValueStr";
-         this.valueDataGridViewTextBoxColumn.HeaderText = "Value";
-         this.valueDataGridViewTextBoxColumn.Name = "valueDataGridViewTextBoxColumn";
-         // 
-         // executionViewModelBindingSource
-         // 
-         this.executionViewModelBindingSource.DataMember = "Registers";
-         this.executionViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
-         // 
-         // m_ConsoleTxt
-         // 
-         this.m_ConsoleTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_ConsoleTxt.Location = new System.Drawing.Point(0, 0);
-         this.m_ConsoleTxt.Name = "m_ConsoleTxt";
-         this.m_ConsoleTxt.Size = new System.Drawing.Size(515, 113);
-         this.m_ConsoleTxt.TabIndex = 0;
          // 
          // m_PauseBtn
          // 
@@ -303,6 +290,21 @@
          this.m_TerminateBtn.Size = new System.Drawing.Size(126, 20);
          this.m_TerminateBtn.Text = "Terminate Execution";
          // 
+         // tableLayoutPanel1
+         // 
+         this.tableLayoutPanel1.ColumnCount = 1;
+         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tableLayoutPanel1.Controls.Add(this.m_HorizontalSplitContainer, 0, 1);
+         this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
+         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+         this.tableLayoutPanel1.RowCount = 2;
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
+         this.tableLayoutPanel1.TabIndex = 1;
+         // 
          // FileExecutionTabPage
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -315,8 +317,10 @@
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).EndInit();
          this.m_TopHalfSplit.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).EndInit();
          ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).EndInit();
          this.m_RegisterGridCtxMenu.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).EndInit();
          this.m_HorizontalSplitContainer.Panel1.ResumeLayout(false);
          this.m_HorizontalSplitContainer.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_HorizontalSplitContainer)).EndInit();
@@ -325,8 +329,6 @@
          this.menuStrip1.PerformLayout();
          this.tableLayoutPanel1.ResumeLayout(false);
          this.tableLayoutPanel1.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).EndInit();
          this.ResumeLayout(false);
 
       }
