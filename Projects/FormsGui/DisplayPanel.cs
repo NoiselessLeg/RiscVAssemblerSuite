@@ -42,8 +42,9 @@ namespace Assembler.FormsGui
          foreach (var view in ViewModel.ViewList)
          {
             view.Dock = DockStyle.Fill;
-            m_TabCtrl.TabPages[i].DataBindings.Add(new Binding(nameof(TabPage.Text), view, nameof(view.ViewName)));
-            m_TabCtrl.TabPages[i].Controls.Add(view);
+            var tabPageElem = m_TabCtrl.TabPages[i];
+            tabPageElem.DataBindings.Add(new Binding(nameof(TabPage.Text), view, nameof(view.ViewName)));
+            tabPageElem.Controls.Add(view);
             ++i;
          }
 
@@ -71,6 +72,5 @@ namespace Assembler.FormsGui
       }
 
       private WindowViewModel m_ViewModel;
-      
    }
 }

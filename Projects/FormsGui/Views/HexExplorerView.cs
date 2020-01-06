@@ -1,6 +1,5 @@
 ﻿using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Controls;
-using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
@@ -29,9 +28,7 @@ namespace Assembler.FormsGui.Views
          base(viewId, "Hex Explorer", msgMgr)
       {
          m_ExplorerVm = new HexExplorerViewModel(viewId, msgMgr);
-         m_OpenFileCmd = new RelayCommand(() => LoadFileAction(), true);
-         m_SaveFileAsCmd = new RelayCommand(() => SaveFileAsAction(), true);
-         m_SaveFileCmd = new RelayCommand(() => SaveFileAction(), true);
+         m_OpenFileCmd = new RelayCommand<string>((filePath) => LoadFileAction(filePath), true);
 
          
          m_CloseTabsToRightCmd = new RelayCommand<int>(
@@ -77,11 +74,11 @@ namespace Assembler.FormsGui.Views
                      System.Diagnostics.Debug.Assert(evm != null);
                      CloseTabAction(evm.ActiveFileIndex);
                   }
-               }, false);
-         m_CloseWindowCmd = new RelayCommand(() => CloseWindow(), true);
+               }, false
+         );
          InitializeComponent();
-         m_Ctx = CreateMenuBarContext();
          CreateDataBindings(m_ExplorerVm);
+         SubscribeToMessageType(MessageType.FileAssembled, m_OpenFileCmd);
       }
 
       private TabPage CreateNewTabPage(CompiledFileViewModel viewModel)
@@ -91,6 +88,9 @@ namespace Assembler.FormsGui.Views
          var tabContent = new HexValueGrid(viewModel);
          tabContent.Dock = DockStyle.Fill;
          newTab.Controls.Add(tabContent);
+         AreAnyFilesOpened = true;
+         m_NoFilesAssembledLbl.Visible = false;
+         m_FileTabCtrl.Visible = true;
 
          return newTab;
       }
@@ -104,57 +104,11 @@ namespace Assembler.FormsGui.Views
             true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
-      private MenuBarContext CreateMenuBarContext()
+      private void LoadFileAction(string filePath)
       {
-         var ctx = new MenuBarContext();
-         
-         var fileElementList = new List<BaseMenuBarElement>
-         {
-            new MenuBarActionElement("Open File", m_OpenFileCmd, Keys.Control | Keys.O),
-            new MenuBarActionElement("Save", m_SaveFileCmd, Keys.Control | Keys.S),
-            new MenuBarActionElement("Save As", m_SaveFileAsCmd),
-            new SeparatorMenuBarElement(),
-
-            // need to pass the whole view model here, so that way the latest ActiveTabIndex will be used
-            // (instead of a copy). differentiate the types in the RelayCommand implementation.
-            new MenuBarActionElement("Close File", m_CloseTabCmd, m_ExplorerVm, m_ExplorerVm),
-            new SeparatorMenuBarElement(),
-            new MenuBarActionElement("Exit", m_CloseWindowCmd, Keys.Alt | Keys.F4)
-         };
-
-         var fileMenuButton = new CompositeMenuBarElement("File", fileElementList);
-         ctx.AddMenuBarElement(fileMenuButton);
-         return ctx;
+         m_ExplorerVm.LoadFileCommand.Execute(filePath);
       }
-
-
-
-      private void LoadFileAction()
-      {
-         IDialogService service = DialogServiceFactory.GetServiceInstance();
-         try
-         {
-            var options = new DialogOptions()
-            {
-               FileFilter = "JEF Compiled File (*.jef)|*.jef",
-               WindowTitle = "Open File"
-            };
-
-            bool okToContinue = service.ShowOpenFileDialog(options, out string filePath);
-
-            if (okToContinue)
-            {
-               m_ExplorerVm.LoadFileCommand.Execute(filePath);
-               var activeViewRequest = new ActiveViewRequestMessage(ViewId);
-               SendMessage(activeViewRequest);
-            }
-         }
-         catch (Exception ex)
-         {
-            service.ShowErrorDialog("Save Error", ex.Message);
-         }
-      }
-
+      
       private void SaveFileAction()
       {
          IDialogService service = DialogServiceFactory.GetServiceInstance();
@@ -185,6 +139,7 @@ namespace Assembler.FormsGui.Views
          }
       }
 
+#if UNUSED
       private void SaveFileAsAction()
       {
          IDialogService service = DialogServiceFactory.GetServiceInstance();
@@ -214,6 +169,7 @@ namespace Assembler.FormsGui.Views
             service.ShowErrorDialog("Save Error", ex.Message);
          }
       }
+#endif
 
       private void CloseTabAction(int tabIdx)
       {
@@ -248,23 +204,107 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void CloseWindow()
+      private void TabControl_OnMouseUp(object sender, MouseEventArgs e)
       {
-         Application.Exit();
+         if (e.Button == MouseButtons.Right)
+         {
+            var ctrl = sender as TabControl;
+            for (int tabItr = 0; tabItr < ctrl.TabCount; ++tabItr)
+            {
+               Rectangle headerRect = ctrl.GetTabRect(tabItr);
+               if (headerRect.Contains(e.Location))
+               {
+                  // store the clicked tab index for retrieval when we handle
+                  // the context menu click events.
+                  foreach (ToolStripItem menuItem in m_TabRightClickMenu.Items)
+                  {
+                     menuItem.Tag = tabItr;
+                  }
+
+                  m_TabRightClickMenu.Show(ctrl, e.Location);
+                  break;
+               }
+            }
+         }
       }
 
+      private void OnCloseTabClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int tabIdxToClose = (int)contextMenu.Tag;
+         CloseTab(tabIdxToClose);
+      }
 
-      private readonly MenuBarContext m_Ctx;
+      private void OnCloseAllTabsToRightClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int targetTabIdx = (int)contextMenu.Tag;
+         ++targetTabIdx;
+         while (targetTabIdx < m_FileTabCtrl.TabCount)
+         {
+            CloseTab(targetTabIdx);
+         }
+      }
+
+      private void OnCloseAllTabsToLeftClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int targetTabIdx = (int)contextMenu.Tag;
+         int numTabsToClose = targetTabIdx;
+         for (int closeCount = 0; closeCount < numTabsToClose; ++closeCount)
+         {
+            CloseTab(0);
+         }
+      }
+
+      private void OnCloseAllTabsClicked(object sender, EventArgs e)
+      {
+         int numTabsToClose = m_FileTabCtrl.TabCount;
+         for (int closeCount = 0; closeCount < numTabsToClose; ++closeCount)
+         {
+            CloseTab(0);
+         }
+      }
+
+      private void CloseTab(int index)
+      {
+         bool continueClosing = true;
+         var fileViewModel = m_ExplorerVm.AllOpenFiles[index];
+         if (fileViewModel.AreAnyChangedUnsaved)
+         {
+            string fileNameNoAsterisk = fileViewModel.FileName.Substring(0, fileViewModel.FileName.LastIndexOf('*'));
+            DialogResult dr = MessageBox.Show(fileNameNoAsterisk + " has unsaved changes. Do you wish to save before closing?",
+                                              "Unsaved Changes",
+                                              MessageBoxButtons.YesNoCancel,
+                                              MessageBoxIcon.Question);
+
+            switch (dr)
+            {
+               case DialogResult.Yes:
+               {
+                  SaveFileAction();
+                  break;
+               }
+               case DialogResult.Cancel:
+               {
+                  continueClosing = false;
+                  break;
+               }
+            }
+         }
+
+         if (continueClosing)
+         {
+            m_ExplorerVm.CloseFileCommand.Execute(index);
+         }
+      }
+
       private readonly HexExplorerViewModel m_ExplorerVm;
 
-      private readonly RelayCommand m_OpenFileCmd;
-      private readonly RelayCommand m_SaveFileCmd;
-      private readonly RelayCommand m_SaveFileAsCmd;
+      private readonly RelayCommand<string> m_OpenFileCmd;
 
       private readonly RelayCommand<object> m_CloseTabCmd;
       private readonly RelayCommand<int> m_CloseTabsToLeftCmd;
       private readonly RelayCommand<int> m_CloseTabsToRightCmd;
-
-      private readonly RelayCommand m_CloseWindowCmd;
    }
 }

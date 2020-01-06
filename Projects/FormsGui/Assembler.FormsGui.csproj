@@ -133,6 +133,7 @@
     <Compile Include="Services\DialogServiceFactory.cs" />
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\Win32DialogService.cs" />
+    <Compile Include="Utility\AssemblerKeywords.cs" />
     <Compile Include="Utility\BindingHelper.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\ControlHelper.cs" />
@@ -174,7 +175,6 @@
       <DependentUpon>HexExplorerView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\IBasicView.cs" />
-    <Compile Include="Controls\Custom\MenuBarContext.cs" />
     <Compile Include="Views\ViewBase.cs">
       <SubType>UserControl</SubType>
     </Compile>

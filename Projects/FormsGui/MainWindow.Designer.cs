@@ -130,6 +130,7 @@
          this.fromCompiledFileToolStripMenuItem.Name = "fromCompiledFileToolStripMenuItem";
          this.fromCompiledFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
          this.fromCompiledFileToolStripMenuItem.Text = "From Compiled File";
+         this.fromCompiledFileToolStripMenuItem.Click += new System.EventHandler(this.fromCompiledFileToolStripMenuItem_Click);
          // 
          // toolStripSeparator2
          // 
@@ -155,7 +156,7 @@
          // preferencesToolStripMenuItem
          // 
          this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-         this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
          this.preferencesToolStripMenuItem.Text = "Preferences";
          this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
          // 
@@ -170,7 +171,7 @@
          // assembleFileToolStripMenuItem
          // 
          this.assembleFileToolStripMenuItem.Name = "assembleFileToolStripMenuItem";
-         this.assembleFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.assembleFileToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
          this.assembleFileToolStripMenuItem.Text = "Assemble File";
          this.assembleFileToolStripMenuItem.Click += new System.EventHandler(this.assembleFileToolStripMenuItem_Click);
          // 

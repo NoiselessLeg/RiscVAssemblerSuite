@@ -57,6 +57,13 @@ namespace Assembler.FormsGui.ViewModels
 
       private void LoadFile(string fileName)
       {
+         // see if we already have this file open. if so, just refresh it
+         // by removing the existing version and adding a new one to the model.
+         int fileIdx = m_FilesToExecute.IndexOf((vm) => vm.FilePath == fileName);
+         if (fileIdx >= 0)
+         {
+            m_FilesToExecute.RemoveAt(fileIdx);
+         }
          DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          m_FilesToExecute.Add(new JefFileViewModel(fileName, file));

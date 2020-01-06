@@ -25,5 +25,9 @@ namespace Assembler.FormsGui.Controls
          preferencesViewModelBindingSource.DataSource = preferences;
          assemblyFileViewModelBindingSource.DataSource = avm;
       }
+
+      private void OnTextChanged(object sender, EventArgs e)
+      {
+      }
    }
 }

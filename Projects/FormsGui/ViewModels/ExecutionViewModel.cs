@@ -188,6 +188,7 @@ namespace Assembler.FormsGui.ViewModels
       private void CancelExecution()
       {
          ExecutionState = PrgmExecutionState.Stopped;
+         m_ExecutionPauseEvent.Set();
          m_Ctx.AbortUserInputOperation();
       }
 

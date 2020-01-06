@@ -52,6 +52,7 @@
          this.m_FileTxtBox.Size = new System.Drawing.Size(392, 324);
          this.m_FileTxtBox.TabIndent = 3;
          this.m_FileTxtBox.TabIndex = 0;
+         this.m_FileTxtBox.TextChanged += new System.EventHandler(this.OnTextChanged);
          // 
          // preferencesViewModelBindingSource
          // 

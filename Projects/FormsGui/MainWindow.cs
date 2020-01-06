@@ -1,5 +1,4 @@
-﻿using Assembler.FormsGui.Controls.Custom;
-using Assembler.FormsGui.IO;
+﻿using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
@@ -75,6 +74,11 @@ namespace Assembler.FormsGui
       private void assembleFileToolStripMenuItem_Click(object sender, EventArgs e)
       {
          m_ViewModel.AssembleFileCommand.Execute(null);
+      }
+
+      private void fromCompiledFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.DisassembleCommand.Execute(null);
       }
    }
 }

@@ -1,6 +1,5 @@
 ﻿using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Controls;
-using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
@@ -52,6 +51,7 @@ namespace Assembler.FormsGui.Views
          var tabContent = new AssemblyTextBox(viewModel, m_Preferences);
          tabContent.Dock = DockStyle.Fill;
          newTab.Controls.Add(tabContent);
+         AreAnyFilesOpened = (m_EditorVm.AllOpenFiles.Count > 0);
 
          return newTab;
       }
@@ -159,40 +159,6 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void CloseTabAction()
-      {
-         bool continueClosing = true;
-         AssemblyFileViewModel avm = m_EditorVm.ActiveFile;
-         int activeTabIdx = m_EditorVm.ActiveFileIndex;
-
-         if (avm.AreAnyChangedUnsaved)
-         {
-            DialogResult dr = MessageBox.Show(avm.FileName + " has unsaved changes. Do you wish to save before closing?",
-                                              "Unsaved Changes",
-                                              MessageBoxButtons.YesNoCancel,
-                                              MessageBoxIcon.Question);
-
-            switch (dr)
-            {
-               case DialogResult.Yes:
-               {
-                  SaveFileAction();
-                  break;
-               }
-               case DialogResult.Cancel:
-               {
-                  continueClosing = false;
-                  break;
-               }
-            }
-         }
-
-         if (continueClosing)
-         {
-            m_EditorVm.CloseFileCommand.Execute(activeTabIdx);
-         }
-      }
-
       private void ImportFileAction()
       {
          IDialogService service = DialogServiceFactory.GetServiceInstance();
@@ -233,7 +199,8 @@ namespace Assembler.FormsGui.Views
          }
          else if (viewModel.AreAnyChangedUnsaved)
          {
-            DialogResult dr = MessageBox.Show(viewModel.FileName + " has unsaved changes. Do you wish to save before running assembler?",
+            string fileNameNoAsterisk = viewModel.FileName.Substring(0, viewModel.FileName.LastIndexOf('*'));
+            DialogResult dr = MessageBox.Show(fileNameNoAsterisk + " has unsaved changes. Do you wish to save before running assembler?",
                                               "Unsaved Changes",
                                               MessageBoxButtons.YesNoCancel,
                                               MessageBoxIcon.Question);
@@ -269,13 +236,14 @@ namespace Assembler.FormsGui.Views
                Rectangle headerRect = ctrl.GetTabRect(tabItr);
                if (headerRect.Contains(e.Location))
                {
-                  m_EditorVm.ChangeActiveIndexCommand.Execute(tabItr);
+                  // store the clicked tab index for retrieval when we handle
+                  // the context menu click events.
+                  foreach (ToolStripItem menuItem in m_TabRightClickMenu.Items)
+                  {
+                     menuItem.Tag = tabItr;
+                  }
 
-                  var cm = new ContextMenu();
-                  //cm.MenuItems.Add(new MenuItem("Close Tab", (s, arg) => { m_CloseTabCmd.Execute(tabItr); }));
-                  //cm.MenuItems.Add(new MenuItem("Close all tabs to right", (s, arg) => { m_CloseTabsToRightCmd.Execute(tabItr); }));
-                  //cm.MenuItems.Add(new MenuItem("Close all tabs to left", (s, arg) => { m_CloseTabsToLeftCmd.Execute(tabItr); }));
-                  cm.Show(ctrl, e.Location);
+                  m_TabRightClickMenu.Show(ctrl, e.Location);
                   break;
                }
             }
@@ -290,7 +258,77 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private readonly MenuBarContext m_Ctx;
+      private void OnCloseTabClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int tabIdxToClose = (int)contextMenu.Tag;
+         CloseTab(tabIdxToClose);
+      }
+
+      private void OnCloseAllTabsToRightClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int targetTabIdx = (int)contextMenu.Tag;
+         ++targetTabIdx;
+         while (targetTabIdx < m_OpenFileTabs.TabCount)
+         {
+            CloseTab(targetTabIdx);
+         }
+      }
+
+      private void OnCloseAllTabsToLeftClicked(object sender, EventArgs e)
+      {
+         var contextMenu = sender as ToolStripMenuItem;
+         int targetTabIdx = (int)contextMenu.Tag;
+         int numTabsToClose = targetTabIdx;
+         for (int closeCount = 0; closeCount < numTabsToClose; ++closeCount)
+         {
+            CloseTab(0);
+         }
+      }
+
+      private void OnCloseAllTabsClicked(object sender, EventArgs e)
+      {
+         int numTabsToClose = m_OpenFileTabs.TabCount;
+         for (int closeCount = 0; closeCount < numTabsToClose; ++closeCount)
+         {
+            CloseTab(0);
+         }
+      }
+
+      private void CloseTab(int index)
+      {
+         bool continueClosing = true;
+         var fileViewModel = m_EditorVm.AllOpenFiles[index];
+         if (fileViewModel.AreAnyChangedUnsaved)
+         {
+            string fileNameNoAsterisk = fileViewModel.FileName.Substring(0, fileViewModel.FileName.LastIndexOf('*'));
+            DialogResult dr = MessageBox.Show(fileNameNoAsterisk + " has unsaved changes. Do you wish to save before closing?",
+                                              "Unsaved Changes",
+                                              MessageBoxButtons.YesNoCancel,
+                                              MessageBoxIcon.Question);
+
+            switch (dr)
+            {
+               case DialogResult.Yes:
+               {
+                  SaveFileAction();
+                  break;
+               }
+               case DialogResult.Cancel:
+               {
+                  continueClosing = false;
+                  break;
+               }
+            }
+         }
+
+         if (continueClosing)
+         {
+            m_EditorVm.CloseFileCommand.Execute(index);
+         }
+      }
+
       private readonly AssemblyEditorViewModel m_EditorVm;
       private readonly PreferencesViewModel m_Preferences;
 
@@ -299,8 +337,6 @@ namespace Assembler.FormsGui.Views
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_ImportFileCmd;
-
-      private readonly RelayCommand m_CloseWindowCmd;
       private readonly RelayCommand m_AssembleFileCmd;
    }
 }

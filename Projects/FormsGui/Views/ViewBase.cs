@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Assembler.FormsGui.Commands;
-using Assembler.FormsGui.Controls.Custom;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 
 namespace Assembler.FormsGui.Views
 {
-   public class ViewBase : UserControl, IBasicView
+   public class ViewBase : UserControl, IBasicView, INotifyPropertyChanged
    {
       public ViewBase()
       {
@@ -55,6 +55,19 @@ namespace Assembler.FormsGui.Views
       {
          m_ViewMsgMgr.BroadcastMessage(m_SenderId, msg);
       }
+
+      public bool AreAnyFilesOpened
+      {
+         get { return m_AreAnyFilesOpen; }
+         protected set
+         {
+            if (m_AreAnyFilesOpen != value)
+            {
+               m_AreAnyFilesOpen = value;
+               PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AreAnyFilesOpened)));
+            }
+         }
+      }
          
       public string ViewName
       {
@@ -70,6 +83,7 @@ namespace Assembler.FormsGui.Views
          }
       }
 
+      private bool m_AreAnyFilesOpen;
       private string m_ViewName;
 
       private readonly int m_ViewId;
@@ -78,5 +92,6 @@ namespace Assembler.FormsGui.Views
       private readonly ObservableQueue<IBasicMessage> m_MsgQ;
       private readonly Dictionary<MessageType, ICommand> m_CmdHandlers;
 
+      public event PropertyChangedEventHandler PropertyChanged;
    }
 }
