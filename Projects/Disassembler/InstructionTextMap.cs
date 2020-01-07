@@ -2,20 +2,17 @@
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Disassembler
 {
-    /// <summary>
-    /// Defines the mapping between an instruction type and the stringifier implementation of it.
-    /// </summary>
-    static class InstructionTextMap
-    {
-        static InstructionTextMap()
-        {
-            s_InstructionMap = new Dictionary<InstructionType, IParameterStringifier>()
+   /// <summary>
+   /// Defines the mapping between an instruction type and the stringifier implementation of it.
+   /// </summary>
+   internal static class InstructionTextMap
+   {
+      static InstructionTextMap()
+      {
+         s_InstructionMap = new Dictionary<InstructionType, IParameterStringifier>()
             {
                 { InstructionType.Lui, new UInstructionStringifier("lui") },
                 { InstructionType.Auipc, new UInstructionStringifier("auipc") },
@@ -56,25 +53,24 @@ namespace Assembler.Disassembler
                 { InstructionType.And, new RInstructionStringifier("and") },
                 { InstructionType.Ecall, new EcallStringifier("ecall") },
             };
-        }
+      }
 
-        /// <summary>
-        /// Gets a stringifier implementation mapped to an instruction type. Throws
-        /// an ArgumentException if the instruction type is not recognized.
-        /// </summary>
-        /// <param name="instructionName">The instruction type to find a stringifier for.</param>
-        /// <returns>The stringifier implementation to use.</returns>
-        public static IParameterStringifier GetParameterStringifier(InstructionType instructionName)
-        {
-            IParameterStringifier stringifier = default(IParameterStringifier);
-            if (!s_InstructionMap.TryGetValue(instructionName, out stringifier))
-            {
-                throw new ArgumentException(instructionName + " is not a valid RISC-V instruction.");
-            }
+      /// <summary>
+      /// Gets a stringifier implementation mapped to an instruction type. Throws
+      /// an ArgumentException if the instruction type is not recognized.
+      /// </summary>
+      /// <param name="instructionName">The instruction type to find a stringifier for.</param>
+      /// <returns>The stringifier implementation to use.</returns>
+      public static IParameterStringifier GetParameterStringifier(InstructionType instructionName)
+      {
+         if (!s_InstructionMap.TryGetValue(instructionName, out IParameterStringifier stringifier))
+         {
+            throw new ArgumentException(instructionName + " is not a valid RISC-V instruction.");
+         }
 
-            return stringifier;
-        }
+         return stringifier;
+      }
 
-        private static readonly Dictionary<InstructionType, IParameterStringifier> s_InstructionMap;
-    }
+      private static readonly Dictionary<InstructionType, IParameterStringifier> s_InstructionMap;
+   }
 }

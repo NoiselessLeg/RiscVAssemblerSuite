@@ -27,7 +27,7 @@ namespace Assembler.Common
          {
             m_Table.Add(label.LabelName, label);
          }
-         catch (ArgumentException ex)
+         catch (ArgumentException)
          {
             throw new ArgumentException("Redefinition of symbol: \"" + label.LabelName);
          }

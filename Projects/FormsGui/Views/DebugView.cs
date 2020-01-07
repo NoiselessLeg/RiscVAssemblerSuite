@@ -45,8 +45,10 @@ namespace Assembler.FormsGui.Views
       private TabPage CreateTabPage(JefFileViewModel file)
       {
          var newTabPage = new TabPage();
-         var tabContent = new FileExecutionTabPage(file);
-         tabContent.Dock = DockStyle.Fill;
+         var tabContent = new FileExecutionTabPage(file)
+         {
+            Dock = DockStyle.Fill
+         };
          newTabPage.DataBindings.Add(new Binding(nameof(newTabPage.Text), file, nameof(file.FileName)));
          newTabPage.Dock = DockStyle.Fill;
          newTabPage.Controls.Add(tabContent);

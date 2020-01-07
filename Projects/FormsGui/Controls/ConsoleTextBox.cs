@@ -47,6 +47,27 @@ namespace Assembler.FormsGui.Controls
          m_NumInputChars = 0;
          m_UnderlyingTxt.Clear();
       }
+      
+      /// <summary> 
+      /// Clean up any resources being used.
+      /// </summary>
+      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+      protected override void Dispose(bool disposing)
+      {
+         if (disposing && (components != null))
+         {
+            components.Dispose();
+         }
+
+         if (disposing)
+         {
+            m_OutputStream.OnDataWritten -= OnStreamWrite;
+            m_OutputStream.Close();
+            m_InputStream.Close();
+         }
+
+         base.Dispose(disposing);
+      }
 
       private bool IsDirectionKey(Keys keyCode)
       {

@@ -37,10 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
-    </Reference>
-    <Reference Include="ConsoleControlAPI, Version=1.2.1.0, Culture=neutral, PublicKeyToken=7c86b8a36b9c33e2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ConsoleControlAPI.1.2.1\lib\net40\ConsoleControlAPI.dll</HintPath>
+      <HintPath>..\..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
@@ -101,6 +98,7 @@
     <Compile Include="DataModels\LoggerModel.cs" />
     <Compile Include="DataModels\Project.cs" />
     <Compile Include="DataModels\ProjectFileVersion.cs" />
+    <Compile Include="DataModels\BindableDataSegmentAccessor.cs" />
     <Compile Include="DisplayPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -141,6 +139,7 @@
     <Compile Include="Utility\IBasicQueue.cs" />
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
+    <Compile Include="ViewModels\DataAddressViewModel.cs" />
     <Compile Include="ViewModels\JefFileViewModel.cs" />
     <Compile Include="ViewModels\MessagingViewModel.cs" />
     <Compile Include="ViewModels\NotifyPropertyChangedBase.cs" />
@@ -177,6 +176,12 @@
     <Compile Include="Views\IBasicView.cs" />
     <Compile Include="Views\ViewBase.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\AboutWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\AboutWindow.Designer.cs">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\PreferencesWindow.cs">
       <SubType>Form</SubType>
@@ -219,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HexExplorerView.resx">
       <DependentUpon>HexExplorerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\AboutWindow.resx">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\PreferencesWindow.resx">
       <DependentUpon>PreferencesWindow.cs</DependentUpon>

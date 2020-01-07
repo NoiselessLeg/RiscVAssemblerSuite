@@ -128,7 +128,7 @@
          // fromCompiledFileToolStripMenuItem
          // 
          this.fromCompiledFileToolStripMenuItem.Name = "fromCompiledFileToolStripMenuItem";
-         this.fromCompiledFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.fromCompiledFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
          this.fromCompiledFileToolStripMenuItem.Text = "From Compiled File";
          this.fromCompiledFileToolStripMenuItem.Click += new System.EventHandler(this.fromCompiledFileToolStripMenuItem_Click);
          // 
@@ -186,8 +186,9 @@
          // aboutToolStripMenuItem
          // 
          this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+         this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
          this.aboutToolStripMenuItem.Text = "About";
+         this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
          // 
          // m_LayoutPanel
          // 

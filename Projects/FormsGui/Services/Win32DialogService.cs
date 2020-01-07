@@ -10,23 +10,26 @@ namespace Assembler.FormsGui.Services
 {
    class Win32DialogService : IDialogService
    {
+
       public bool ShowOpenFileDialog(DialogOptions options, out string fileName)
       {
          bool openSuccess = false;
-         var ofd = new OpenFileDialog();
-         ofd.Filter = options.FileFilter;
-         ofd.FileName = options.DefaultFileName;
-         ofd.AddExtension = true;
-         ofd.Title = options.WindowTitle;
-         DialogResult retVal = ofd.ShowDialog();
-         if (retVal == DialogResult.OK)
+         using (var ofd = new OpenFileDialog())
          {
-            openSuccess = true;
-            fileName = ofd.FileName;
-         }
-         else
-         {
-            fileName = string.Empty;
+            ofd.Filter = options.FileFilter;
+            ofd.FileName = options.DefaultFileName;
+            ofd.AddExtension = true;
+            ofd.Title = options.WindowTitle;
+            DialogResult retVal = ofd.ShowDialog();
+            if (retVal == DialogResult.OK)
+            {
+               openSuccess = true;
+               fileName = ofd.FileName;
+            }
+            else
+            {
+               fileName = string.Empty;
+            }
          }
 
          return openSuccess;
@@ -35,20 +38,23 @@ namespace Assembler.FormsGui.Services
       public bool ShowSaveFileDialog(DialogOptions options, out string fileName)
       {
          bool dialogSuccess = false;
-         var sfd = new SaveFileDialog();
-         sfd.Filter = options.FileFilter;
-         sfd.FileName = options.DefaultFileName;
-         sfd.Title = options.WindowTitle;
-         sfd.AddExtension = true;
-         DialogResult retVal = sfd.ShowDialog();
-         if (retVal == DialogResult.OK)
+         
+         using (var sfd = new SaveFileDialog())
          {
-            dialogSuccess = true;
-            fileName = sfd.FileName;
-         }
-         else
-         {
-            fileName = string.Empty;
+            sfd.Filter = options.FileFilter;
+            sfd.FileName = options.DefaultFileName;
+            sfd.Title = options.WindowTitle;
+            sfd.AddExtension = true;
+            DialogResult retVal = sfd.ShowDialog();
+            if (retVal == DialogResult.OK)
+            {
+               dialogSuccess = true;
+               fileName = sfd.FileName;
+            }
+            else
+            {
+               fileName = string.Empty;
+            }
          }
 
          return dialogSuccess;

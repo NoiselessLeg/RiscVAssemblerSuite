@@ -1,6 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.Disassembler;
 using Assembler.FormsGui.Commands;
+using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.Interpreter;
@@ -49,7 +50,9 @@ namespace Assembler.FormsGui.ViewModels
          }
 
          DisassembledFile file = underlyingVm.FileData;
-         m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_Registers, file);
+         var dataSegmentAccessor = new BindableDataSegmentAccessor(file.DataSegment);
+
+         m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_Registers, dataSegmentAccessor, file.TextSegment);
 
          m_DefaultRegValues = new Register[m_Ctx.UserRegisters.Count];
          for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
@@ -57,9 +60,20 @@ namespace Assembler.FormsGui.ViewModels
             m_DefaultRegValues[i] = new Register(m_Ctx.UserRegisters[i].Value);
          }
 
+         m_DataSegmentElements = new BindingList<DataAddressViewModel>();
+
+         // increment this by 16. Each row will display four words.
+         for (int currElem = file.DataSegment.BaseRuntimeDataAddress; 
+             currElem < file.DataSegment.BaseRuntimeDataAddress + file.DataSegmentLength;
+             currElem += 16)
+         {
+            m_DataSegmentElements.Add(new DataAddressViewModel(currElem, dataSegmentAccessor));
+         }
+
          m_ExecuteFileCmd = new RelayCommand(() => OnExecutionTaskBegin(), true);
          m_TerminateExecutionCmd = new RelayCommand(() => CancelExecution(), false);
          m_SwitchRepresentationCmd = new RelayCommand<RegisterDisplayType>((param) => SwitchRegisterDisplayType(param), true);
+         m_SwitchDataRepresentationCmd = new RelayCommand<RegisterDisplayType>((param) => SwitchDataDisplayType(param), true);
          m_PauseExecutionCmd = new RelayCommand(() => PauseExecution(), false);
          m_ResumeExecutionCmd = new RelayCommand(() => ResumeExecution(), false);
          m_InstructionStepCmd = new RelayCommand(() => TemporarilyUnblockExecutionTask(), false);
@@ -94,6 +108,11 @@ namespace Assembler.FormsGui.ViewModels
       public ICommand ChangeRegisterValueDisplayTypeCommand
       {
          get { return m_SwitchRepresentationCmd; }
+      }
+
+      public ICommand ChangeDataValueDisplayTypeCommand
+      {
+         get { return m_SwitchDataRepresentationCmd; }
       }
 
       public ICommand SetBreakpointCommand
@@ -223,6 +242,14 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      private void SwitchDataDisplayType(RegisterDisplayType displayType)
+      {
+         foreach (DataAddressViewModel address in m_DataSegmentElements)
+         {
+            address.DisplayType = displayType;
+         }
+      }
+
       private void ExecuteUntilEnd()
       {
          var runTimer = new Stopwatch();
@@ -279,6 +306,11 @@ namespace Assembler.FormsGui.ViewModels
       public RegisterViewModel[] Registers
       {
          get { return m_Registers; }
+      }
+
+      public BindingList<DataAddressViewModel> DataElements
+      {
+         get { return m_DataSegmentElements; }
       }
 
       private bool IsPaused
@@ -340,10 +372,14 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_ResumeExecutionCmd;
       private readonly RelayCommand m_TerminateExecutionCmd;
       private readonly RelayCommand<RegisterDisplayType> m_SwitchRepresentationCmd;
+      private readonly RelayCommand<RegisterDisplayType> m_SwitchDataRepresentationCmd;
       private readonly RelayCommand m_InstructionStepCmd;
       private readonly RelayCommand<int> m_SetBreakpointCmd;
       private readonly RelayCommand<int> m_UnsetBreakpointCmd;
       private readonly RegisterViewModel[] m_Registers;
+      private readonly BindingList<DataAddressViewModel> m_DataSegmentElements;
+
+
       private readonly Interpreter.ExecutionContext m_Ctx;
 
       private readonly Register[] m_DefaultRegValues;

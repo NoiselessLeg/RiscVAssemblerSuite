@@ -66,10 +66,15 @@ namespace Assembler.FormsGui.Utility
          int foundIndex = -1;
          bool found = false;
          IEnumerator<T> enumerator = collection.GetEnumerator();
+         int currIdx = 0;
          while (enumerator.MoveNext() && !found)
          {
-            ++foundIndex;
             found = predicate(enumerator.Current);
+            if (found)
+            {
+               foundIndex = currIdx;
+            }
+            ++currIdx;
          }
 
          return foundIndex;
@@ -216,7 +221,19 @@ namespace Assembler.FormsGui.Utility
                   {
                      foreach (TElem oldElem in e.OldItems)
                      {
-                        collection.RemoveAt(index);
+                        object boundElem = collection[index];
+
+                        // if we removed a disposable object from our list,
+                        // then dispose of it to free memory up
+                        if (boundElem is IDisposable)
+                        {
+                           // calling dispose seems to auto remove the element from the collection.
+                           ((IDisposable)boundElem).Dispose();
+                        }
+                        else
+                        {
+                           collection.RemoveAt(index);
+                        }
                         ++index;
                      }
                   }

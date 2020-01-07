@@ -48,8 +48,10 @@ namespace Assembler.FormsGui.Views
       {
          var newTab = new TabPage();
          newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new AssemblyTextBox(viewModel, m_Preferences);
-         tabContent.Dock = DockStyle.Fill;
+         var tabContent = new AssemblyTextBox(viewModel, m_Preferences)
+         {
+            Dock = DockStyle.Fill
+         };
          newTab.Controls.Add(tabContent);
          AreAnyFilesOpened = (m_EditorVm.AllOpenFiles.Count > 0);
 

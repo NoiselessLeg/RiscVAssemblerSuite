@@ -4,6 +4,7 @@ using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
 using Assembler.FormsGui.Views;
+using Assembler.FormsGui.Windows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,6 +80,14 @@ namespace Assembler.FormsGui
       private void fromCompiledFileToolStripMenuItem_Click(object sender, EventArgs e)
       {
          m_ViewModel.DisassembleCommand.Execute(null);
+      }
+
+      private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         using (var aboutWin = new AboutWindow())
+         {
+            aboutWin.ShowDialog();
+         }
       }
    }
 }

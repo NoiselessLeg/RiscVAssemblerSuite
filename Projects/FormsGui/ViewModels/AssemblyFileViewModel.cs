@@ -117,8 +117,5 @@ namespace Assembler.FormsGui.ViewModels
       private bool m_AreAnyChangesUnsaved;
 
       private readonly AssemblyFile m_UnderlyingFile;
-
-      private readonly RelayCommand m_UndoCmd;
-      private readonly RelayCommand m_RedoCmd;
    }
 }

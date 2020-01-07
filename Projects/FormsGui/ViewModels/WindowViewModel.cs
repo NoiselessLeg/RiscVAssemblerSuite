@@ -154,7 +154,6 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_DisassembleFileCmd;
       private readonly RelayCommand m_AssembleFileCmd;
-      private readonly RelayCommand m_ExitCommand;
 
       private readonly RelayCommand m_ShowPreferencesCmd;
 

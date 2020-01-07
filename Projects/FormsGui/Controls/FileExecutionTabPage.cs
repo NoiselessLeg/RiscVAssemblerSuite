@@ -27,14 +27,58 @@ namespace Assembler.FormsGui.Controls
 
          m_ShowDecValuesItem.Click += (s, arg) =>
          {
-            m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
-            m_ShowHexValuesItem.Checked = false;
+            var btn = s as ToolStripMenuItem;
+            if (btn.Checked)
+            {
+               m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
+               m_ShowHexValuesItem.Checked = false;
+            }
+            else
+            {
+               btn.Checked = true;
+            }
          };
 
          m_ShowHexValuesItem.Click += (s, arg) =>
          {
-            m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
-            m_ShowDecValuesItem.Checked = false;
+            var btn = s as ToolStripMenuItem;
+            if (btn.Checked)
+            {
+               m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
+               m_ShowDecValuesItem.Checked = false;
+            }
+            else
+            {
+               btn.Checked = true;
+            }
+         };
+
+         m_ShowDataElemsAsDecimalBtn.Click += (s, arg) =>
+         {
+            var btn = s as ToolStripMenuItem;
+            if (btn.Checked)
+            {
+               m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
+               m_ShowDataElemsAsHexBtn.Checked = false;
+            }
+            else
+            {
+               btn.Checked = true;
+            }
+         };
+
+         m_ShowDataElemsAsHexBtn.Click += (s, arg) =>
+         {
+            var btn = s as ToolStripMenuItem;
+            if (btn.Checked)
+            { 
+               m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
+               m_ShowDataElemsAsDecimalBtn.Checked = false;
+            }
+            else
+            {
+               btn.Checked = true;
+            }
          };
 
          m_FileViewModel = viewModel;
@@ -43,7 +87,11 @@ namespace Assembler.FormsGui.Controls
          m_ExViewModel = new ExecutionViewModel(m_ExConsole, viewModel, viewModel.InstructionList);
 
          var bindingWrapper = new BindingList<RegisterViewModel>(m_ExViewModel.Registers);
+         m_RegisterData.AutoGenerateColumns = false;
          m_RegisterData.DataSource = bindingWrapper;
+
+         m_DataSegmentGrdView.AutoGenerateColumns = false;
+         m_DataSegmentGrdView.DataSource = m_ExViewModel.DataElements;
          executionViewModelBindingSource.DataSource = bindingWrapper;
          jefFileViewModelBindingSource.DataSource = m_FileViewModel;
          m_ExViewModel.PropertyChanged += OnExecutionViewModelChanged;
@@ -136,7 +184,7 @@ namespace Assembler.FormsGui.Controls
          int firstDisplayedCell = m_SrcGrid.FirstDisplayedScrollingRowIndex;
 
          // in case the current row index goes back up above our first displayed cell.
-         int indexFromFirstDisplayedCell = Math.Abs(rowIndex - firstDisplayedCell);
+         int indexFromFirstDisplayedCell = rowIndex - firstDisplayedCell;
          bool elemOffscreen = false;
          if (indexFromFirstDisplayedCell > dgvSizeInCells ||
              indexFromFirstDisplayedCell < 0)

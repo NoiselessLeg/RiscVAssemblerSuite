@@ -85,8 +85,10 @@ namespace Assembler.FormsGui.Views
       {
          var newTab = new TabPage();
          newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new HexValueGrid(viewModel);
-         tabContent.Dock = DockStyle.Fill;
+         var tabContent = new HexValueGrid(viewModel)
+         {
+            Dock = DockStyle.Fill
+         };
          newTab.Controls.Add(tabContent);
          AreAnyFilesOpened = true;
          m_NoFilesAssembledLbl.Visible = false;
@@ -296,6 +298,13 @@ namespace Assembler.FormsGui.Views
          if (continueClosing)
          {
             m_ExplorerVm.CloseFileCommand.Execute(index);
+
+            AreAnyFilesOpened = m_ExplorerVm.AllOpenFiles.Any();
+            if (!AreAnyFilesOpened)
+            {
+               m_NoFilesAssembledLbl.Visible = true;
+               m_FileTabCtrl.Visible = false;
+            }
          }
       }
 

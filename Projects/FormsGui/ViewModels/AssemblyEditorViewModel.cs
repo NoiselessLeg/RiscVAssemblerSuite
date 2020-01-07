@@ -16,13 +16,21 @@ namespace Assembler.FormsGui.ViewModels
 {
    public class AssemblyEditorViewModel : MessagingViewModel
    {
+      /// <summary>
+      /// Creates an instance of the AssemblyEditorViewModel. This is the view model associated
+      /// with the editing of all assembly files, and contains a list of individual assembly file view models.
+      /// </summary>
+      /// <param name="viewId">The ID of the parent view. Used to make active view requests.</param>
+      /// <param name="msgMgr">The message manager used to send messages to other views.</param>
       public AssemblyEditorViewModel(int viewId, MessageManager msgMgr):
          base(msgMgr)
       {
          m_ViewId = viewId;
          m_Disassembler = new DisassemblyManager();
-         m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
-         m_OpenViewModels.Add(new AssemblyFileViewModel());
+         m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>
+         {
+            new AssemblyFileViewModel()
+         };
 
          m_Assembler = new RiscVAssembler();
          m_LoggerVm = new LoggerViewModel();
@@ -42,6 +50,10 @@ namespace Assembler.FormsGui.ViewModels
          );
       }
 
+      /// <summary>
+      /// Gets the index of the view model that is currently focused by the view's tab control.
+      /// It is expected that the selected tab and this index are synchronized.
+      /// </summary>
       public int ActiveFileIndex
       {
          get { return m_ActiveViewModelIdx; }
@@ -55,115 +67,114 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      /// <summary>
+      /// Gets the view model in the open file view model list that
+      /// is pointed to by the ActiveFileIndex property.
+      /// </summary>
       public AssemblyFileViewModel ActiveFile
       {
          get { return m_OpenViewModels[ActiveFileIndex]; }
       }
 
+      /// <summary>
+      /// Gets a collection of all of the open file view models.
+      /// </summary>
       public ObservableCollection<AssemblyFileViewModel> AllOpenFiles
       {
          get { return m_OpenViewModels; }
       }
 
+      /// <summary>
+      /// Gets the logger view model that is used by the underlying assembler
+      /// to log data to.
+      /// </summary>
       public LoggerViewModel LoggerModel
       {
          get { return m_LoggerVm; }
       }
 
+      /// <summary>
+      /// This command will create a blank file in the view model,
+      /// and add it to the open file list.
+      /// </summary>
       public ICommand NewFileCommand
       {
          get { return m_NewFileCmd; }
       }
 
+      /// <summary>
+      /// This command will create an assembly view model file based
+      /// on data read from a provided file name. It is expected that
+      /// the command user will provide the file name as an argument.
+      /// </summary>
       public ICommand LoadFileCommand
       {
          get { return m_OpenFileCmd; }
       }
 
+      /// <summary>
+      /// This command will commit an assembly view model file to
+      /// the file system. It is expected that the command user will
+      /// provide the file name as an argument.
+      /// </summary>
       public ICommand SaveFileCommand
       {
          get { return m_SaveFileCmd; }
       }
 
+      /// <summary>
+      /// This command will remove the specified view model from the 
+      /// view model list. It is expected that the command user will
+      /// provide the index of the view model to remove as an argument.
+      /// </summary>
       public ICommand CloseFileCommand
       {
          get { return m_CloseFileCmd; }
       }
 
+      /// <summary>
+      /// This command will change the active view model index.
+      /// It is expected that the command user will provide a valid
+      /// new index to switch to as an argument.
+      /// </summary>
       public ICommand ChangeActiveIndexCommand
       {
          get { return m_ChangeActiveIdxCmd; }
       }
 
+      /// <summary>
+      /// This command will call the assembler and assemble
+      /// a given file. It is expected that the command user will
+      /// pass the path of the file to assemble as an argument.
+      /// </summary>
       public ICommand AssembleFileCmd
       {
          get { return m_AssembleFileCmd; }
       }
 
+      /// <summary>
+      /// This command will call the disassembler to disassemble
+      /// a pre-compiled JEF file, and import the resultant assembly
+      /// file into the editor. It is expected that the command user will
+      /// pass the path of the file to disassemble as an argument.
+      /// </summary>
       public ICommand DisassembleAndImportCmd
       {
          get { return m_DisassembleAndImportCmd; }
       }
 
-      public ICommand OpenPreferencesCommand
-      {
-         get { return m_OpenPreferencesCmd; }
-      }
-
+      /// <summary>
+      /// Creates a new view model isntance with a blank template file,
+      /// and adds it to the list of open view models. In addition,
+      /// this will allow the CloseFileCommand to execute (as there
+      /// is now guaranteed to be a file in the editor to close).
+      /// </summary>
       private void CreateNewFile()
       {
          var newVm = new AssemblyFileViewModel(new DataModels.AssemblyFile());
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
          m_CloseFileCmd.CanExecute = true;
-      }
-
-      private void ShowDialogAndOpenFile()
-      { 
-         IDialogService service = DialogServiceFactory.GetServiceInstance();
-         try
-         {
-            var options = new DialogOptions()
-            {
-               FileFilter = "RISC-V Assembly File (*.asm)|*.asm",
-               WindowTitle = "Open File"
-            };
-
-            bool okToContinue = service.ShowOpenFileDialog(options, out string filePath);
-
-            if (okToContinue)
-            {
-               OpenFile(filePath);
-            }
-         }
-         catch (Exception ex)
-         {
-            service.ShowErrorDialog("Open error", ex.Message);
-         }
-      }
-
-      private void ShowDialogAndSaveFile()
-      {
-         IDialogService service = DialogServiceFactory.GetServiceInstance();
-         try
-         {
-            var options = new DialogOptions()
-            {
-               FileFilter = "RISC-V Assembly File (*.asm)|*.asm",
-               WindowTitle = "Save File"
-            };
-
-            bool okToContinue = service.ShowSaveFileDialog(options, out string filePath);
-
-            if (okToContinue)
-            {
-               OpenFile(filePath);
-            }
-         }
-         catch (Exception ex)
-         {
-            service.ShowErrorDialog("Save error", ex.Message);
-         }
       }
 
       private void OpenFile(string fileName)
@@ -180,6 +191,9 @@ namespace Assembler.FormsGui.ViewModels
          {
             ActiveFileIndex = m_OpenViewModels.IndexOf(vm => vm.FileName == fileName);
          }
+
+         var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
+         BroadcastMessage(activeViewRequest);
       }
 
       private void SaveFile(string fileName)
@@ -194,6 +208,8 @@ namespace Assembler.FormsGui.ViewModels
          var newVm = new AssemblyFileViewModel(asmFile);
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
+         var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
+         BroadcastMessage(activeViewRequest);
       }
 
       private void CloseFile(int fileIndex)

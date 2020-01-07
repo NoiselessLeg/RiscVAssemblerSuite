@@ -16,16 +16,16 @@ namespace Assembler.Interpreter
       /// Creates an instance of the file interpreter.
       /// </summary>
       /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
-      public ExecutionContext(IRuntimeEnvironment environment, ITerminal terminal, IList<IRegister> registers, DisassembledFile file)
+      public ExecutionContext(IRuntimeEnvironment environment, ITerminal terminal, IList<IRegister> registers,
+                              IDataSegmentAccessor dataSegment, TextSegmentAccessor textSegment)
       {
          m_Environment = environment;
          m_Terminal = terminal;
          m_InterpreterFac = new InterpreterFactory(terminal);
-         var dataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
 
          m_Ctx = new RuntimeContext(environment, dataSegment, registers);
-
-         m_TextSegment = file.TextSegment;
+         
+         m_TextSegment = textSegment;
          m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = m_TextSegment.StartingSegmentAddress;
          m_Ctx.UserRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
       }
