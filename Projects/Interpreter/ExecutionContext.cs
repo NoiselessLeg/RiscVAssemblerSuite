@@ -46,7 +46,7 @@ namespace Assembler.Interpreter
 
       public void AbortUserInputOperation()
       {
-         m_Terminal.RequestOutputFlush();
+         m_Terminal.InterruptInputOperation();
       }
 
       public void ExecuteNextInstruction()

@@ -44,9 +44,6 @@ namespace Assembler
             tasks.Add(task);
             task.Start();
          }
-         foreach (string file in options.InputFileNames)
-         {
-         }
 
          // wait for all of our assembler tasks to join.
          Task.WaitAll(tasks.ToArray());
@@ -101,13 +98,6 @@ namespace Assembler
                   // build the symbol table
                   var instructionProcFac = new InstructionProcessorFactory(symTable);
                   var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
-
-#if DEBUG
-                  string dbg = reader.ReadToEnd();
-                  reader.Seek(0, SeekOrigin.Begin);
-#endif
-
-
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 

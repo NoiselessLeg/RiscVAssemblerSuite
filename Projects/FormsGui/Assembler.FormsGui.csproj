@@ -79,6 +79,7 @@
     <Compile Include="Controls\AssemblyTextBox.Designer.cs">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CtrlComponents\AssemblyFileHighlighter.cs" />
     <Compile Include="Controls\FileExecutionTabPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -121,15 +122,21 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Messaging\ActiveViewRequestMessage.cs" />
-    <Compile Include="Messaging\ParameterlessMessage.cs" />
+    <Compile Include="Messaging\BasicMessage.cs" />
     <Compile Include="Messaging\IBasicMessage.cs" />
     <Compile Include="Messaging\MessageManager.cs" />
     <Compile Include="Messaging\FileAssembledMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\DialogOptions.cs" />
     <Compile Include="Services\DialogServiceFactory.cs" />
     <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\StreamService.cs" />
     <Compile Include="Services\Win32DialogService.cs" />
     <Compile Include="Utility\AssemblerKeywords.cs" />
     <Compile Include="Utility\BindingHelper.cs" />
@@ -209,13 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Views\AssemblyEditorView.resx">
       <DependentUpon>AssemblyEditorView.cs</DependentUpon>
     </EmbeddedResource>
@@ -231,6 +234,8 @@
     <EmbeddedResource Include="Windows\PreferencesWindow.resx">
       <DependentUpon>PreferencesWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Assembly.xshd" />
+    <None Include="Assembly_Orig.xshd" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyFileViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.DebugWindowViewModel.datasource" />
@@ -275,5 +280,6 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

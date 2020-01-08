@@ -17,6 +17,11 @@ namespace Assembler.FormsGui.IO
          m_Buffers = new ConcurrentQueue<byte[]>();
       }
 
+      public void AbortRead()
+      {
+         m_DataReady.Set();
+      }
+
       public override int Read(byte[] buffer, int offset, int count)
       {
          m_DataReady.WaitOne();

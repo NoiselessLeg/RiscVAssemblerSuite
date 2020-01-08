@@ -92,12 +92,17 @@ namespace Assembler.FormsGui.Views
 
             if (okToContinue)
             {
+               Cursor.Current = Cursors.WaitCursor;
                m_EditorVm.LoadFileCommand.Execute(filePath);
             }
          }
          catch (Exception ex)
          {
             service.ShowErrorDialog("Save Error", ex.Message);
+         }
+         finally
+         {
+            Cursor.Current = Cursors.Default;
          }
       }
 
@@ -122,12 +127,17 @@ namespace Assembler.FormsGui.Views
 
             if (okToContinue)
             {
+               Cursor.Current = Cursors.WaitCursor;
                m_EditorVm.SaveFileCommand.Execute(filePath);
             }
          }
          catch (Exception ex)
          {
             service.ShowErrorDialog("Save Error", ex.Message);
+         }
+         finally
+         {
+            Cursor.Current = Cursors.Default;
          }
       }
 
@@ -152,12 +162,17 @@ namespace Assembler.FormsGui.Views
 
             if (okToContinue)
             {
+               Cursor.Current = Cursors.WaitCursor;
                m_EditorVm.SaveFileCommand.Execute(filePath);
             }
          }
          catch (Exception ex)
          {
             service.ShowErrorDialog("Save Error", ex.Message);
+         }
+         finally
+         {
+            Cursor.Current = Cursors.Default;
          }
       }
 
@@ -182,6 +197,10 @@ namespace Assembler.FormsGui.Views
          catch (Exception ex)
          {
             service.ShowErrorDialog("Import Error", ex.Message);
+         }
+         finally
+         {
+            Cursor.Current = Cursors.Default;
          }
       }
 
@@ -224,7 +243,9 @@ namespace Assembler.FormsGui.Views
 
          if (continueAssembling)
          {
+            Cursor.Current = Cursors.WaitCursor;
             m_EditorVm.AssembleFileCmd.Execute(viewModel.FilePath);
+            Cursor.Current = Cursors.Default;
          }
       }
 

@@ -38,6 +38,7 @@
          // 
          // m_FileTxtBox
          // 
+         this.m_FileTxtBox.BackColor = System.Drawing.SystemColors.Control;
          this.m_FileTxtBox.ConvertTabsToSpaces = true;
          this.m_FileTxtBox.DataBindings.Add(new System.Windows.Forms.Binding("ConvertTabsToSpaces", this.preferencesViewModelBindingSource, "ReplaceTabsWithSpaces", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
          this.m_FileTxtBox.DataBindings.Add(new System.Windows.Forms.Binding("ShowLineNumbers", this.preferencesViewModelBindingSource, "ShowLineNumbers", true));
@@ -46,13 +47,14 @@
          this.m_FileTxtBox.Dock = System.Windows.Forms.DockStyle.Fill;
          this.m_FileTxtBox.IndentStyle = ICSharpCode.TextEditor.Document.IndentStyle.None;
          this.m_FileTxtBox.IsReadOnly = false;
+         this.m_FileTxtBox.LineViewerStyle = ICSharpCode.TextEditor.Document.LineViewerStyle.FullRow;
          this.m_FileTxtBox.Location = new System.Drawing.Point(0, 0);
          this.m_FileTxtBox.Name = "m_FileTxtBox";
          this.m_FileTxtBox.ShowMatchingBracket = false;
+         this.m_FileTxtBox.ShowVRuler = false;
          this.m_FileTxtBox.Size = new System.Drawing.Size(392, 324);
          this.m_FileTxtBox.TabIndent = 3;
          this.m_FileTxtBox.TabIndex = 0;
-         this.m_FileTxtBox.TextChanged += new System.EventHandler(this.OnTextChanged);
          // 
          // preferencesViewModelBindingSource
          // 
@@ -64,6 +66,7 @@
          // 
          // AssemblyTextBox
          // 
+         this.BackColor = System.Drawing.Color.DarkSalmon;
          this.Controls.Add(this.m_FileTxtBox);
          this.Name = "AssemblyTextBox";
          this.Size = new System.Drawing.Size(392, 324);

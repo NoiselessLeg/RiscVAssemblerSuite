@@ -34,6 +34,7 @@
          this.m_OkBtn = new System.Windows.Forms.Button();
          this.label2 = new System.Windows.Forms.Label();
          this.label3 = new System.Windows.Forms.Label();
+         this.label4 = new System.Windows.Forms.Label();
          ((System.ComponentModel.ISupportInitialize)(this.m_LogoBox)).BeginInit();
          this.SuspendLayout();
          // 
@@ -71,7 +72,7 @@
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(12, 87);
+         this.label2.Location = new System.Drawing.Point(12, 38);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(70, 13);
          this.label2.TabIndex = 3;
@@ -80,17 +81,27 @@
          // label3
          // 
          this.label3.AutoSize = true;
-         this.label3.Location = new System.Drawing.Point(12, 48);
+         this.label3.Location = new System.Drawing.Point(12, 25);
          this.label3.Name = "label3";
          this.label3.Size = new System.Drawing.Size(263, 13);
          this.label3.TabIndex = 4;
          this.label3.Text = "Developed by John Lewis, released under MIT license";
+         // 
+         // label4
+         // 
+         this.label4.AutoSize = true;
+         this.label4.Location = new System.Drawing.Point(12, 51);
+         this.label4.Name = "label4";
+         this.label4.Size = new System.Drawing.Size(268, 26);
+         this.label4.TabIndex = 5;
+         this.label4.Text = "Assembly text editor XSHD file based on Assembly.xshd\r\nwritten by Ezra Altahan";
          // 
          // AboutWindow
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(423, 301);
+         this.Controls.Add(this.label4);
          this.Controls.Add(this.label3);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.m_OkBtn);
@@ -99,6 +110,7 @@
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.Name = "AboutWindow";
+         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "About";
          ((System.ComponentModel.ISupportInitialize)(this.m_LogoBox)).EndInit();
          this.ResumeLayout(false);
@@ -113,5 +125,6 @@
       private System.Windows.Forms.Button m_OkBtn;
       private System.Windows.Forms.Label label2;
       private System.Windows.Forms.Label label3;
+      private System.Windows.Forms.Label label4;
    }
 }

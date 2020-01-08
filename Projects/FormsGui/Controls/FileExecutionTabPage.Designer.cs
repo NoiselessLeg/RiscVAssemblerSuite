@@ -274,10 +274,12 @@
          // 
          // programCounterLocationStrDataGridViewTextBoxColumn
          // 
+         this.programCounterLocationStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
          this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
          this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
          this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
          this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 105;
          // 
          // rawBytesStrDataGridViewTextBoxColumn
          // 
@@ -315,6 +317,7 @@
          this.m_RegisterData.Location = new System.Drawing.Point(0, 0);
          this.m_RegisterData.MultiSelect = false;
          this.m_RegisterData.Name = "m_RegisterData";
+         this.m_RegisterData.RowHeadersVisible = false;
          this.m_RegisterData.Size = new System.Drawing.Size(254, 152);
          this.m_RegisterData.TabIndex = 0;
          // 
@@ -481,14 +484,14 @@
       private System.Windows.Forms.ContextMenuStrip m_DataGridCtxMenu;
       private System.Windows.Forms.ToolStripMenuItem m_ShowDataElemsAsDecimalBtn;
       private System.Windows.Forms.ToolStripMenuItem m_ShowDataElemsAsHexBtn;
-      private System.Windows.Forms.DataGridViewCheckBoxColumn IsBreakpointApplied;
-      private System.Windows.Forms.DataGridViewTextBoxColumn programCounterLocationStrDataGridViewTextBoxColumn;
-      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
-      private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
       private System.Windows.Forms.DataGridViewTextBoxColumn BaseAddressStr;
       private System.Windows.Forms.DataGridViewTextBoxColumn Word0Str;
       private System.Windows.Forms.DataGridViewTextBoxColumn Word1Str;
       private System.Windows.Forms.DataGridViewTextBoxColumn Word2Str;
       private System.Windows.Forms.DataGridViewTextBoxColumn Word3Str;
+      private System.Windows.Forms.DataGridViewCheckBoxColumn IsBreakpointApplied;
+      private System.Windows.Forms.DataGridViewTextBoxColumn programCounterLocationStrDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
    }
 }

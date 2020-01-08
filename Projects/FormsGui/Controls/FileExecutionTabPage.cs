@@ -123,8 +123,12 @@ namespace Assembler.FormsGui.Controls
          var viewModel = sender as ExecutionViewModel;
          if (e.PropertyName == nameof(viewModel.ActiveInstructionIdx))
          {
-            int prevRowIdx = viewModel.PreviousInstructionIndex;
-            int rowIdx = viewModel.ActiveInstructionIdx;
+
+            // bound these, in case the last instruction is the end of the .text segment.
+
+            int prevRowIdx = Math.Min(viewModel.PreviousInstructionIndex, m_SrcGrid.RowCount - 1);
+            int rowIdx = Math.Min(viewModel.ActiveInstructionIdx, m_SrcGrid.RowCount - 1);
+
             // if we are not the first row, invalidate the previous row so we lose
             // the highlighting that was there (since it has changed).
             RemoveRowHighlighting(prevRowIdx);
@@ -150,6 +154,7 @@ namespace Assembler.FormsGui.Controls
 
       private void RemoveRowHighlighting(int rowIndex)
       {
+         // bound the row index.
          if (rowIndex % 2 == 0)
          {
             m_SrcGrid.Rows[rowIndex].DefaultCellStyle.SelectionBackColor = m_PrimarySrcGridRowColor;
@@ -166,7 +171,7 @@ namespace Assembler.FormsGui.Controls
       {
          m_SrcGrid.Rows[rowIndex].DefaultCellStyle.SelectionBackColor = Color.Yellow;
          m_SrcGrid.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-         
+
          // invoking this in our run loop is HYPER expensive. This is literally just
          // to move the selected index so it's visible to the user if it goes offscreen,
          // so only do that if we're confident the selection moved off screen.
