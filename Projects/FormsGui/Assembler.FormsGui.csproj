@@ -79,7 +79,6 @@
     <Compile Include="Controls\AssemblyTextBox.Designer.cs">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CtrlComponents\AssemblyFileHighlighter.cs" />
     <Compile Include="Controls\FileExecutionTabPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
