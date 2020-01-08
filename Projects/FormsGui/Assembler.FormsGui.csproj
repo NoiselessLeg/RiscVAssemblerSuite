@@ -234,7 +234,6 @@
       <DependentUpon>PreferencesWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Assembly.xshd" />
-    <None Include="Assembly_Orig.xshd" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.AssemblyFileViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.DebugWindowViewModel.datasource" />
