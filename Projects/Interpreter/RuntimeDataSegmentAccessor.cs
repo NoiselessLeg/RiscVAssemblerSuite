@@ -403,7 +403,8 @@ namespace Assembler.Interpreter
 
             if (!foundSubsection)
             {
-                throw new AccessViolationException("Address was out of range of .data area.");
+                throw new AccessViolationException("Address 0x" + address.ToString("x8") + 
+                   " was out of range of .data area.");
             }
 
             return subsection;

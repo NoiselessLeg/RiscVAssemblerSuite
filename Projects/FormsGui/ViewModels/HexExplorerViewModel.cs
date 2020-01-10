@@ -92,6 +92,10 @@ namespace Assembler.FormsGui.ViewModels
       private void CloseFile(int fileIndex)
       {
          m_OpenFiles.RemoveAt(fileIndex);
+         if (fileIndex <= ActiveFileIndex)
+         {
+            --ActiveFileIndex;
+         }
       }
 
 

@@ -64,6 +64,12 @@ namespace Assembler.Interpreter
                m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
             }
          }
+         catch (AccessViolationException ex)
+         {
+            m_Terminal.PrintString("Received SIGSEGV: Segmentation fault\n");
+            m_Terminal.PrintString(ex.Message);
+            m_Environment.Terminate();
+         }
          catch (Exception ex)
          {
             m_Terminal.PrintString(ex.Message);

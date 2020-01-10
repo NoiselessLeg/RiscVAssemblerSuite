@@ -105,6 +105,10 @@ namespace Assembler.FormsGui.Views
       private void CloseTab(int index)
       {
          m_ViewModel.FilesToExecute.RemoveAt(index);
+         if (index <= m_ViewModel.ActiveTabIdx)
+         {
+            --(m_ViewModel.ActiveTabIdx);
+         }
          AreAnyFilesOpened = m_ViewModel.FilesToExecute.Any();
          if (!AreAnyFilesOpened)
          {

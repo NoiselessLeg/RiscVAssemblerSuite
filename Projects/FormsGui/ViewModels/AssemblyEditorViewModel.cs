@@ -215,6 +215,13 @@ namespace Assembler.FormsGui.ViewModels
       private void CloseFile(int fileIndex)
       {
          m_OpenViewModels.RemoveAt(fileIndex);
+
+         // if our active file index is greater than the removed
+         // index, we need to decrement the index.
+         if (fileIndex <= ActiveFileIndex)
+         {
+            --ActiveFileIndex;
+         }
          if (m_OpenViewModels.Any())
          {
             m_CloseFileCmd.CanExecute = true;
