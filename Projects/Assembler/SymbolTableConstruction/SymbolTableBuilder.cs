@@ -95,7 +95,7 @@ namespace Assembler.SymbolTableConstruction
          // all of the encountered exceptions.
          if (exceptionList.Any())
          {
-            throw new AggregateException(exceptionList);
+            throw new AggregateAssemblyError(exceptionList);
          }
 
          // reset the StreamReader to the beginning position.
@@ -168,7 +168,7 @@ namespace Assembler.SymbolTableConstruction
          // all of the encountered exceptions.
          if (exceptionList.Any())
          {
-            throw new AggregateException(exceptionList);
+            throw new AggregateAssemblyError(exceptionList);
          }
 
          // reset the StreamReader to the beginning position.

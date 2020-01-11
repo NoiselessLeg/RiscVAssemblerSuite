@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Output.MetadataComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace Assembler.Output.ObjFileComponents
         public UInt16DataElement(ushort elem)
         {
             m_Elem = elem;
-            m_Metadata = new Metadata(ObjectTypeCode.Half, sizeof(ushort));
+            m_Metadata = new BasicMetadataComponent(ObjectTypeCode.Half);
         }
 
         /// <summary>
@@ -65,6 +66,6 @@ namespace Assembler.Output.ObjFileComponents
         }
 
         private readonly ushort m_Elem;
-        private readonly Metadata m_Metadata;
+        private readonly IMetadataComponent m_Metadata;
     }
 }

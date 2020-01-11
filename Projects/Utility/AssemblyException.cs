@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assembler
+namespace Assembler.Common
 {
    public class AssemblyException : Exception
    {
@@ -13,7 +13,7 @@ namespace Assembler
 
       public int LineNumber
       {
-         get { return 0; }
+         get { return m_LineNum; }
       }
 
       public string Reason

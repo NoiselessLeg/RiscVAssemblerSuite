@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Output.MetadataComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,7 @@ namespace Assembler.Output.ObjFileComponents
         public AsciiDataSegmentElement(string str)
         {
             m_Elem = str;
-            m_Metadata = new Metadata(ObjectTypeCode.String, m_Elem.Length);
+            m_Metadata = new StringMetadataComponent(ObjectTypeCode.String, m_Elem.Length);
         }
 
         /// <summary>
@@ -44,6 +45,6 @@ namespace Assembler.Output.ObjFileComponents
         }
 
         private readonly string m_Elem;
-        private readonly Metadata m_Metadata;
+        private readonly IMetadataComponent m_Metadata;
     }
 }

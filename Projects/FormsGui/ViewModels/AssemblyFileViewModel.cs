@@ -1,10 +1,12 @@
-﻿using Assembler.FormsGui.Commands;
+﻿using Assembler.Common;
+using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Utility;
 using ICSharpCode.TextEditor.Document;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,13 +20,14 @@ namespace Assembler.FormsGui.ViewModels
       {
          m_AreAnyChangesUnsaved = false;
          m_UnderlyingFile = new AssemblyFile();
+         m_FileErrors = new ObservableCollection<AssemblyException>();
       }
 
       public AssemblyFileViewModel(AssemblyFile file)
       {
          m_AreAnyChangesUnsaved = false;  
          m_UnderlyingFile = file;
-
+         m_FileErrors = new ObservableCollection<AssemblyException>();
       }
 
       public void SaveFileAs(string filePath)
@@ -109,13 +112,36 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      public int CurrentFileOffset
+      {
+         get { return m_CurrFileOffset; }
+         set
+         {
+            if (m_CurrFileOffset != value)
+            {
+               m_CurrFileOffset = value;
+               OnPropertyChanged();
+            }
+         }
+      }
+
       public AssemblyFile UnderlyingFile
       {
          get { return m_UnderlyingFile; }
       }
 
+      public ObservableCollection<AssemblyException> FileErrors
+      {
+         get { return m_FileErrors; }
+      }
+
       private bool m_AreAnyChangesUnsaved;
 
+
+      private int m_CurrFileOffset;
+      private readonly ObservableCollection<AssemblyException> m_FileErrors;
+
       private readonly AssemblyFile m_UnderlyingFile;
+      
    }
 }

@@ -15,6 +15,7 @@ namespace Assembler.Common
         Half = 0x02,
         Word = 0x03,
         Dword = 0x04,
-        String = 0x05
+        String = 0x05,
+        AlignmentChange = 0x06
     }
 }

@@ -64,7 +64,7 @@
             this.helpToolStripMenuItem});
          this.m_MenuStrip.Location = new System.Drawing.Point(0, 0);
          this.m_MenuStrip.Name = "m_MenuStrip";
-         this.m_MenuStrip.Size = new System.Drawing.Size(800, 24);
+         this.m_MenuStrip.Size = new System.Drawing.Size(784, 24);
          this.m_MenuStrip.TabIndex = 0;
          this.m_MenuStrip.Text = "menuStrip1";
          // 
@@ -163,25 +163,25 @@
          // 
          this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
          this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-         this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
          this.undoToolStripMenuItem.Text = "Undo";
          // 
          // redoToolStripMenuItem
          // 
          this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
          this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-         this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
          this.redoToolStripMenuItem.Text = "Redo";
          // 
          // toolStripSeparator3
          // 
          this.toolStripSeparator3.Name = "toolStripSeparator3";
-         this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+         this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
          // 
          // preferencesToolStripMenuItem
          // 
          this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-         this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
          this.preferencesToolStripMenuItem.Text = "Preferences";
          this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
          // 
@@ -227,7 +227,7 @@
          this.m_LayoutPanel.RowCount = 2;
          this.m_LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
          this.m_LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.m_LayoutPanel.Size = new System.Drawing.Size(800, 450);
+         this.m_LayoutPanel.Size = new System.Drawing.Size(784, 561);
          this.m_LayoutPanel.TabIndex = 3;
          // 
          // m_DisplayPanel
@@ -235,14 +235,14 @@
          this.m_DisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
          this.m_DisplayPanel.Location = new System.Drawing.Point(3, 27);
          this.m_DisplayPanel.Name = "m_DisplayPanel";
-         this.m_DisplayPanel.Size = new System.Drawing.Size(794, 426);
+         this.m_DisplayPanel.Size = new System.Drawing.Size(778, 891);
          this.m_DisplayPanel.TabIndex = 1;
          // 
          // MainWindow
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(800, 450);
+         this.ClientSize = new System.Drawing.Size(784, 561);
          this.Controls.Add(this.m_LayoutPanel);
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MainMenuStrip = this.m_MenuStrip;

@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Output.MetadataComponents;
 using System.IO;
 
 namespace Assembler.Output.ObjFileComponents
@@ -15,7 +16,7 @@ namespace Assembler.Output.ObjFileComponents
         public ByteDataElement(byte elem)
         {
             m_Elem = elem;
-            m_Metadata = new Metadata(ObjectTypeCode.Byte, 1);
+            m_Metadata = new BasicMetadataComponent(ObjectTypeCode.Byte);
         }
 
         /// <summary>
@@ -42,6 +43,6 @@ namespace Assembler.Output.ObjFileComponents
         }
 
         private readonly byte m_Elem;
-        private readonly Metadata m_Metadata;
+        private readonly IMetadataComponent m_Metadata;
     }
 }

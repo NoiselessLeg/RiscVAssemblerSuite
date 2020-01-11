@@ -1,4 +1,5 @@
-﻿using Assembler.Disassembler;
+﻿using Assembler.Common;
+using Assembler.Disassembler;
 using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
@@ -222,6 +223,8 @@ namespace Assembler.FormsGui.ViewModels
          {
             --ActiveFileIndex;
          }
+
+
          if (m_OpenViewModels.Any())
          {
             m_CloseFileCmd.CanExecute = true;
@@ -230,6 +233,11 @@ namespace Assembler.FormsGui.ViewModels
          {
             m_CloseFileCmd.CanExecute = false;
          }
+      }
+
+      private AssemblyFileViewModel GetViewModelByFilePath(string filePath)
+      {
+         return m_OpenViewModels.First((avm) => avm.FilePath == filePath);
       }
 
       private void AssembleFile(string fileName)
@@ -245,11 +253,23 @@ namespace Assembler.FormsGui.ViewModels
 
          //TODO: this will def need to change if we implement more filetypes.
          string outputFile = fileNameNoExtension + ".jef";
-         Common.AssemblerOptions options = new Common.AssemblerOptions(new[] { fileName }, new[] { outputFile });
-         if (m_Assembler.Assemble(options, m_LoggerVm.Logger))
+         var options = new AssemblerOptions(new[] { fileName }, new[] { outputFile });
+
+         // clear any errors beforehand.
+         AssemblyFileViewModel assembledFile = GetViewModelByFilePath(fileName);
+         assembledFile.FileErrors.Clear();
+         AssemblerResult result = m_Assembler.AssembleFile(fileName, outputFile, m_LoggerVm.Logger, options);
+         if (result.OperationSuccessful)
          {
             var fileAssembledCmd = new FileAssembledMessage(outputFile);
             BroadcastMessage(fileAssembledCmd);
+         }
+         else
+         {
+            foreach (AssemblyException ex in result.UserErrors)
+            {
+               assembledFile.FileErrors.Add(ex);
+            }
          }
       }
       

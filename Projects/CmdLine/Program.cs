@@ -41,23 +41,30 @@ namespace Assembler.CmdLine
          }
 
          RiscVAssembler assembler = new RiscVAssembler();
-         bool wasSuccessful = assembler.Assemble(options, logger);
-         if (wasSuccessful && options.RunAfterAssembly)
+         try
          {
-            string inputFile = options.InputFileNames.ElementAt(0);
-            // get the file name with no extension, in case we want intermediate files,
-            // or for our output.
-            string fileNameNoExtension = inputFile;
-            if (inputFile.Contains("."))
+            assembler.Assemble(options, logger);
+            if (options.RunAfterAssembly)
             {
-               fileNameNoExtension = inputFile.Substring(0, inputFile.LastIndexOf('.'));
+               string inputFile = options.InputFileNames.ElementAt(0);
+               // get the file name with no extension, in case we want intermediate files,
+               // or for our output.
+               string fileNameNoExtension = inputFile;
+               if (inputFile.Contains("."))
+               {
+                  fileNameNoExtension = inputFile.Substring(0, inputFile.LastIndexOf('.'));
+               }
+
+               //TODO: this will def need to change if we implement more filetypes.
+               string outputFile = fileNameNoExtension + ".jef";
+
+               var runtimeOps = new InterpreterOptions(outputFile);
+               RunInterpreter(runtimeOps);
             }
+         }
+         catch (Exception)
+         {
 
-            //TODO: this will def need to change if we implement more filetypes.
-            string outputFile = fileNameNoExtension + ".jef";
-
-            var runtimeOps = new InterpreterOptions(outputFile);
-            RunInterpreter(runtimeOps);
          }
 
          return 0;

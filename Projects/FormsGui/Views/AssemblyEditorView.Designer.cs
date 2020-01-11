@@ -39,8 +39,8 @@
          this.m_CloseCurrTabItem = new System.Windows.Forms.ToolStripMenuItem();
          this.m_CloseAllToRightItem = new System.Windows.Forms.ToolStripMenuItem();
          this.m_CloseAllToLeftItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.m_CloseAllItem = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+         this.m_CloseAllItem = new System.Windows.Forms.ToolStripMenuItem();
          ((System.ComponentModel.ISupportInitialize)(this.m_EditorLoggerSplitContainer)).BeginInit();
          this.m_EditorLoggerSplitContainer.Panel1.SuspendLayout();
          this.m_EditorLoggerSplitContainer.Panel2.SuspendLayout();
@@ -89,6 +89,7 @@
          this.statusStrip1.Size = new System.Drawing.Size(446, 22);
          this.statusStrip1.TabIndex = 2;
          this.statusStrip1.Text = "statusStrip1";
+         this.statusStrip1.Visible = false;
          // 
          // toolStripStatusLabel1
          // 
@@ -145,17 +146,17 @@
          this.m_CloseAllToLeftItem.Text = "Close all tabs to left";
          this.m_CloseAllToLeftItem.Click += new System.EventHandler(this.OnCloseAllTabsToLeftClicked);
          // 
+         // toolStripSeparator1
+         // 
+         this.toolStripSeparator1.Name = "toolStripSeparator1";
+         this.toolStripSeparator1.Size = new System.Drawing.Size(182, 6);
+         // 
          // m_CloseAllItem
          // 
          this.m_CloseAllItem.Name = "m_CloseAllItem";
          this.m_CloseAllItem.Size = new System.Drawing.Size(185, 22);
          this.m_CloseAllItem.Text = "Close all tabs";
          this.m_CloseAllItem.Click += new System.EventHandler(this.OnCloseAllTabsClicked);
-         // 
-         // toolStripSeparator1
-         // 
-         this.toolStripSeparator1.Name = "toolStripSeparator1";
-         this.toolStripSeparator1.Size = new System.Drawing.Size(182, 6);
          // 
          // AssemblyEditorView
          // 

@@ -24,43 +24,40 @@ namespace Assembler
       /// </summary>
       /// <param name="inputFileNames">One or more file paths to assembly files.</param>
       /// <param name="logger">A logging implementation to log errors to.</param>
-      public bool Assemble(AssemblerOptions options, ILogger logger)
+      public void Assemble(AssemblerOptions options, ILogger logger)
       {
          if (options.InputFileNames.Count() != options.OutputFileNames.Count())
          {
             logger.Log(LogLevel.Critical, "Input file names do not match output file names.");
-            return false;
-         }
-
-         var stopwatch = new Stopwatch();
-
-         var tasks = new List<Task<bool>>();
-         stopwatch.Start();
-         for (int idx = 0; idx < options.InputFileNames.Count(); ++idx)
-         {
-            string inputFileName = options.InputFileNames.ElementAt(idx);
-            string outputFileName = options.OutputFileNames.ElementAt(idx);
-            var task = new Task<bool>(() => AssembleFile(inputFileName, outputFileName, logger, options));
-            tasks.Add(task);
-            task.Start();
-         }
-
-         // wait for all of our assembler tasks to join.
-         Task.WaitAll(tasks.ToArray());
-         stopwatch.Stop();
-
-         bool ret = false;
-         if (tasks.Any(t => !t.Result))
-         {
-            logger.Log(LogLevel.Info, "Build completed (with errors) in " + stopwatch.Elapsed.ToString());
          }
          else
          {
-            ret = true;
-            logger.Log(LogLevel.Info, "Build completed in " + stopwatch.Elapsed.ToString());
-         }
+            var stopwatch = new Stopwatch();
 
-         return ret;
+            var tasks = new List<Task<AssemblerResult>>();
+            stopwatch.Start();
+            for (int idx = 0; idx < options.InputFileNames.Count(); ++idx)
+            {
+               string inputFileName = options.InputFileNames.ElementAt(idx);
+               string outputFileName = options.OutputFileNames.ElementAt(idx);
+               var task = new Task<AssemblerResult>(() => AssembleFile(inputFileName, outputFileName, logger, options));
+               tasks.Add(task);
+               task.Start();
+            }
+
+            // wait for all of our assembler tasks to join.
+            Task.WaitAll(tasks.ToArray());
+            stopwatch.Stop();
+            
+            if (tasks.Any(t => (!t.Result.OperationSuccessful)))
+            {
+               logger.Log(LogLevel.Info, "Build completed (with errors) in " + stopwatch.Elapsed.ToString());
+            }
+            else
+            {
+               logger.Log(LogLevel.Info, "Build completed in " + stopwatch.Elapsed.ToString());
+            }
+         }
       }
 
       /// <summary>
@@ -70,9 +67,9 @@ namespace Assembler
       /// <param name="logger">The logging implementation to log errors/info to.</param>
       /// <param name="options">The options to use while assembling.</param>
       /// <returns>True if the assembler could successfully generate code for the file; otherwise returns false.</returns>
-      public bool AssembleFile(string inputFile, string outputFile, ILogger logger, AssemblerOptions options)
+      public AssemblerResult AssembleFile(string inputFile, string outputFile, ILogger logger, AssemblerOptions options)
       {
-         bool success = true;
+         var result = new AssemblerResult();
          logger.Log(LogLevel.Info, "Invoking assembler for file " + inputFile);
          try
          {
@@ -114,23 +111,14 @@ namespace Assembler
                }
             }
          }
-         catch (AggregateException ex)
+         catch (AggregateAssemblyError ex)
          {
-            foreach (Exception e in ex.InnerExceptions)
+            foreach (AssemblyException asEx in ex.AssemblyErrors)
             {
-               logger.Log(LogLevel.Critical, "In file " + inputFile + ":");
-               logger.Log(LogLevel.Critical, e.Message);
+               logger.Log(LogLevel.Critical, "In file \"" + inputFile + "\" (line " + asEx.LineNumber + "):\n\t");
+               logger.Log(LogLevel.Critical, asEx.Message);
+               result.AddUserAssemblyError(asEx);
             }
-            success = false;
-         }
-         catch (IOException ex)
-         {
-            logger.Log(LogLevel.Critical, ex.Message);
-            if (ex.InnerException != null)
-            {
-               logger.Log(LogLevel.Critical, ex.InnerException.Message);
-            }
-            success = false;
          }
          catch (Exception ex)
          {
@@ -139,12 +127,10 @@ namespace Assembler
             {
                logger.Log(LogLevel.Critical, ex.InnerException.Message);
             }
-            success = false;
+            result.AddInternalAssemblerError(ex);
          }
 
-         return success;
+         return result;
       }
-
-
    }
 }

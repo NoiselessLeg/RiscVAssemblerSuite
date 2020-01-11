@@ -34,65 +34,90 @@ namespace Assembler.Disassembler
       {
          int currAddress = dataSegment.BaseRuntimeDataAddress;
          writer.WriteLine(".data");
+         int currAlignment = CommonConstants.DEFAULT_ALIGNMENT;
+         int processedByteCount = 0;
          foreach (MetadataElement elem in dataSegment.Metadata)
          {
-            // first, see if there's a label associated with the data element.
-            if (symTable.ContainsSymbol(currAddress))
+            // don't do any processing if we're looking at padding bytes.
+            if (processedByteCount % currAlignment == 0)
             {
-               // if so, write it out.
-               writer.Write(symTable.GetLabel(currAddress));
-               writer.Write(":\t\t");
+               // first, see if there's a label associated with the data element.
+               if (symTable.ContainsSymbol(currAddress))
+               {
+                  // if so, write it out.
+                  writer.Write(symTable.GetLabel(currAddress));
+                  writer.Write(":\t\t");
+               }
+               else
+               {
+                  writer.Write("\t\t\t");
+               }
+
+               // determine what to write out.
+               switch (elem.TypeCode)
+               {
+                  case ObjectTypeCode.Byte:
+                  {
+                     writer.Write(".byte ");
+                     byte value = dataSegment.ReadUnsignedByte(currAddress);
+                     writer.WriteLine(value);
+                     processedByteCount += sizeof(byte);
+                     break;
+                  }
+
+                  case ObjectTypeCode.Half:
+                  {
+                     writer.Write(".half ");
+                     short value = dataSegment.ReadShort(currAddress);
+                     writer.WriteLine(value);
+                     processedByteCount += sizeof(short);
+                     break;
+                  }
+
+                  case ObjectTypeCode.Word:
+                  {
+                     writer.Write(".word ");
+                     int value = dataSegment.ReadWord(currAddress);
+                     writer.WriteLine(value);
+                     processedByteCount += sizeof(int);
+                     break;
+                  }
+
+                  case ObjectTypeCode.Dword:
+                  {
+                     writer.Write(".dword ");
+                     long value = dataSegment.ReadLong(currAddress);
+                     writer.WriteLine(value);
+                     processedByteCount += sizeof(long);
+                     break;
+                  }
+
+                  case ObjectTypeCode.String:
+                  {
+                     writer.Write(".asciiz ");
+                     string value = dataSegment.ReadString(currAddress);
+                     string processedValue = ProcessString(value);
+                     writer.WriteLine(processedValue);
+                     processedByteCount += value.Length;
+
+                     // account for a null terminated byte here.
+                     ++processedByteCount;
+                     break;
+                  }
+
+                  case ObjectTypeCode.AlignmentChange:
+                  {
+                     currAlignment = elem.Alignment;
+                     break;
+                  }
+               }
             }
             else
             {
-               writer.Write("\t\t\t");
+               // otherwise, assume we're at a padding byte and don't print it.
+               ++processedByteCount;
             }
-
-            // determine what to write out.
-            switch (elem.TypeCode)
-            {
-               case ObjectTypeCode.Byte:
-               {
-                  writer.Write(".byte ");
-                  byte value = dataSegment.ReadUnsignedByte(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case ObjectTypeCode.Half:
-               {
-                  writer.Write(".half ");
-                  short value = dataSegment.ReadShort(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case ObjectTypeCode.Word:
-               {
-                  writer.Write(".word ");
-                  int value = dataSegment.ReadWord(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case ObjectTypeCode.Dword:
-               {
-                  writer.Write(".dword ");
-                  long value = dataSegment.ReadLong(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case ObjectTypeCode.String:
-               {
-                  writer.Write(".asciiz ");
-                  string value = dataSegment.ReadString(currAddress);
-                  string processedValue = ProcessString(value);
-                  writer.WriteLine(processedValue);
-                  break;
-               }
-            }
-
+            
             currAddress += elem.Size;
          }
 

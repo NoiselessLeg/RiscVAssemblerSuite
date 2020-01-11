@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Output.MetadataComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,7 @@ namespace Assembler.Output.ObjFileComponents
         public AsciizDataSegmentElement(string str):
             base(str)
         {
-            m_Metadata = new Metadata(ObjectTypeCode.String, str.Length + 1);
+            m_Metadata = new StringMetadataComponent(ObjectTypeCode.String, str.Length + 1);
         }
 
         /// <summary>
@@ -45,6 +46,6 @@ namespace Assembler.Output.ObjFileComponents
             m_Metadata.WriteToStream(outputStream);
         }
 
-        private readonly Metadata m_Metadata;
+        private readonly IMetadataComponent m_Metadata;
     }
 }

@@ -12,10 +12,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Assembler.FormsGui.Services;
+using System.Collections.Specialized;
+using System.Collections.ObjectModel;
+using Assembler.Common;
 
 namespace Assembler.FormsGui.Controls
 {
-   public partial class AssemblyTextBox : UserControl
+   public partial class AssemblyTextBox : UserControl, IDisposable
    {
       public AssemblyTextBox()
       {
@@ -26,6 +29,8 @@ namespace Assembler.FormsGui.Controls
                              PreferencesViewModel preferences) :
          this()
       {
+         m_ViewModel = avm;
+         m_ViewModel.FileErrors.CollectionChanged += OnFileErrorsChanged;
          preferencesViewModelBindingSource.DataSource = preferences;
          assemblyFileViewModelBindingSource.DataSource = avm;
 
@@ -56,6 +61,68 @@ namespace Assembler.FormsGui.Controls
          m_FileTxtBox.SetHighlighting("Assembly");
       }
 
+      public string ActiveFileName
+      {
+         get
+         {
+            return m_ViewModel.FileName;
+         }
+      }
+
+      /// <summary> 
+      /// Clean up any resources being used.
+      /// </summary>
+      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+      protected override void Dispose(bool disposing)
+      {
+         if (disposing && (components != null))
+         {
+            components.Dispose();
+            m_ViewModel.FileErrors.CollectionChanged -= OnFileErrorsChanged;
+         }
+         base.Dispose(disposing);
+      }
+
+      private void OnFileErrorsChanged(object sender, NotifyCollectionChangedEventArgs e)
+      {
+         // get the line of each syntax error.
+
+         switch (e.Action)
+         {
+            case NotifyCollectionChangedAction.Add:
+            {
+               foreach (var item in e.NewItems)
+               {
+                  var error = item as AssemblyException;
+                  int zeroBasedLineNum = error.LineNumber - 1;
+                  LineSegment offendingLine = m_FileTxtBox.Document.LineSegmentCollection[zeroBasedLineNum];
+                  int lineOffset = offendingLine.Offset;
+                  int lineLen = offendingLine.Length;
+                  int firstNonWhitespaceCol = offendingLine.Words.GetFirstNonWhitespaceColumn();
+                  var errorMarker = new TextMarker(lineOffset + firstNonWhitespaceCol, lineLen - firstNonWhitespaceCol, 
+                     TextMarkerType.WaveLine, Color.Red);
+                  m_FileTxtBox.Document.MarkerStrategy.AddMarker(errorMarker);
+                  m_FileTxtBox.Update();
+               }
+
+               m_FileTxtBox.Refresh();
+               break;
+            }
+
+            case NotifyCollectionChangedAction.Remove:
+            {
+               foreach (var item in e.OldItems)
+               {
+                  var error = item as AssemblyException;
+                  LineSegment offendingLine = m_FileTxtBox.Document.LineSegmentCollection[error.LineNumber];
+                  m_FileTxtBox.Document.MarkerStrategy.RemoveAll((marker) => marker.Offset == offendingLine.Offset);
+               }
+
+               break;
+            }
+         }
+      }
+
       private static string GetSyntaxPathName()
       {
          byte[] syntaxDefPath = Properties.Resources.Assembly;
@@ -63,5 +130,6 @@ namespace Assembler.FormsGui.Controls
       }
 
       private static bool s_TriedToOpenSyntaxFile;
+      private readonly AssemblyFileViewModel m_ViewModel;
    }
 }

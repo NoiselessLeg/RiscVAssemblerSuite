@@ -128,6 +128,7 @@ namespace Assembler.OutputProcessing
       {
          var elemList = new List<MetadataElement>();
          int totalBytesRead = 0;
+         int currAlignment = CommonConstants.DEFAULT_ALIGNMENT;
          while (totalBytesRead < sectionSize)
          {
             // read the first byte to determine what the typecode is.
@@ -164,10 +165,18 @@ namespace Assembler.OutputProcessing
                }
 
                // strings include a size word afterward.
-               // otherwise, just read a byte.
                case ObjectTypeCode.String:
                {
                   size = reader.ReadInt32();
+                  totalBytesRead += 4;
+                  break;
+               }
+
+               // alignment changes include the new alignment word afterward.
+               case ObjectTypeCode.AlignmentChange:
+               {
+                  size = 0;
+                  currAlignment = reader.ReadInt32();
                   totalBytesRead += 4;
                   break;
                }
@@ -178,7 +187,7 @@ namespace Assembler.OutputProcessing
                }
             }
 
-            var dataElem = new MetadataElement(typeCodeByte, size);
+            var dataElem = new MetadataElement(typeCodeByte, size, currAlignment);
             elemList.Add(dataElem);
          }
 

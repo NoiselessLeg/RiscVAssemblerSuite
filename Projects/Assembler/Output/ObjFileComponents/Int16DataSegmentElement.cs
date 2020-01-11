@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Output.MetadataComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,7 @@ namespace Assembler.Output.ObjFileComponents
         public Int16DataElement(short elem)
         {
             m_Elem = elem;
-            m_Metadata = new Metadata(ObjectTypeCode.Half, sizeof(short));
+            m_Metadata = new BasicMetadataComponent(ObjectTypeCode.Half);
         }
 
         /// <summary>
@@ -66,6 +67,6 @@ namespace Assembler.Output.ObjFileComponents
         }
 
         private readonly short m_Elem;
-        private readonly Metadata m_Metadata;
+        private readonly IMetadataComponent m_Metadata;
     }
 }

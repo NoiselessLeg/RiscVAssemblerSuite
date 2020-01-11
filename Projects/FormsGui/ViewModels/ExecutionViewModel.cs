@@ -300,7 +300,11 @@ namespace Assembler.FormsGui.ViewModels
       private void ExecuteNextInstruction()
       {
          m_Ctx.ExecuteNextInstruction();
-         ActiveInstructionIdx = CalculateNextInstructionIndex(m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value);
+         if (IsRunning && !m_Ctx.EndOfFile)
+         {
+            int pcVal = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
+            ActiveInstructionIdx = CalculateActiveInstructionIndex(pcVal);
+         }
       }
 
       public RegisterViewModel[] Registers
@@ -337,7 +341,7 @@ namespace Assembler.FormsGui.ViewModels
          m_InstructionAddrToBreakpointMap[instructionAddr] = false;
       }
 
-      private int CalculateNextInstructionIndex(int programCtr)
+      private int CalculateActiveInstructionIndex(int programCtr)
       {
          // this will give us our initial program counter value which we can use
          // to determine how many instructions we've executed.

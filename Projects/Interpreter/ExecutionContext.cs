@@ -63,6 +63,14 @@ namespace Assembler.Interpreter
             {
                m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);
             }
+
+            // check to make sure something didn't put us in some crazy address
+            pcValue = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
+            if (pcValue < m_TextSegment.StartingSegmentAddress)
+            {
+               throw new AccessViolationException(string.Format("Program counter value 0x{0} was outside " +
+                  "text segment.", pcValue.ToString("x8")));
+            }
          }
          catch (AccessViolationException ex)
          {
