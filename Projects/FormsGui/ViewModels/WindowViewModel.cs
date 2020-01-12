@@ -54,6 +54,7 @@ namespace Assembler.FormsGui.ViewModels
          m_SaveFileAsCmd = new RelayCommand(() => SendFileMessage(MessageType.SaveFileAsRequest), true);
          m_DisassembleFileCmd = new RelayCommand(() => SendFileMessage(MessageType.DisassembleFileRequest), true);
          m_AssembleFileCmd = new RelayCommand(() => SendFileMessage(MessageType.AssembleFileRequest), true);
+         m_CloseWindowCmd = new RelayCommand(() => SendFileMessage(MessageType.WindowClosingNotification), true);
 
          m_ShowPreferencesCmd = new RelayCommand(() => ShowPreferences(), true);
       }
@@ -108,6 +109,11 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_DisassembleFileCmd; }
       }
 
+      public ICommand CloseWindowCommand
+      {
+         get { return m_CloseWindowCmd; }
+      }
+
       public int ActiveViewIndex
       {
          get { return m_ActiveIdx; }
@@ -154,6 +160,7 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_DisassembleFileCmd;
       private readonly RelayCommand m_AssembleFileCmd;
+      private readonly RelayCommand m_CloseWindowCmd;
 
       private readonly RelayCommand m_ShowPreferencesCmd;
 

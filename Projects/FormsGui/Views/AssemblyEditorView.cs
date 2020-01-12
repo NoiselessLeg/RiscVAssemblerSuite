@@ -32,6 +32,7 @@ namespace Assembler.FormsGui.Views
          m_SaveFileCmd = new RelayCommand(() => SaveFileAction(), true);
          m_ImportFileCmd = new RelayCommand(() => ImportFileAction(), true);
          m_AssembleFileCmd = new RelayCommand(() => AssembleActiveFileAction(), true);
+         m_CloseAllFilesCmd = new RelayCommand(() => CloseAllFiles(), true);
 
          InitializeComponent();
          CreateDataBindings(m_EditorVm);
@@ -42,13 +43,14 @@ namespace Assembler.FormsGui.Views
          SubscribeToMessageType(MessageType.SaveFileAsRequest, m_SaveFileAsCmd);
          SubscribeToMessageType(MessageType.DisassembleFileRequest, m_ImportFileCmd);
          SubscribeToMessageType(MessageType.AssembleFileRequest, m_AssembleFileCmd);
+         SubscribeToMessageType(MessageType.WindowClosingNotification, m_CloseAllFilesCmd);
       }
 
       private TabPage CreateNewTabPage(AssemblyFileViewModel viewModel)
       {
          var newTab = new TabPage();
          newTab.DataBindings.Add(new Binding(nameof(newTab.Text), viewModel, nameof(viewModel.FileName)));
-         var tabContent = new AssemblyTextBox(viewModel, m_Preferences)
+         var tabContent = new FileEditor(viewModel, m_Preferences)
          {
             Dock = DockStyle.Fill
          };
@@ -64,11 +66,6 @@ namespace Assembler.FormsGui.Views
                                                             (avm) => CreateNewTabPage(avm));
 
          m_OpenFileTabs.DataBindings.Add(new Binding(nameof(m_OpenFileTabs.SelectedIndex), m_EditorVm, 
-            nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
-         m_LogTxt.DataBindings.Add(new Binding(nameof(m_LogTxt.Text), m_EditorVm.LoggerModel, 
-            nameof(m_EditorVm.LoggerModel.LogText), true, DataSourceUpdateMode.OnPropertyChanged));
-
-         m_NumericValue.DataBindings.Add(new Binding(nameof(m_NumericValue.Text), m_EditorVm, 
             nameof(m_EditorVm.ActiveFileIndex), true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
@@ -151,6 +148,13 @@ namespace Assembler.FormsGui.Views
             {
                defaultFileName = "Untitled.asm";
             }
+
+            // if there is an asterisk, strike that prior to printing.
+            if (defaultFileName[defaultFileName.Length - 1] == '*')
+            {
+               defaultFileName = defaultFileName.Remove(defaultFileName.Length - 1);
+            }
+
             var options = new DialogOptions()
             {
                DefaultFileName = defaultFileName,
@@ -352,6 +356,14 @@ namespace Assembler.FormsGui.Views
          }
       }
 
+      private void CloseAllFiles()
+      {
+         for (int i = 0; i < m_OpenFileTabs.TabCount; ++i)
+         {
+            CloseTab(0);
+         }
+      }
+
       private readonly AssemblyEditorViewModel m_EditorVm;
       private readonly PreferencesViewModel m_Preferences;
 
@@ -361,5 +373,6 @@ namespace Assembler.FormsGui.Views
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_ImportFileCmd;
       private readonly RelayCommand m_AssembleFileCmd;
+      private readonly RelayCommand m_CloseAllFilesCmd;
    }
 }

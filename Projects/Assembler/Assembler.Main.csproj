@@ -131,6 +131,9 @@
     <Compile Include="InstructionProcessing\JalProcessor.cs" />
     <Compile Include="InstructionProcessing\LuiProcessor.cs" />
     <Compile Include="InstructionProcessing\NopProcessor.cs" />
+    <Compile Include="Output\OutputWriters\ElfObjectWriter.cs" />
+    <Compile Include="Output\OutputWriters\ELF_FileComponents\ELF_FileHeader.cs" />
+    <Compile Include="Output\OutputWriters\ELF_FileComponents\ELF_SectionHeader.cs" />
     <Compile Include="Output\OutputWriters\IObjectFileWriter.cs" />
     <Compile Include="Output\OutputWriters\ObjectFileWriterFactory.cs" />
     <Compile Include="RiscVAssembler.cs" />

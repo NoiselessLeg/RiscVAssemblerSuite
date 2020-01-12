@@ -123,9 +123,7 @@ namespace Assembler.FormsGui.Controls
          var viewModel = sender as ExecutionViewModel;
          if (e.PropertyName == nameof(viewModel.ActiveInstructionIdx))
          {
-
             // bound these, in case the last instruction is the end of the .text segment.
-
             int prevRowIdx = Math.Min(viewModel.PreviousInstructionIndex, m_SrcGrid.RowCount - 1);
             int rowIdx = Math.Min(viewModel.ActiveInstructionIdx, m_SrcGrid.RowCount - 1);
 
@@ -133,10 +131,6 @@ namespace Assembler.FormsGui.Controls
             // the highlighting that was there (since it has changed).
             RemoveRowHighlighting(prevRowIdx);
             UpdateRowHighlighting(rowIdx);
-            //m_SrcGrid.InvalidateRow(rowIdx - 1);
-            // in case the active instruction index was pointing to the last instruction,
-            // don't actually try to set the color of the row.
-            //m_SrcGrid.InvalidateRow(rowIdx);
          }
       }
 
@@ -191,7 +185,7 @@ namespace Assembler.FormsGui.Controls
          // in case the current row index goes back up above our first displayed cell.
          int indexFromFirstDisplayedCell = rowIndex - firstDisplayedCell;
          bool elemOffscreen = false;
-         if (indexFromFirstDisplayedCell > dgvSizeInCells ||
+         if (indexFromFirstDisplayedCell >= dgvSizeInCells ||
              indexFromFirstDisplayedCell < 0)
          {
             elemOffscreen = true;

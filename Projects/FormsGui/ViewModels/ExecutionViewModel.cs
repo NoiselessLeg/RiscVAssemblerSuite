@@ -327,7 +327,7 @@ namespace Assembler.FormsGui.ViewModels
          ActiveInstructionIdx = 0;
          for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
          {
-            m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = m_DefaultRegValues[i].Value;
+            m_Ctx.UserRegisters[i].Value = m_DefaultRegValues[i].Value;
          }
       }
 

@@ -80,12 +80,19 @@
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditorTextBoxHelper.cs" />
+    <Compile Include="Controls\FileEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FileEditor.Designer.cs">
+      <DependentUpon>FileEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FileExecutionTabPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\FileExecutionTabPage.Designer.cs">
       <DependentUpon>FileExecutionTabPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\GeneralControlHelper.cs" />
     <Compile Include="Controls\HexValueGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -138,7 +145,6 @@
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\StreamService.cs" />
     <Compile Include="Services\Win32DialogService.cs" />
-    <Compile Include="Utility\AssemblerKeywords.cs" />
     <Compile Include="Utility\BindingHelper.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\ControlHelper.cs" />
@@ -201,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AssemblyTextBox.resx">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FileEditor.resx">
+      <DependentUpon>FileEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\FileExecutionTabPage.resx">
       <DependentUpon>FileExecutionTabPage.cs</DependentUpon>

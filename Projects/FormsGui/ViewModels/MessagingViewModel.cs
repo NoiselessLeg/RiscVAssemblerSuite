@@ -23,12 +23,8 @@ namespace Assembler.FormsGui.ViewModels
       protected void BroadcastMessage(IBasicMessage msg)
       {
          m_MsgMgr.BroadcastMessage(m_MsgSenderId, msg);
-      }
 
-      //protected void SubscribeToMessageType(MessageType type, ICommand handler)
-      //{
-      //   m_CmdHandlers.Add(type, handler);
-      //}
+      }
 
       private void OnExternalMsgReceived(object sender, EventArgs e)
       {

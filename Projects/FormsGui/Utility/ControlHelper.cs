@@ -17,7 +17,7 @@ namespace Assembler.FormsGui.Utility
          if (ctrl.InvokeRequired)
          {
             var dummyArgs = new object[0];
-            ctrl.Invoke(action, dummyArgs);
+            ctrl.BeginInvoke(action, dummyArgs);
          }
          else
          {

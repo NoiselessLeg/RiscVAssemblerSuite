@@ -100,7 +100,7 @@ namespace Assembler.Disassembler
                      writer.WriteLine(processedValue);
                      processedByteCount += value.Length;
 
-                     // account for a null terminated byte here.
+                     // account for a null terminating byte here.
                      ++processedByteCount;
                      break;
                   }

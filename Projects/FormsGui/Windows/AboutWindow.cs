@@ -15,11 +15,13 @@ namespace Assembler.FormsGui.Windows
       public AboutWindow()
       {
          InitializeComponent();
+         string version = Properties.Settings.Default.Version;
+         m_VersionLbl.Text = "GUI Version: " + version;
       }
 
       private void m_OkBtn_Click(object sender, EventArgs e)
       {
-         this.Close();
+         Close();
       }
    }
 }

@@ -52,9 +52,8 @@ namespace Assembler.FormsGui.ViewModels
 
       public void InterruptInputOperation()
       {
-         // write a null byte to the input reader buffer and flush it.
-         m_InputReader.BaseStream.Write(new byte[] { 0 }, 0, 1);
-         m_InputReader.BaseStream.Flush();
+         var inputStream = m_InputReader.BaseStream as IO.InputStream;
+         inputStream.AbortRead();
       }
 
       public void RequestOutputFlush()

@@ -78,7 +78,10 @@ namespace Assembler.FormsGui.Controls
          if (disposing && (components != null))
          {
             components.Dispose();
-            m_ViewModel.FileErrors.CollectionChanged -= OnFileErrorsChanged;
+            if (m_ViewModel != null)
+            {
+               m_ViewModel.FileErrors.CollectionChanged -= OnFileErrorsChanged;
+            }
          }
          base.Dispose(disposing);
       }

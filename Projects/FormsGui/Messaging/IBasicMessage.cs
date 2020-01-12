@@ -17,7 +17,8 @@ namespace Assembler.FormsGui.Messaging
       AssembleFileRequest,
       SaveFileRequest,
       SaveFileAsRequest,
-      DisassembleFileRequest
+      DisassembleFileRequest,
+      WindowClosingNotification
    }
 
    // Can't reuse a class here, because the parameter to ICommand can vary among implementations

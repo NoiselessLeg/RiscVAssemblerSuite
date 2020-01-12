@@ -28,13 +28,9 @@ namespace Assembler.FormsGui.ViewModels
       {
          m_ViewId = viewId;
          m_Disassembler = new DisassemblyManager();
-         m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>
-         {
-            new AssemblyFileViewModel()
-         };
+         m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
 
          m_Assembler = new RiscVAssembler();
-         m_LoggerVm = new LoggerViewModel();
          m_AssembleFileCmd = new RelayCommand<string>(param => AssembleFile(param), false);
          m_NewFileCmd = new RelayCommand(() => CreateNewFile(), true);
          m_OpenFileCmd = new RelayCommand<string>((fileName) => OpenFile(fileName), true);
@@ -49,6 +45,8 @@ namespace Assembler.FormsGui.ViewModels
             },
             true
          );
+
+         CreateNewFile();
       }
 
       /// <summary>
@@ -83,15 +81,6 @@ namespace Assembler.FormsGui.ViewModels
       public ObservableCollection<AssemblyFileViewModel> AllOpenFiles
       {
          get { return m_OpenViewModels; }
-      }
-
-      /// <summary>
-      /// Gets the logger view model that is used by the underlying assembler
-      /// to log data to.
-      /// </summary>
-      public LoggerViewModel LoggerModel
-      {
-         get { return m_LoggerVm; }
       }
 
       /// <summary>
@@ -205,8 +194,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private void DisassembleAndImportFile(string fileName)
       {
-         DataModels.AssemblyFile asmFile = m_Disassembler.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
-         var newVm = new AssemblyFileViewModel(asmFile);
+         var newVm = new AssemblyFileViewModel(fileName, m_Disassembler);
          m_OpenViewModels.Add(newVm);
          ActiveFileIndex = m_OpenViewModels.Count - 1;
          var activeViewRequest = new ActiveViewRequestMessage(m_ViewId);
@@ -242,34 +230,11 @@ namespace Assembler.FormsGui.ViewModels
 
       private void AssembleFile(string fileName)
       {
-         m_LoggerVm.ClearLogCommand.Execute(null);
-         // get the file name with no extension, in case we want intermediate files,
-         // or for our output.
-         string fileNameNoExtension = fileName;
-         if (fileName.Contains("."))
-         {
-            fileNameNoExtension = fileName.Substring(0, fileName.LastIndexOf('.'));
-         }
-
-         //TODO: this will def need to change if we implement more filetypes.
-         string outputFile = fileNameNoExtension + ".jef";
-         var options = new AssemblerOptions(new[] { fileName }, new[] { outputFile });
-
-         // clear any errors beforehand.
          AssemblyFileViewModel assembledFile = GetViewModelByFilePath(fileName);
-         assembledFile.FileErrors.Clear();
-         AssemblerResult result = m_Assembler.AssembleFile(fileName, outputFile, m_LoggerVm.Logger, options);
-         if (result.OperationSuccessful)
+         if (assembledFile.AssembleFile(m_Assembler))
          {
-            var fileAssembledCmd = new FileAssembledMessage(outputFile);
-            BroadcastMessage(fileAssembledCmd);
-         }
-         else
-         {
-            foreach (AssemblyException ex in result.UserErrors)
-            {
-               assembledFile.FileErrors.Add(ex);
-            }
+            var fileAssembledMsg = new FileAssembledMessage(assembledFile.AssembledFilePath);
+            BroadcastMessage(fileAssembledMsg);
          }
       }
       
@@ -279,8 +244,6 @@ namespace Assembler.FormsGui.ViewModels
       private readonly ObservableCollection<AssemblyFileViewModel> m_OpenViewModels;
       private readonly RiscVAssembler m_Assembler;
       private readonly DisassemblyManager m_Disassembler;
-      
-      private readonly LoggerViewModel m_LoggerVm;
 
       private readonly RelayCommand m_NewFileCmd;
       private readonly RelayCommand<string> m_OpenFileCmd;

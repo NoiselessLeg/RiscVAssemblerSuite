@@ -64,6 +64,7 @@ namespace Assembler.FormsGui
 
       private void exitToolStripMenuItem_Click(object sender, EventArgs e)
       {
+         m_ViewModel.CloseWindowCommand.Execute(null);
          Application.Exit();
       }
 
@@ -88,6 +89,11 @@ namespace Assembler.FormsGui
          {
             aboutWin.ShowDialog();
          }
+      }
+
+      private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+      {
+         m_ViewModel.CloseWindowCommand.Execute(null);
       }
    }
 }

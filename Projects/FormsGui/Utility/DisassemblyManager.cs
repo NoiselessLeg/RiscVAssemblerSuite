@@ -38,9 +38,10 @@ namespace Assembler.FormsGui.Utility
             File.Delete(tmpPath);
             return asmFile;
          }
-         catch (IOException ex)
+         catch (Exception ex)
          {
-            throw new IOException("Failed to disassemble file: " + ex.Message);
+            loggerInput.Log(LogLevel.Critical, "Failed to disassemble file: " + ex.Message);
+            return new AssemblyFile();
          }
       }
 

@@ -248,6 +248,7 @@
          this.MainMenuStrip = this.m_MenuStrip;
          this.Name = "MainWindow";
          this.Text = "rASM";
+         this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
          this.m_MenuStrip.ResumeLayout(false);
          this.m_MenuStrip.PerformLayout();
          this.m_LayoutPanel.ResumeLayout(false);
