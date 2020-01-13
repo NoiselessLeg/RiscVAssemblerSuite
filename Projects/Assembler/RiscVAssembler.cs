@@ -106,7 +106,7 @@ namespace Assembler
 
                   // write the object file out.
                   var writerFac = new ObjectFileWriterFactory();
-                  IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.DirectBinary);
+                  IObjectFileWriter writer = writerFac.GetWriterForObjectType(OutputTypes.ELF);
                   writer.WriteObjectFile(outputFile, objFile);
                }
             }

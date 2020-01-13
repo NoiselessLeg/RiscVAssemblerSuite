@@ -11,29 +11,35 @@ namespace Assembler.Output.OutputWriters
    {
       public void WriteObjectFile(string fileName, BasicObjectFile file)
       {
-         using (FileStream fs = File.Open(fileName, FileMode.Create))
+         byte[] dataBytes;
+
+         // "trick" our object file into writing data into our arrays.
+         using (var strm = new MemoryStream())
          {
-            using (MemoryStream tmpStrm = new MemoryStream())
+            foreach (var dataElement in file.DataElements)
             {
-
+               dataElement.WriteDataToFile(strm);
             }
+
+            dataBytes = strm.ToArray();
          }
-      }
 
-      private void WriteELF_Header(Stream strm, BasicObjectFile file)
-      {
-         byte[] ELF_HEADER = new byte[]{ 0x7F, 0x45, 0x4C, 0x46 };
-         strm.Write(ELF_HEADER, 0, ELF_HEADER.Length);
+         byte[] textBytes;
+         using (var strm = new MemoryStream())
+         {
+            foreach (var textElement in file.TextElements)
+            {
+               textElement.WriteDataToFile(strm);
+            }
 
-         // indicates 32-bit and little endian format.
-         byte[] CLASS_AND_DATA_FIELD = new byte[] { 1, 1 };
+            textBytes = strm.ToArray();
+         }
 
-         strm.Write(CLASS_AND_DATA_FIELD, 0, CLASS_AND_DATA_FIELD.Length);
-
-         // write the target platform (according to the 'pedia, this is often set to 0 regardless of platform)
-         strm.Write(new byte[] { 0 }, 0, 1);
-
-
+         var underlyingWriter = new ELF_Wrapper.ELF_Writer();
+         underlyingWriter.AddDataSection(dataBytes, Common.CommonConstants.BASE_DATA_ADDRESS);
+         underlyingWriter.AddTextSection(textBytes, Common.CommonConstants.BASE_TEXT_ADDRESS);
+         underlyingWriter.AddSymbolTable(file.SymbolTable);
+         underlyingWriter.WriteFile(fileName);
       }
    }
 }

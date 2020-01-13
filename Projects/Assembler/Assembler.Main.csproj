@@ -11,6 +11,7 @@
     <AssemblyName>Assembler</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -132,8 +133,6 @@
     <Compile Include="InstructionProcessing\LuiProcessor.cs" />
     <Compile Include="InstructionProcessing\NopProcessor.cs" />
     <Compile Include="Output\OutputWriters\ElfObjectWriter.cs" />
-    <Compile Include="Output\OutputWriters\ELF_FileComponents\ELF_FileHeader.cs" />
-    <Compile Include="Output\OutputWriters\ELF_FileComponents\ELF_SectionHeader.cs" />
     <Compile Include="Output\OutputWriters\IObjectFileWriter.cs" />
     <Compile Include="Output\OutputWriters\ObjectFileWriterFactory.cs" />
     <Compile Include="RiscVAssembler.cs" />
@@ -161,6 +160,10 @@
     <Compile Include="InstructionProcessing\OrProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Assembler.ELF_Wrapper\Assembler.ELF_Wrapper.vcxproj">
+      <Project>{89ba844d-01bc-44bc-80b2-5ac9a5602341}</Project>
+      <Name>Assembler.ELF_Wrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>
       <Name>Assembler.Common</Name>
