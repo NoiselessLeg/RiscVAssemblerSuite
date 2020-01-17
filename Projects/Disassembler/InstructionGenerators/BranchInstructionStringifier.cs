@@ -52,7 +52,7 @@ namespace Assembler.Disassembler.InstructionGenerators
          if (symTable.ContainsSymbol(address))
          {
             Symbol sym = symTable.GetSymbol(address);
-            retStr += sym.LabelName + ":\t\t";
+            retStr += sym.LabelName;
          }
          else
          {
