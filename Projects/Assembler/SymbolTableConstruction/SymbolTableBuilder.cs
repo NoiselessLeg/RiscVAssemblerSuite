@@ -211,7 +211,7 @@ namespace Assembler.SymbolTableConstruction
                }
                else
                {
-                  Symbol externSym = new Symbol(tokens[1], segType, m_CurrExternAddress);
+                  Symbol externSym = new Symbol(tokens[1], segType, m_CurrExternAddress, 4);
                   symTable.AddSymbol(externSym);
                   m_CurrExternAddress += declarationSize;
                }

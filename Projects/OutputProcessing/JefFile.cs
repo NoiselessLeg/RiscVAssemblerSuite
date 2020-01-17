@@ -105,8 +105,8 @@ namespace Assembler.OutputProcessing
       /// <param name="externElements">An IEnumerable of all the .extern elements in the .JEF file.</param>
       /// <param name="symTable">A reconstructed SymbolTable instance from the .JEF file.</param>
       private JefFile(int baseDataAddress, int baseTextAddress, int baseExternAddress, IEnumerable<MetadataElement> metadataElems,
-                        IEnumerable<byte> dataElements, IEnumerable<int> textElements, IEnumerable<byte> externElements,
-                        ReverseSymbolTable symTable)
+                      IEnumerable<byte> dataElements, IEnumerable<int> textElements, IEnumerable<byte> externElements,
+                      ReverseSymbolTable symTable)
       {
          m_BaseDataAddress = baseDataAddress;
          m_BaseTextAddress = baseTextAddress;
@@ -294,7 +294,7 @@ namespace Assembler.OutputProcessing
             int symbolAddress = reader.ReadInt32();
             readBytes += sizeof(int);
 
-            symTable.AddSymbol(symbolAddress, symNameStr);
+            symTable.AddSymbol(symbolAddress, new Symbol(symNameStr, SegmentType.Data, symbolAddress, 4));
          }
 
          return symTable;

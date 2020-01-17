@@ -58,15 +58,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InstructionData.cs" />
     <Compile Include="DisassemblerServices.cs" />
+    <Compile Include="InstructionData.cs" />
+    <Compile Include="InstructionGenerators\BranchInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\EcallStringifier.cs" />
     <Compile Include="InstructionGenerators\ImmediateParamStringifier.cs" />
     <Compile Include="InstructionGenerators\IParameterStringifier.cs" />
     <Compile Include="InstructionGenerators\JalInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\JalrInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\LdInstructionStringifier.cs" />
-    <Compile Include="InstructionGenerators\BranchInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\RInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\StoreInstructionStringifier.cs" />
     <Compile Include="InstructionGenerators\UInstructionStringifier.cs" />

@@ -28,7 +28,8 @@ namespace Assembler.Interpreter
         /// <param name="logger">A logging implementation to use to disassemble the file.</param>
         public void RunJefFile(string fileName, ILogger logger)
         {
-            try
+#if false
+         try
             {
                 var disassembler = new JefFileProcessor();
                 DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
@@ -83,6 +84,7 @@ namespace Assembler.Interpreter
             {
                 logger.Log(LogLevel.Critical, "Runtime exception occurred: " + ex.Message);
             }
+#endif
         }
 
         /// <summary>

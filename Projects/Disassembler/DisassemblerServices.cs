@@ -1,4 +1,5 @@
-﻿using Assembler.Disassembler.InstructionGenerators;
+﻿using Assembler.Common;
+using Assembler.Disassembler.InstructionGenerators;
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;

@@ -58,7 +58,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
         private void ParseLabeledLine(SymbolTable symTable, LineData originalLine, string[] tokens, int alignment)
         {
             string labelName = ParserCommon.ExtractLabel(tokens[0]);
-            var label = new Symbol(labelName, SegmentType.Text, m_CurrDataAddress);
+            var label = new Symbol(labelName, SegmentType.Data, m_CurrDataAddress, 4);
             symTable.AddSymbol(label);
             ParseUnlabeledLine(originalLine, tokens, alignment);
         }

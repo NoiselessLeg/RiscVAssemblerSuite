@@ -108,7 +108,17 @@ namespace Assembler.FormsGui.Views
 
       private void LoadFileAction(string filePath)
       {
-         m_ExplorerVm.LoadFileCommand.Execute(filePath);
+         try
+         {
+            m_ExplorerVm.LoadFileCommand.Execute(filePath);
+         }
+         catch (Exception ex)
+         {
+            MessageBox.Show("Failed to load hex representation: " + ex.Message,
+                            "Hex Editor Load Failure",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+         }
       }
       
       private void SaveFileAction()
@@ -140,38 +150,6 @@ namespace Assembler.FormsGui.Views
             service.ShowErrorDialog("Save Error", ex.Message);
          }
       }
-
-#if UNUSED
-      private void SaveFileAsAction()
-      {
-         IDialogService service = DialogServiceFactory.GetServiceInstance();
-         try
-         {
-            string defaultFileName = m_ExplorerVm.ActiveFile.FileName;
-            if (string.IsNullOrEmpty(defaultFileName))
-            {
-               defaultFileName = "Untitled.jef";
-            }
-            var options = new DialogOptions()
-            {
-               DefaultFileName = defaultFileName,
-               FileFilter = "JEF Compiled File (*.jef)|*.jef",
-               WindowTitle = "Save File"
-            };
-
-            bool okToContinue = service.ShowSaveFileDialog(options, out string filePath);
-
-            if (okToContinue)
-            {
-               m_ExplorerVm.SaveFileCommand.Execute(filePath);
-            }
-         }
-         catch (Exception ex)
-         {
-            service.ShowErrorDialog("Save Error", ex.Message);
-         }
-      }
-#endif
 
       private void CloseTabAction(int tabIdx)
       {

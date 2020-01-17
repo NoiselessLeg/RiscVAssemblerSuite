@@ -117,7 +117,7 @@ namespace Assembler.OutputProcessing
 
                 default:
                 {
-                    throw new ArgumentException("Unrecognized instruction \"" + instruction + "\"");
+                    throw new ArgumentException("Unrecognized instruction \"0x" + instruction.ToString("x8") + "\"");
                 }
             }
 

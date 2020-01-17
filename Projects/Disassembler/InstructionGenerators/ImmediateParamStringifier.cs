@@ -29,7 +29,8 @@ namespace Assembler.Disassembler.InstructionGenerators
             // first, see if the program counter has a symbol mapped to it.
             if (symTable.ContainsSymbol(currPgrmCtr))
             {
-                retStr += symTable.GetLabel(currPgrmCtr) + ":\t\t";
+               Symbol sym = symTable.GetSymbol(currPgrmCtr);
+               retStr += sym.LabelName + ":\t\t";
             }
             else
             {

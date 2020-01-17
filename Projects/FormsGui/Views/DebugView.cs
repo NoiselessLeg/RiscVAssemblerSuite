@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Assembler.FormsGui.Commands;
 
 namespace Assembler.FormsGui.Views
 {
@@ -29,7 +30,9 @@ namespace Assembler.FormsGui.Views
          InitializeComponent();
          CreateDataBindings(m_ViewModel);
 
-         SubscribeToMessageType(MessageType.FileAssembled, m_ViewModel.HandleFileAssembledCommand);
+         var fileAssembledAction = new RelayCommand<string>((fileName) => HandleFileAssembledAction(fileName), true);
+
+         SubscribeToMessageType(MessageType.FileAssembled, fileAssembledAction);
       }
 
       private void CreateDataBindings(DebugWindowViewModel vm)
@@ -62,7 +65,20 @@ namespace Assembler.FormsGui.Views
          return newTabPage;
       }
 
-
+      private void HandleFileAssembledAction(string fileName)
+      {
+         try
+         {
+            m_ViewModel.HandleFileAssembledCommand.Execute(fileName);
+         }
+         catch (Exception ex)
+         {
+            MessageBox.Show("Failed to load compiled file: " + ex.Message,
+                            "Compiled File Load Failure",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+         }
+      }
 
       private void OnCloseTabClicked(object sender, EventArgs e)
       {

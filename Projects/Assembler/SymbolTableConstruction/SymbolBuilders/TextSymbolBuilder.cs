@@ -41,7 +41,7 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
             if (ParserCommon.ContainsLabel(tokens[0]))
             {
                 string labelName = ParserCommon.ExtractLabel(tokens[0]);
-                var label = new Symbol(labelName, SegmentType.Text, m_CurrTextAddress);
+                var label = new Symbol(labelName, SegmentType.Text, m_CurrTextAddress, 4);
                 symbolList.AddSymbol(label);
 
                 // determine if there are any instructions on this line.

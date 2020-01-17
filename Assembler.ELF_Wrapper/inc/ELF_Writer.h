@@ -12,12 +12,16 @@ namespace Assembler
 {
    namespace ELF_Wrapper
    {
+      class ELF_Helper;
+
       public ref class ELF_Writer
       {
       public:
          ELF_Writer();
 
          ~ELF_Writer();
+
+         !ELF_Writer();
 
          void AddDataSection(array<System::Byte>^ dataBytes, long address);
          void AddSymbolTable(Assembler::Common::SymbolTable^ symTbl);
@@ -26,10 +30,9 @@ namespace Assembler
          void WriteFile(System::String^ fileName);
 
       private:
-         ELFIO::section* GetSectionByType(long type);
-         int GetSectionIndex(const char* sectionName);
 
          ELFIO::elfio* m_pUnderlyingWriter;
+         ELF_Helper* m_pHelper;
          char* m_pDataBytes;
          char* m_pTxtBytes;
       };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace Assembler.OutputProcessing
 {
    /// <summary>
-   /// Represents a completely disassembled .JEF file.
+   /// Represents a completely disassembled file.
    /// </summary>
    public class DisassembledFile
    {
@@ -25,13 +26,6 @@ namespace Assembler.OutputProcessing
          m_TextSegment = instructions;
          m_ExternSize = externSegment.Count();
          m_SymTbl = symTable;
-         m_DataSegmentLengthBytes = 0;
-
-         foreach (var metadataElem in dataSegment.Metadata)
-         {
-            m_DataSegmentLengthBytes += metadataElem.Size;
-         }
-
       }
 
       /// <summary>
@@ -47,7 +41,7 @@ namespace Assembler.OutputProcessing
       /// </summary>
       public int DataSegmentLength
       {
-         get { return m_DataSegmentLengthBytes; }
+         get { return m_DataSegment.SegmentSize; }
       }
       
       /// <summary>
@@ -73,8 +67,7 @@ namespace Assembler.OutputProcessing
       {
          get { return m_SymTbl; }
       }
-
-      private readonly int m_DataSegmentLengthBytes;
+      
       private readonly DataSegmentAccessor m_DataSegment;
       private readonly TextSegmentAccessor m_TextSegment;
       private readonly int m_ExternSize;

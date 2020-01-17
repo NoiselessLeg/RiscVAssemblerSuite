@@ -142,6 +142,9 @@
     <ClInclude Include="inc\elfio\elfio_symbols.hpp" />
     <ClInclude Include="inc\elfio\elfio_utils.hpp" />
     <ClInclude Include="inc\elfio\elf_types.hpp" />
+    <ClInclude Include="inc\ELF_CompiledFile.h" />
+    <ClInclude Include="inc\ELF_Helper.h" />
+    <ClInclude Include="inc\ELF_Reader.h" />
     <ClInclude Include="inc\ELF_Writer.h" />
     <ClInclude Include="inc\MarshalUtils.h" />
     <ClInclude Include="Resource.h" />
@@ -149,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="src\ELF_CompiledFile.cpp" />
+    <ClCompile Include="src\ELF_Helper.cpp" />
+    <ClCompile Include="src\ELF_Reader.cpp" />
     <ClCompile Include="src\ELF_Writer.cpp" />
     <ClCompile Include="src\MarshalUtils.cpp" />
     <ClCompile Include="stdafx.cpp">

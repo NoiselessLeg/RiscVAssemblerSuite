@@ -22,6 +22,30 @@ namespace Assembler.Output.OutputWriters
       }
 
       /// <summary>
+      /// Gets the appropriate file output format based on the file extension
+      /// of the output file.
+      /// </summary>
+      /// <param name="filePath">The file path or name of the output file.</param>
+      /// <returns>An appropriate instance of IObjectFileWriter for that particular
+      /// file extension.</returns>
+      public IObjectFileWriter GetWriterForOutputFile(string filePath)
+      {
+         string fileExtension = filePath.Substring(filePath.LastIndexOf('.'));
+
+         IObjectFileWriter writer = default(IObjectFileWriter);
+         if (fileExtension == ".jef")
+         {
+            writer = GetWriterForObjectType(OutputTypes.DirectBinary);
+         }
+         else
+         {
+            writer = GetWriterForObjectType(OutputTypes.ELF);
+         }
+
+         return writer;
+      }
+
+      /// <summary>
       /// Fetches the appropriate object file writer for the specified object type.
       /// </summary>
       /// <param name="outType">The type of file to output.</param>

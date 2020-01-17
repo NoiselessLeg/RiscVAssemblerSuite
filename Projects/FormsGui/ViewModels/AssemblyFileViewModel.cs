@@ -86,7 +86,7 @@ namespace Assembler.FormsGui.ViewModels
             }
 
             //TODO: this will def need to change if we implement more filetypes.
-            string outputFile = fileNameNoExtension + ".jef";
+            string outputFile = fileNameNoExtension + ".o";
             return outputFile;
          }
       }

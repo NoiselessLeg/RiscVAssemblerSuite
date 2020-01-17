@@ -3,12 +3,14 @@ using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using Assembler.OutputProcessing;
+using Assembler.OutputProcessing.FileReaders;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Assembler.FormsGui.ViewModels
 {
@@ -21,7 +23,7 @@ namespace Assembler.FormsGui.ViewModels
          m_DisassemblyMgr = new DisassemblyManager();
          m_LoggerVm = new LoggerViewModel();
          m_FilesToExecute = new ObservableCollection<JefFileViewModel>();
-         m_FileProc = new JefFileProcessor();
+         m_FileProc = new FileReaderFactory();
          m_LoadFileCmd = new RelayCommand<string>((param) => LoadFile(param), true);
 
          m_HandleAssembledFileCmd = new RelayCommand<string>((compiledFileName) => HandleFileAssembledMsg(compiledFileName), true);
@@ -64,7 +66,9 @@ namespace Assembler.FormsGui.ViewModels
          {
             m_FilesToExecute.RemoveAt(fileIdx);
          }
-         DisassembledFile file = m_FileProc.ProcessJefFile(fileName, m_LoggerVm.Logger);
+
+         var fileReader = m_FileProc.GetFileParser(fileName);
+         DisassembledFile file = fileReader.ParseFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          m_FilesToExecute.Add(new JefFileViewModel(fileName, file));
          ActiveTabIdx = (m_FilesToExecute.Count - 1);
@@ -83,7 +87,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private readonly RelayCommand<string> m_LoadFileCmd;
       private readonly RelayCommand<string> m_HandleAssembledFileCmd;
-      private readonly JefFileProcessor m_FileProc;
+      private readonly FileReaderFactory m_FileProc;
       private readonly LoggerViewModel m_LoggerVm;
 
       private readonly ObservableCollection<JefFileViewModel> m_FilesToExecute;

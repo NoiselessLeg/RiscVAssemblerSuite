@@ -1,45 +1,40 @@
 ﻿using Assembler.Common;
 using Assembler.Interpreter.InstructionInterpretation;
-using Assembler.OutputProcessing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
-    /// <summary>
-    /// Class that runs and interprets a .JEF RISC-V output file.
-    /// </summary>
-    public class FileInterpreter : IRuntimeEnvironment
-    {
-        /// <summary>
-        /// Creates an instance of the file interpreter.
-        /// </summary>
-        /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
-        public FileInterpreter(ITerminal terminal)
-        {
-            m_InterpreterFac = new InterpreterFactory(terminal);
-        }
-        
-        /// <summary>
-        /// Returns a boolean value representing if the runtime was requested to terminate.
-        /// </summary>
-        /// <returns>True if a termination request was placed by the runtime; otherwise returns false.</returns>
-        public bool IsTerminationRequested()
-        {
-            return m_TerminationRequested;
-        }
+   /// <summary>
+   /// Class that runs and interprets a .JEF RISC-V output file.
+   /// </summary>
+   public class FileInterpreter : IRuntimeEnvironment
+   {
+      /// <summary>
+      /// Creates an instance of the file interpreter.
+      /// </summary>
+      /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
+      public FileInterpreter(ITerminal terminal)
+      {
+         m_InterpreterFac = new InterpreterFactory(terminal);
+      }
 
-        /// <summary>
-        /// Diassembles and interprets a .JEF file.
-        /// </summary>
-        /// <param name="fileName">The file name to run the interpreter with.</param>
-        /// <param name="logger">A logging implementation to use to disassemble the file.</param>
-        public void RunJefFile(string fileName, ILogger logger)
-        {
-            try
+      /// <summary>
+      /// Returns a boolean value representing if the runtime was requested to terminate.
+      /// </summary>
+      /// <returns>True if a termination request was placed by the runtime; otherwise returns false.</returns>
+      public bool IsTerminationRequested()
+      {
+         return m_TerminationRequested;
+      }
+
+      /// <summary>
+      /// Diassembles and interprets a .JEF file.
+      /// </summary>
+      /// <param name="fileName">The file name to run the interpreter with.</param>
+      /// <param name="logger">A logging implementation to use to disassemble the file.</param>
+      public void RunJefFile(string fileName, ILogger logger)
+      {
+#if false
+         try
             {
                 var disassembler = new JefFileProcessor();
                 DisassembledFile file = disassembler.ProcessJefFile(fileName, logger);
@@ -80,17 +75,18 @@ namespace Assembler.Interpreter
                 logger.Log(LogLevel.Critical, "Runtime exception occurred: " + ex.Message);
                 logger.Log(LogLevel.Critical, "No exception handler found - terminating program.");
             }
-        }
+#endif
+      }
 
-        /// <summary>
-        /// Terminates execution of the current assembly program.
-        /// </summary>
-        public void Terminate()
-        {
-            m_TerminationRequested = true;
-        }
-        
-        private readonly InterpreterFactory m_InterpreterFac;
-        private bool m_TerminationRequested;
-    }
+      /// <summary>
+      /// Terminates execution of the current assembly program.
+      /// </summary>
+      public void Terminate()
+      {
+         m_TerminationRequested = true;
+      }
+
+      private readonly InterpreterFactory m_InterpreterFac;
+      private bool m_TerminationRequested;
+   }
 }
