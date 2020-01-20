@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.OutputProcessing.TextOutput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,8 @@ namespace Assembler.OutputProcessing
    /// <summary>
    /// Represents a completely disassembled file.
    /// </summary>
-   public class DisassembledFile
+   public abstract class DisassembledFileBase
    {
-      /// <summary>
-      /// Creates an instance of the disassembled file.
-      /// </summary>
-      /// <param name="dataSegment">The disassembled .data segment of the file.</param>
-      /// <param name="instructions">The disassembled .text segment of the file.</param>
-      /// <param name="externSegment">The constituent bytes of the .extern segment.</param>
-      /// <param name="symTable">The symbol table associated with the file.</param>
-      public DisassembledFile(DataSegmentAccessor dataSegment, TextSegmentAccessor instructions,
-                              IEnumerable<byte> externSegment, ReverseSymbolTable symTable)
-      {
-         m_DataSegment = dataSegment;
-         m_TextSegment = instructions;
-         m_ExternSize = externSegment.Count();
-         m_SymTbl = symTable;
-      }
 
       /// <summary>
       /// Gets the accessor to this file's data segment.
@@ -67,7 +53,29 @@ namespace Assembler.OutputProcessing
       {
          get { return m_SymTbl; }
       }
-      
+
+      /// <summary>
+      /// Gets the implementation of the file writer that can generate a 
+      /// text file (i.e. disassembled and human-readable assembly file).
+      /// </summary>
+      public abstract IAssemblyFileWriter AssemblyTextFileWriter { get; }
+
+      /// <summary>
+      /// Creates an instance of the disassembled file.
+      /// </summary>
+      /// <param name="dataSegment">The disassembled .data segment of the file.</param>
+      /// <param name="instructions">The disassembled .text segment of the file.</param>
+      /// <param name="externSegment">The constituent bytes of the .extern segment.</param>
+      /// <param name="symTable">The symbol table associated with the file.</param>
+      protected DisassembledFileBase(DataSegmentAccessor dataSegment, TextSegmentAccessor instructions,
+                                     IEnumerable<byte> externSegment, ReverseSymbolTable symTable)
+      {
+         m_DataSegment = dataSegment;
+         m_TextSegment = instructions;
+         m_ExternSize = externSegment.Count();
+         m_SymTbl = symTable;
+      }
+
       private readonly DataSegmentAccessor m_DataSegment;
       private readonly TextSegmentAccessor m_TextSegment;
       private readonly int m_ExternSize;

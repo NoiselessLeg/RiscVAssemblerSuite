@@ -97,7 +97,6 @@ namespace Assembler
 
             // need to figure out which section header to point the symbol to.
             int sectionIdx = 0;
-            int symSize = 0;
             int symType = STT_OBJECT;
             switch (symbol->SegmentType)
             {
@@ -117,9 +116,7 @@ namespace Assembler
             symbols.add_symbol(strTable,
                nativeSymName.c_str(),
                symbol->Address,
-               // FIXME: need to figure out the size of the underlying symbol
-               symSize,
-               // FIXME: need to change this to be dynamic (i.e. is this a function symbol, var symbol?)
+               symbol->Size,
                ELF_ST_INFO(STB_LOCAL, symType),
                STV_DEFAULT,
                sectionIdx);

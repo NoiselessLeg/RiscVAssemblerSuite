@@ -1,7 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.OutputProcessing;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
     /// <summary>
     /// Defines a class that can print an instruction as text.

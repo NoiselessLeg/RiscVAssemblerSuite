@@ -6,14 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
-    class JalInstructionStringifier : IParameterStringifier
+    class JalrInstructionStringifier : IParameterStringifier
     {
-        public JalInstructionStringifier(string instructionName)
+        public JalrInstructionStringifier(string instructionName)
         {
             m_Name = instructionName;
         }
+
         /// <summary>
         /// Formats and stringifies an instruction as well as its parameters.
         /// </summary>
@@ -37,29 +38,18 @@ namespace Assembler.Disassembler.InstructionGenerators
             }
 
             retStr += m_Name + ' ';
-            if (inst.Parameters.Count() != 2)
+            if (inst.Parameters.Count() != 3)
             {
-                throw new ArgumentException("Jal instruction expected 2 arguments, received " + inst.Parameters.Count());
+                throw new ArgumentException("UJ-type instruction expected 3 arguments, received " + inst.Parameters.Count());
             }
 
-            string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
+            string rd = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
+            string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(1));
 
-            retStr += rs1 + ", ";
+            retStr += rd + ", " + rs1 + ", ";
 
-            int offset = inst.Parameters.ElementAt(1);
-
-            int address = currPgrmCtr + offset;
-            // see if there's a symbol mapped to it.
-            if (symTable.ContainsSymbol(address))
-            {
-               Symbol sym = symTable.GetSymbol(address);
-               retStr += sym.LabelName;
-            }
-            else
-            {
-                retStr += "0x" + address.ToString("X2");
-            }
-
+            int offset = inst.Parameters.ElementAt(2);
+            retStr += "0x" + offset.ToString("X6");
             return retStr;
         }
 

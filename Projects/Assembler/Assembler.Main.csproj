@@ -49,6 +49,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -141,6 +144,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeGeneration\TextCodeGenerator.cs" />
     <Compile Include="SymbolTableConstruction\IInstructionSizeEstimator.cs" />
+    <Compile Include="Tokenization\RiscV.g4.lexer.cs">
+      <DependentUpon>RiscV.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Tokenization\RiscV.g4.parser.cs">
+      <DependentUpon>RiscV.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Tokenization\Token.cs" />
+    <Compile Include="Tokenization\TokenStream.cs" />
     <Compile Include="Util\DummyLogger.cs" />
     <Compile Include="Util\InstructionElement.cs" />
     <Compile Include="Util\LineParseResults.cs" />
@@ -171,6 +182,13 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Antlr4 Include="Tokenization\RiscV.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>Assembler.Tokenization</CustomToolNamespace>
+    </Antlr4>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

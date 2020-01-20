@@ -7,18 +7,30 @@
    public class Symbol
    {
       /// <summary>
+      /// This constant defines the "unresolved" or null address.
+      /// </summary>
+      public const int UNRESOLVED_ADDR = 0;
+
+      /// <summary>
       /// Creates a new instance of an assembly symbol.
       /// </summary>
       /// <param name="name">The name of the label.</param>
       /// <param name="foundMemType">Which segment type the label was found in</param>
       /// <param name="address">The relative address of the label in the .text/.data segment.</param>
-      /// <param name="size">The size of the object the symbol demarcates, in bytes.</param>
-      public Symbol(string name, SegmentType foundMemType, int address, int size)
+      public Symbol(string name, SegmentType foundMemType, int address)
       {
          m_SegType = foundMemType;
          m_LabelName = name;
          m_Address = address;
-         m_SymSize = size;
+      }
+
+      /// <summary>
+      /// Determines if a symbol has been "resolved" by the assembler. This
+      /// indicates that a valid address (i.e. non-null) is attached to it.
+      /// </summary>
+      public bool IsResolvedSymbol
+      {
+         get { return Address != UNRESOLVED_ADDR; }
       }
 
       /// <summary>
@@ -33,18 +45,42 @@
       public string LabelName => m_LabelName;
 
       /// <summary>
-      /// Gets the address this symbol was found in.
+      /// Gets or sets the address of the symbol.
       /// </summary>
-      public int Address => m_Address;
+      public int Address
+      {
+         get { return m_Address; }
+         set
+         {
+            if (m_Address != value)
+            {
+               m_Address = value;
+            }
+         }
+      }
 
       /// <summary>
       /// Gets the size of the underlying object the symbol represents, in bytes.
       /// </summary>
-      public int Size => m_SymSize;
+      public int Size
+      {
+         get { return m_SymSize; }
+         set
+         {
+            if (m_SymSize == 0)
+            {
+               m_SymSize = value;
+            }
+            else
+            {
+               System.Diagnostics.Debug.Assert(false);
+            }
+         }
+      }
 
       private readonly SegmentType m_SegType;
       private readonly string m_LabelName;
-      private readonly int m_Address;
-      private readonly int m_SymSize;
+      private int m_SymSize;
+      private int m_Address;
    }
 }

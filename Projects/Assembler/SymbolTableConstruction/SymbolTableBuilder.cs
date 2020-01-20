@@ -56,7 +56,7 @@ namespace Assembler.SymbolTableConstruction
                // ignore blank lines. trim should remove all whitespace
                try
                {
-                  if (line.Any())
+                  if (!string.IsNullOrWhiteSpace(line))
                   {
                      LineParseResults directiveResults = ParserCommon.HandleAssemblerDirective(line, lineNum, currSegmentType, currAlignment);
                      currAlignment = directiveResults.NewAlignment;
@@ -70,7 +70,7 @@ namespace Assembler.SymbolTableConstruction
                         {
                            ISymbolTableBuilder segParser = m_SymbolBuilderFac.GetParserForSegment(lineNum, currSegmentType);
                            var asmLine = new LineData(line, lineNum);
-                              segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
+                           segParser.ParseSymbolsInLine(asmLine, symTable, currAlignment);
                         }
                      }
                   }
@@ -131,7 +131,7 @@ namespace Assembler.SymbolTableConstruction
                // ignore blank lines. trim should remove all whitespace
                try
                {
-                  if (line.Any())
+                  if (!string.IsNullOrWhiteSpace(line))
                   {
                      LineParseResults directiveResults = ParserCommon.HandleAssemblerDirective(line, lineNum, currSegmentType, currAlignment);
                      currAlignment = directiveResults.NewAlignment;
@@ -211,7 +211,7 @@ namespace Assembler.SymbolTableConstruction
                }
                else
                {
-                  Symbol externSym = new Symbol(tokens[1], segType, m_CurrExternAddress, 4);
+                  Symbol externSym = new Symbol(tokens[1], segType, m_CurrExternAddress);
                   symTable.AddSymbol(externSym);
                   m_CurrExternAddress += declarationSize;
                }

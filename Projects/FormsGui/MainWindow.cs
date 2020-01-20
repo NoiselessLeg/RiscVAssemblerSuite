@@ -1,4 +1,5 @@
-﻿using Assembler.FormsGui.IO;
+﻿using Assembler.Common;
+using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
@@ -73,9 +74,9 @@ namespace Assembler.FormsGui
          m_ViewModel.ShowPreferencesCommand.Execute(null);
       }
 
-      private void assembleFileToolStripMenuItem_Click(object sender, EventArgs e)
+      private void assembleElfFileToolStripMenuItem_Click(object sender, EventArgs e)
       {
-         m_ViewModel.AssembleFileCommand.Execute(null);
+         m_ViewModel.AssembleFileCommand.Execute(OutputTypes.ELF);
       }
 
       private void fromCompiledFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -94,6 +95,11 @@ namespace Assembler.FormsGui
       private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
       {
          m_ViewModel.CloseWindowCommand.Execute(null);
+      }
+
+      private void assembleJefFileToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         m_ViewModel.AssembleFileCommand.Execute(OutputTypes.DirectBinary);
       }
    }
 }

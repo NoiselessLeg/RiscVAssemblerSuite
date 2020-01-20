@@ -3,7 +3,7 @@ using Assembler.OutputProcessing;
 using System;
 using System.Linq;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
    internal class LdInstructionStringifier : IParameterStringifier
    {

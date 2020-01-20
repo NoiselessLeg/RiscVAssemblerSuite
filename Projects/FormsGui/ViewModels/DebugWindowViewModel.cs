@@ -68,7 +68,7 @@ namespace Assembler.FormsGui.ViewModels
          }
 
          var fileReader = m_FileProc.GetFileParser(fileName);
-         DisassembledFile file = fileReader.ParseFile(fileName, m_LoggerVm.Logger);
+         DisassembledFileBase file = fileReader.ParseFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          m_FilesToExecute.Add(new JefFileViewModel(fileName, file));
          ActiveTabIdx = (m_FilesToExecute.Count - 1);

@@ -106,7 +106,8 @@ namespace Assembler
                _ASSERT(0);
             }
 
-            auto symbol = gcnew Assembler::Common::Symbol(convertedSymName, foundSegType, symAddress, symSize);
+            auto symbol = gcnew Assembler::Common::Symbol(convertedSymName, foundSegType, symAddress);
+            symbol->Size = symSize;
             symTbl->AddSymbol((int32_t)symAddress, symbol);
          }
 

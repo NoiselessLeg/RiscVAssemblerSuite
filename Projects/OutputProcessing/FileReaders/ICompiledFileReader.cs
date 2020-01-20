@@ -9,6 +9,6 @@ namespace Assembler.OutputProcessing.FileReaders
 {
    public interface ICompiledFileReader
    {
-      DisassembledFile ParseFile(string fileName, ILogger logger);
+      DisassembledFileBase ParseFile(string fileName, ILogger logger);
    }
 }

@@ -1,26 +1,29 @@
 ﻿using Assembler.Common;
-using Assembler.Disassembler.InstructionGenerators;
-using Assembler.OutputProcessing;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Assembler.Disassembler
+namespace Assembler.OutputProcessing.TextOutput
 {
-   internal class TextFileGenerator
+   class JefAssemblyFileWriter : IAssemblyFileWriter
    {
-      /// <summary>
-      /// Generates text output from the disassembled .JEF binary.
-      /// </summary>
-      /// <param name="outputFileName">The file to write to.</param>
-      /// <param name="file">The disassembled .JEF file.</param>
-      public void GenerateOutput(string outputFileName, DisassembledFile file)
+      public JefAssemblyFileWriter(DisassembledJefFile underlyingFile)
       {
-         IEnumerable<InstructionData> txtInstructions = DisassemblerServices.GenerateInstructionData(file.SymbolTable, file.TextSegment);
+         m_File = underlyingFile;
+      }
+
+      public void GenerateOutputFile(string outputFileName)
+      {
+         IEnumerable<InstructionData> txtInstructions = 
+            DisassemblerServices.GenerateInstructionData(m_File.SymbolTable, m_File.TextSegment);
          using (var writer = new StreamWriter(File.Open(outputFileName, FileMode.Create)))
          {
-            GenerateDataSegment(writer, file.SymbolTable, file.DataSegment);
+            GenerateDataSegment(writer, m_File.SymbolTable, m_File.DataSegment);
             OutputTextSegment(writer, txtInstructions);
-            writer.WriteLine(".extern extern_data " + file.ExternSegmentSize);
+            writer.WriteLine(".extern extern_data " + m_File.ExternSegmentSize);
          }
       }
 
@@ -32,68 +35,11 @@ namespace Assembler.Disassembler
       /// <param name="dataSegment">The accessor to the file's data segment.</param>
       private void GenerateDataSegment(StreamWriter writer, ReverseSymbolTable symTable, DataSegmentAccessor dataSegment)
       {
-         int currAddress = dataSegment.BaseRuntimeDataAddress;
-         writer.WriteLine(".data");
-
-         // first, see if there's a label associated with the data element.
-         if (symTable.ContainsSymbol(currAddress))
-         {
-            Symbol sym = symTable.GetSymbol(currAddress);
-            // if so, write it out.
-            writer.Write(sym.LabelName);
-            writer.Write(":\t\t");
-
-            switch (sym.Size)
-            {
-               case sizeof(byte):
-               {
-                  writer.Write(".byte ");
-                  byte value = dataSegment.ReadUnsignedByte(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case sizeof(short):
-               {
-                  writer.Write(".half ");
-                  short value = dataSegment.ReadShort(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case sizeof(int):
-               {
-                  writer.Write(".word ");
-                  int value = dataSegment.ReadWord(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               case sizeof(long):
-               {
-                  writer.Write(".dword ");
-                  long value = dataSegment.ReadLong(currAddress);
-                  writer.WriteLine(value);
-                  break;
-               }
-
-               default:
-               {
-                  writer.Write(".asciiz ");
-                  string value = dataSegment.ReadString(currAddress);
-                  string processedValue = ProcessString(value);
-                  writer.WriteLine(processedValue);
-                  break;
-               }
-            }
-
-            currAddress += sym.Size;
-         }
-
-#if false
          int currAlignment = CommonConstants.DEFAULT_ALIGNMENT;
+         writer.WriteLine(".data");
          int processedByteCount = 0;
-         foreach (MetadataElement elem in dataSegment.Metadata)
+         int currAddress = dataSegment.BaseRuntimeDataAddress;
+         foreach (MetadataElement elem in m_File.Metadata)
          {
             // don't do any processing if we're looking at padding bytes.
             if (processedByteCount % currAlignment == 0)
@@ -102,7 +48,8 @@ namespace Assembler.Disassembler
                if (symTable.ContainsSymbol(currAddress))
                {
                   // if so, write it out.
-                  writer.Write(symTable.GetLabel(currAddress));
+                  Symbol sym = symTable.GetSymbol(currAddress);
+                  writer.Write(sym.LabelName);
                   writer.Write(":\t\t");
                }
                else
@@ -177,9 +124,7 @@ namespace Assembler.Disassembler
             
             currAddress += elem.Size;
          }
-#endif
-
-         }
+      }
 
       /// <summary>
       /// Processes a string for any special characters, and wraps it in quotes.
@@ -211,5 +156,7 @@ namespace Assembler.Disassembler
             writer.WriteLine(instruction.Instruction);
          }
       }
+
+      private readonly DisassembledJefFile m_File;
    }
 }

@@ -94,7 +94,7 @@ namespace Assembler
 
                   // build the symbol table
                   var instructionProcFac = new InstructionProcessorFactory(symTable);
-                  var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
+                  var symTableBuilder = new SymbolTableConstruction.SymbolTableBuilder(logger, instructionProcFac);
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
@@ -104,10 +104,18 @@ namespace Assembler
                   var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
                   codeGenerator.GenerateCode(reader, objFile);
 
-                  // write the object file out.
-                  var writerFac = new ObjectFileWriterFactory();
-                  IObjectFileWriter writer = writerFac.GetWriterForOutputFile(outputFile);
-                  writer.WriteObjectFile(outputFile, objFile);
+                  if (!objFile.TextElements.Any())
+                  {
+                     logger.Log(LogLevel.Warning, "No .text segment to assemble. Stop.");
+                     result.OperationSuccessful = false;
+                  }
+                  else
+                  {
+                     // write the object file out.
+                     var writerFac = new ObjectFileWriterFactory();
+                     IObjectFileWriter writer = writerFac.GetWriterForOutputFile(outputFile);
+                     writer.WriteObjectFile(outputFile, objFile);
+                  }
                }
             }
          }
@@ -122,9 +130,11 @@ namespace Assembler
          }
          catch (Exception ex)
          {
+            logger.Log(LogLevel.Critical, ex.StackTrace);
             logger.Log(LogLevel.Critical, ex.Message);
             if (ex.InnerException != null)
             {
+               logger.Log(LogLevel.Critical, ex.InnerException.StackTrace);
                logger.Log(LogLevel.Critical, ex.InnerException.Message);
             }
             result.AddInternalAssemblerError(ex);

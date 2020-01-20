@@ -49,7 +49,7 @@ namespace Assembler.FormsGui.ViewModels
             }
          }
 
-         DisassembledFile file = underlyingVm.FileData;
+         DisassembledFileBase file = underlyingVm.FileData;
          var dataSegmentAccessor = new BindableDataSegmentAccessor(file.DataSegment);
 
          m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_Registers, dataSegmentAccessor, file.TextSegment);

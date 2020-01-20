@@ -1,4 +1,5 @@
 ﻿using Assembler.Disassembler;
+using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ namespace Assembler.FormsGui.ViewModels
    public class JefFileViewModel : BaseViewModel
    {
       public JefFileViewModel(string fileName,
-                              OutputProcessing.DisassembledFile runtimeFile)
+                              OutputProcessing.DisassembledFileBase runtimeFile)
       {
          m_UnderlyingFile = runtimeFile;
          m_Instructions = new BindingList<ProgramInstructionViewModel>();
@@ -56,7 +57,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public OutputProcessing.DisassembledFile FileData
+      public OutputProcessing.DisassembledFileBase FileData
       {
          get { return m_UnderlyingFile; }
       }
@@ -67,7 +68,7 @@ namespace Assembler.FormsGui.ViewModels
       }
 
       private string m_FilePath;
-      private readonly OutputProcessing.DisassembledFile m_UnderlyingFile;
+      private readonly OutputProcessing.DisassembledFileBase m_UnderlyingFile;
       private readonly BindingList<ProgramInstructionViewModel> m_Instructions;
    }
 }

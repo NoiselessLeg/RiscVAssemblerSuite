@@ -10,7 +10,7 @@ namespace Assembler.OutputProcessing.FileReaders
 {
    public class ElfFileReader : ICompiledFileReader
    {
-      public DisassembledFile ParseFile(string fileName, ILogger logger)
+      public DisassembledFileBase ParseFile(string fileName, ILogger logger)
       {
          var elfFileParser = new ELF_Reader(fileName);
          var decompiledFile = new ELF_CompiledFile(elfFileParser);
@@ -24,7 +24,7 @@ namespace Assembler.OutputProcessing.FileReaders
          //TODO: fix when we have better sectioning logic.
          var dummyExtern = new List<byte>();
 
-         return new DisassembledFile(dataSection, textSection, dummyExtern, decompiledFile.SymbolTable);
+         return new DisassembledElfFile(dataSection, textSection, dummyExtern, decompiledFile.SymbolTable);
       }
    }
 }

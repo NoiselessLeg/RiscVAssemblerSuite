@@ -1,6 +1,7 @@
 ﻿using Assembler.Common;
 using Assembler.OutputProcessing;
 using Assembler.OutputProcessing.FileReaders;
+using Assembler.OutputProcessing.TextOutput;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,9 +56,9 @@ namespace Assembler.Disassembler
          try
          {
             ICompiledFileReader fileParser = m_FileParserFac.GetFileParser(options.InputFileName);
-            DisassembledFile fileBase = fileParser.ParseFile(options.InputFileName, logger);
-            var txtGen = new TextFileGenerator();
-            txtGen.GenerateOutput(options.OutputFileName, fileBase);
+            DisassembledFileBase fileBase = fileParser.ParseFile(options.InputFileName, logger);
+            IAssemblyFileWriter fileWriter = fileBase.AssemblyTextFileWriter;
+            fileWriter.GenerateOutputFile(options.OutputFileName);
          }
          catch (IOException ex)
          {

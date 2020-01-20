@@ -1,11 +1,16 @@
 ﻿using Assembler.Common;
 using Assembler.OutputProcessing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
-   internal class EcallStringifier : IParameterStringifier
+   class UInstructionStringifier : IParameterStringifier
    {
-      public EcallStringifier(string instructionName)
+      public UInstructionStringifier(string instructionName)
       {
          m_Name = instructionName;
       }
@@ -32,11 +37,21 @@ namespace Assembler.Disassembler.InstructionGenerators
             retStr += "\t\t\t";
          }
 
-         retStr += m_Name;
+         retStr += m_Name + ' ';
+
+         if (inst.Parameters.Count() != 2)
+         {
+            throw new ArgumentException("U-type instruction expected 2 arguments, received " + inst.Parameters.Count());
+         }
+
+         string rd = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
+         int immediate = inst.Parameters.ElementAt(1);
+
+         retStr += rd + ", 0x" + immediate.ToString("X2");
+
          return retStr;
       }
 
       private readonly string m_Name;
    }
-
 }

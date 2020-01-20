@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
-    class ImmediateParamStringifier : IParameterStringifier
+    class JalInstructionStringifier : IParameterStringifier
     {
-        public ImmediateParamStringifier(string instructionName)
+        public JalInstructionStringifier(string instructionName)
         {
             m_Name = instructionName;
         }
-
         /// <summary>
         /// Formats and stringifies an instruction as well as its parameters.
         /// </summary>
@@ -38,17 +37,28 @@ namespace Assembler.Disassembler.InstructionGenerators
             }
 
             retStr += m_Name + ' ';
-            if (inst.Parameters.Count() != 3)
+            if (inst.Parameters.Count() != 2)
             {
-                throw new ArgumentException("I-type instruction expected 3 arguments, received " + inst.Parameters.Count());
+                throw new ArgumentException("Jal instruction expected 2 arguments, received " + inst.Parameters.Count());
             }
 
-            string rd = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
-            string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(1));
+            string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
 
-            int immediate = inst.Parameters.ElementAt(2);
+            retStr += rs1 + ", ";
 
-            retStr += rd + ", " + rs1 + ", " + immediate;
+            int offset = inst.Parameters.ElementAt(1);
+
+            int address = currPgrmCtr + offset;
+            // see if there's a symbol mapped to it.
+            if (symTable.ContainsSymbol(address))
+            {
+               Symbol sym = symTable.GetSymbol(address);
+               retStr += sym.LabelName;
+            }
+            else
+            {
+                retStr += "0x" + address.ToString("X2");
+            }
 
             return retStr;
         }

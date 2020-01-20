@@ -294,7 +294,7 @@ namespace Assembler.OutputProcessing
             int symbolAddress = reader.ReadInt32();
             readBytes += sizeof(int);
 
-            symTable.AddSymbol(symbolAddress, new Symbol(symNameStr, SegmentType.Data, symbolAddress, 4));
+            symTable.AddSymbol(symbolAddress, new Symbol(symNameStr, SegmentType.Data, symbolAddress));
          }
 
          return symTable;

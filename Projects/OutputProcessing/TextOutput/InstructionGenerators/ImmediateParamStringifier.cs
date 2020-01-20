@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
-    class JalrInstructionStringifier : IParameterStringifier
+    class ImmediateParamStringifier : IParameterStringifier
     {
-        public JalrInstructionStringifier(string instructionName)
+        public ImmediateParamStringifier(string instructionName)
         {
             m_Name = instructionName;
         }
@@ -40,16 +40,16 @@ namespace Assembler.Disassembler.InstructionGenerators
             retStr += m_Name + ' ';
             if (inst.Parameters.Count() != 3)
             {
-                throw new ArgumentException("UJ-type instruction expected 3 arguments, received " + inst.Parameters.Count());
+                throw new ArgumentException("I-type instruction expected 3 arguments, received " + inst.Parameters.Count());
             }
 
             string rd = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
             string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(1));
 
-            retStr += rd + ", " + rs1 + ", ";
+            int immediate = inst.Parameters.ElementAt(2);
 
-            int offset = inst.Parameters.ElementAt(2);
-            retStr += "0x" + offset.ToString("X6");
+            retStr += rd + ", " + rs1 + ", " + immediate;
+
             return retStr;
         }
 

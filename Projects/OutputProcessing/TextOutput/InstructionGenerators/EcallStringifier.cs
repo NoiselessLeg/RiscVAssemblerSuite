@@ -1,13 +1,11 @@
 ﻿using Assembler.Common;
 using Assembler.OutputProcessing;
-using System;
-using System.Linq;
 
-namespace Assembler.Disassembler.InstructionGenerators
+namespace Assembler.OutputProcessing.TextOutput.InstructionGenerators
 {
-   internal class BranchInstructionStringifier : IParameterStringifier
+   internal class EcallStringifier : IParameterStringifier
    {
-      public BranchInstructionStringifier(string instructionName)
+      public EcallStringifier(string instructionName)
       {
          m_Name = instructionName;
       }
@@ -34,34 +32,11 @@ namespace Assembler.Disassembler.InstructionGenerators
             retStr += "\t\t\t";
          }
 
-         retStr += m_Name + ' ';
-         if (inst.Parameters.Count() != 3)
-         {
-            throw new ArgumentException("sb instruction expected 3 arguments, received " + inst.Parameters.Count());
-         }
-
-         string rs1 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(0));
-         string rs2 = ReverseRegisterMap.GetStringifiedRegisterValue(inst.Parameters.ElementAt(1));
-
-         retStr += rs1 + ", " + rs2 + ", ";
-
-         int offset = inst.Parameters.ElementAt(2);
-
-         int address = currPgrmCtr + offset;
-         // see if there's a symbol mapped to it.
-         if (symTable.ContainsSymbol(address))
-         {
-            Symbol sym = symTable.GetSymbol(address);
-            retStr += sym.LabelName;
-         }
-         else
-         {
-            retStr += "0x" + address.ToString("X2");
-         }
-
+         retStr += m_Name;
          return retStr;
       }
 
       private readonly string m_Name;
    }
+
 }

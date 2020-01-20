@@ -1,13 +1,14 @@
 ﻿using Assembler.Common;
-using Assembler.Disassembler.InstructionGenerators;
 using Assembler.OutputProcessing;
+using Assembler.OutputProcessing.TextOutput;
+using Assembler.OutputProcessing.TextOutput.InstructionGenerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Disassembler
+namespace Assembler.OutputProcessing
 {
    public class DisassemblerServices
    {

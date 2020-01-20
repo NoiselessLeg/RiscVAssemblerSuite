@@ -1,4 +1,5 @@
-﻿using Assembler.FormsGui.Commands;
+﻿using Assembler.Common;
+using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
@@ -31,7 +32,9 @@ namespace Assembler.FormsGui.Views
          m_SaveFileAsCmd = new RelayCommand(() => SaveFileAsAction(), true);
          m_SaveFileCmd = new RelayCommand(() => SaveFileAction(), true);
          m_ImportFileCmd = new RelayCommand(() => ImportFileAction(), true);
-         m_AssembleFileCmd = new RelayCommand(() => AssembleActiveFileAction(), true);
+         m_AssembleFileCmd = new RelayCommand<OutputTypes>((OutputTypes outputType) =>
+            AssembleActiveFileAction(outputType), true);
+
          m_CloseAllFilesCmd = new RelayCommand(() => CloseAllFiles(), true);
 
          InitializeComponent();
@@ -187,7 +190,7 @@ namespace Assembler.FormsGui.Views
          {
             var options = new DialogOptions()
             {
-               FileFilter = "RISC-V Compiled File (*.jef)|*.jef",
+               FileFilter = "RISC-V ELF object file (*.o)|*.o|RISC-V JEF object file (*.jef)|*.jef",
                WindowTitle = "Import Compiled File"
             };
 
@@ -208,7 +211,7 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private void AssembleActiveFileAction()
+      private void AssembleActiveFileAction(OutputTypes outputType)
       {
          AssemblyFileViewModel viewModel = m_EditorVm.ActiveFile;
          bool continueAssembling = true;
@@ -248,7 +251,29 @@ namespace Assembler.FormsGui.Views
          if (continueAssembling)
          {
             Cursor.Current = Cursors.WaitCursor;
-            m_EditorVm.AssembleFileCmd.Execute(viewModel.FilePath);
+            AssemblyCommandParams cmdParams = default(AssemblyCommandParams);
+            cmdParams.InputFileName = viewModel.FilePath;
+            string fileNoExt = viewModel.FilePath.Substring(0, viewModel.FilePath.LastIndexOf('.'));
+            switch (outputType)
+            {
+               case OutputTypes.DirectBinary:
+               {
+                  cmdParams.OutputFileName = fileNoExt + ".jef";
+                  break;
+               }
+
+               case OutputTypes.ELF:
+               {
+                  cmdParams.OutputFileName = fileNoExt + ".o";
+                  break;
+               }
+
+               default:
+                  System.Diagnostics.Debug.Assert(false);
+                  break;
+            }
+
+            m_EditorVm.AssembleFileCmd.Execute(cmdParams);
             Cursor.Current = Cursors.Default;
          }
       }
@@ -372,7 +397,7 @@ namespace Assembler.FormsGui.Views
       private readonly RelayCommand m_SaveFileCmd;
       private readonly RelayCommand m_SaveFileAsCmd;
       private readonly RelayCommand m_ImportFileCmd;
-      private readonly RelayCommand m_AssembleFileCmd;
+      private readonly RelayCommand<OutputTypes> m_AssembleFileCmd;
       private readonly RelayCommand m_CloseAllFilesCmd;
    }
 }

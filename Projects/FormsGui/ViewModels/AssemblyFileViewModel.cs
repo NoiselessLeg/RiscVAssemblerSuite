@@ -53,12 +53,9 @@ namespace Assembler.FormsGui.ViewModels
          AreAnyChangedUnsaved = false;
       }
 
-      public bool AssembleFile(RiscVAssembler assembler)
+      public bool AssembleFile(RiscVAssembler assembler, string outputFilePath)
       {
          Logger.ClearLogCommand.Execute(null);
-         // get the file name with no extension, in case we want intermediate files,
-         // or for our output.
-         string outputFilePath = AssembledFilePath;
          var options = new AssemblerOptions(new[] { FilePath }, new[] { outputFilePath });
 
          // clear any errors beforehand.
@@ -74,23 +71,6 @@ namespace Assembler.FormsGui.ViewModels
 
          return result.OperationSuccessful;
       }
-
-      public string AssembledFilePath
-      {
-         get
-         {
-            string fileNameNoExtension = FilePath;
-            if (fileNameNoExtension.Contains("."))
-            {
-               fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
-            }
-
-            //TODO: this will def need to change if we implement more filetypes.
-            string outputFile = fileNameNoExtension + ".o";
-            return outputFile;
-         }
-      }
-
 
       public bool AreAnyChangedUnsaved
       {

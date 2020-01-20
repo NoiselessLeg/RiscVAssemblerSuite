@@ -31,7 +31,7 @@ namespace Assembler.FormsGui.ViewModels
          m_OpenViewModels = new ObservableCollection<AssemblyFileViewModel>();
 
          m_Assembler = new RiscVAssembler();
-         m_AssembleFileCmd = new RelayCommand<string>(param => AssembleFile(param), false);
+         m_AssembleFileCmd = new RelayCommand<AssemblyCommandParams>(param => AssembleFile(param), false);
          m_NewFileCmd = new RelayCommand(() => CreateNewFile(), true);
          m_OpenFileCmd = new RelayCommand<string>((fileName) => OpenFile(fileName), true);
          m_SaveFileCmd = new RelayCommand<string>((fileName) => SaveFile(fileName), true);
@@ -228,12 +228,12 @@ namespace Assembler.FormsGui.ViewModels
          return m_OpenViewModels.First((avm) => avm.FilePath == filePath);
       }
 
-      private void AssembleFile(string fileName)
+      private void AssembleFile(AssemblyCommandParams asmParams)
       {
-         AssemblyFileViewModel assembledFile = GetViewModelByFilePath(fileName);
-         if (assembledFile.AssembleFile(m_Assembler))
+         AssemblyFileViewModel assembledFile = GetViewModelByFilePath(asmParams.InputFileName);
+         if (assembledFile.AssembleFile(m_Assembler, asmParams.OutputFileName))
          {
-            var fileAssembledMsg = new FileAssembledMessage(assembledFile.AssembledFilePath);
+            var fileAssembledMsg = new FileAssembledMessage(asmParams.OutputFileName);
             BroadcastMessage(fileAssembledMsg);
          }
       }
@@ -247,7 +247,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private readonly RelayCommand m_NewFileCmd;
       private readonly RelayCommand<string> m_OpenFileCmd;
-      private readonly RelayCommand<string> m_AssembleFileCmd;
+      private readonly RelayCommand<AssemblyCommandParams> m_AssembleFileCmd;
       private readonly RelayCommand<string> m_SaveFileCmd;
       private readonly RelayCommand<int> m_CloseFileCmd;
       private readonly RelayCommand<int> m_ChangeActiveIdxCmd;

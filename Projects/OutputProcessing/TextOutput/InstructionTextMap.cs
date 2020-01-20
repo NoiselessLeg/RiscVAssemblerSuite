@@ -1,9 +1,9 @@
-﻿using Assembler.Disassembler.InstructionGenerators;
-using Assembler.OutputProcessing;
+﻿using Assembler.OutputProcessing;
+using Assembler.OutputProcessing.TextOutput.InstructionGenerators;
 using System;
 using System.Collections.Generic;
 
-namespace Assembler.Disassembler
+namespace Assembler.OutputProcessing.TextOutput
 {
    /// <summary>
    /// Defines the mapping between an instruction type and the stringifier implementation of it.

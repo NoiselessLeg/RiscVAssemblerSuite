@@ -9,7 +9,7 @@ namespace Assembler.OutputProcessing.FileReaders
 {
    public class JefFileReader : ICompiledFileReader
    {
-      public DisassembledFile ParseFile(string fileName, ILogger logger)
+      public DisassembledFileBase ParseFile(string fileName, ILogger logger)
       {
          JefFile jefFile = JefFile.ParseFile(fileName);
 
@@ -26,7 +26,8 @@ namespace Assembler.OutputProcessing.FileReaders
 
          var textSegment = new TextSegmentAccessor(instructions, jefFile.BaseTextAddress);
 
-         return new DisassembledFile(dataSegment, textSegment, jefFile.ExternElements, jefFile.SymbolTable);
+         return new DisassembledJefFile(dataSegment, textSegment, jefFile.ExternElements, 
+                                        jefFile.SymbolTable, jefFile.DataMetadata);
       }
    }
 }

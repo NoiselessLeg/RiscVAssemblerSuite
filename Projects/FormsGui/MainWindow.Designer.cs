@@ -46,11 +46,12 @@
          this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
          this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.assemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.assembleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.assembleElfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.m_LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
          this.m_DisplayPanel = new Assembler.FormsGui.DisplayPanel();
+         this.assembleJefFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.m_MenuStrip.SuspendLayout();
          this.m_LayoutPanel.SuspendLayout();
          this.SuspendLayout();
@@ -188,17 +189,18 @@
          // assemblerToolStripMenuItem
          // 
          this.assemblerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.assembleFileToolStripMenuItem});
+            this.assembleElfFileToolStripMenuItem,
+            this.assembleJefFileToolStripMenuItem});
          this.assemblerToolStripMenuItem.Name = "assemblerToolStripMenuItem";
          this.assemblerToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
          this.assemblerToolStripMenuItem.Text = "Assembler";
          // 
-         // assembleFileToolStripMenuItem
+         // assembleElfFileToolStripMenuItem
          // 
-         this.assembleFileToolStripMenuItem.Name = "assembleFileToolStripMenuItem";
-         this.assembleFileToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-         this.assembleFileToolStripMenuItem.Text = "Assemble File";
-         this.assembleFileToolStripMenuItem.Click += new System.EventHandler(this.assembleFileToolStripMenuItem_Click);
+         this.assembleElfFileToolStripMenuItem.Name = "assembleElfFileToolStripMenuItem";
+         this.assembleElfFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.assembleElfFileToolStripMenuItem.Text = "Assemble ELF File";
+         this.assembleElfFileToolStripMenuItem.Click += new System.EventHandler(this.assembleElfFileToolStripMenuItem_Click);
          // 
          // helpToolStripMenuItem
          // 
@@ -238,6 +240,13 @@
          this.m_DisplayPanel.Size = new System.Drawing.Size(778, 891);
          this.m_DisplayPanel.TabIndex = 1;
          // 
+         // assembleJefFileToolStripMenuItem
+         // 
+         this.assembleJefFileToolStripMenuItem.Name = "assembleJefFileToolStripMenuItem";
+         this.assembleJefFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+         this.assembleJefFileToolStripMenuItem.Text = "Assemble JEF File";
+         this.assembleJefFileToolStripMenuItem.Click += new System.EventHandler(this.assembleJefFileToolStripMenuItem_Click);
+         // 
          // MainWindow
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -274,13 +283,14 @@
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
       private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem assembleFileToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem assembleElfFileToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
       private DisplayPanel m_DisplayPanel;
       private System.Windows.Forms.TableLayoutPanel m_LayoutPanel;
       private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
       private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+      private System.Windows.Forms.ToolStripMenuItem assembleJefFileToolStripMenuItem;
    }
 }
 

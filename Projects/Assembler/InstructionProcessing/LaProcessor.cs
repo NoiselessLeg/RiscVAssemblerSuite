@@ -38,16 +38,19 @@ namespace Assembler.InstructionProcessing
             // where the symbol will lie.
             if (sym.SegmentType == SegmentType.Data)
             {
-                instructionList.AddRange(new AddiProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], "x0", sym.Address.ToString() }));
+                instructionList.AddRange(new AddiProcessor().GenerateCodeForInstruction(address, 
+                   new string[] { instructionArgs[0], "x0", sym.Address.ToString() }));
             }
             else
             {
                 int shiftedAddress = sym.Address >> 12;
-                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], shiftedAddress.ToString() }));
+                instructionList.AddRange(new LuiProcessor().GenerateCodeForInstruction(address, 
+                   new string[] { instructionArgs[0], shiftedAddress.ToString() }));
 
                 // need to do something if this value is less 
                 int orImmVal = sym.Address & 0xFFF;
-                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(address, new string[] { instructionArgs[0], instructionArgs[0], orImmVal.ToString() }));
+                instructionList.AddRange(new OriProcessor().GenerateCodeForInstruction(address, 
+                   new string[] { instructionArgs[0], instructionArgs[0], orImmVal.ToString() }));
             }
 
             return instructionList;
@@ -81,7 +84,8 @@ namespace Assembler.InstructionProcessing
                 if (sym.SegmentType == SegmentType.Data)
                 {
                     var tempProc = new AddiProcessor();
-                    numGeneratedInstructions = tempProc.GenerateCodeForInstruction(address, new string[] { args[0], "x0", sym.Address.ToString() }).Count();
+                    numGeneratedInstructions = tempProc.GenerateCodeForInstruction(address, 
+                       new string[] { args[0], "x0", sym.Address.ToString() }).Count();
                 }
                 else
                 {

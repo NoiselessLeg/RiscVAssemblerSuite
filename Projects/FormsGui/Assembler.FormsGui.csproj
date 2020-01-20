@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyCommandParams.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\BindableToolStripMenuItem.cs">
@@ -129,6 +130,7 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Messaging\ActiveViewRequestMessage.cs" />
+    <Compile Include="Messaging\AssembleFileMessage.cs" />
     <Compile Include="Messaging\BasicMessage.cs" />
     <Compile Include="Messaging\IBasicMessage.cs" />
     <Compile Include="Messaging\MessageManager.cs" />
