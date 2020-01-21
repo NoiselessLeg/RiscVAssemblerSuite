@@ -12,6 +12,7 @@ namespace Assembler.FormsGui.ViewModels
                                   DataModels.BindableDataSegmentAccessor segmentAccessor)
       {
          m_StartingOffset = startingSegmentAddress;
+         m_DisplayType = RegisterDisplayType.Hexadecimal;
          m_MaxOffset = m_StartingOffset + (4 * WORD_SIZE_BYTES);
          m_Accessor = segmentAccessor;
          m_Accessor.DataSegmentWritten += OnDataSegmentChanged;

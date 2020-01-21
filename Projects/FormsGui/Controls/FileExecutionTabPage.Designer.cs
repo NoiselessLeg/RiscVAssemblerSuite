@@ -339,13 +339,11 @@
             this.m_ShowDataElemsAsDecimalBtn,
             this.m_ShowDataElemsAsHexBtn});
          this.m_DataGridCtxMenu.Name = "m_RegisterGridCtxMenu";
-         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 48);
+         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 70);
          // 
          // m_ShowDataElemsAsDecimalBtn
          // 
-         this.m_ShowDataElemsAsDecimalBtn.Checked = true;
          this.m_ShowDataElemsAsDecimalBtn.CheckOnClick = true;
-         this.m_ShowDataElemsAsDecimalBtn.CheckState = System.Windows.Forms.CheckState.Checked;
          this.m_ShowDataElemsAsDecimalBtn.Name = "m_ShowDataElemsAsDecimalBtn";
          this.m_ShowDataElemsAsDecimalBtn.Size = new System.Drawing.Size(246, 22);
          this.m_ShowDataElemsAsDecimalBtn.Text = "Display all values in decimal";
@@ -353,7 +351,9 @@
          // 
          // m_ShowDataElemsAsHexBtn
          // 
+         this.m_ShowDataElemsAsHexBtn.Checked = true;
          this.m_ShowDataElemsAsHexBtn.CheckOnClick = true;
+         this.m_ShowDataElemsAsHexBtn.CheckState = System.Windows.Forms.CheckState.Checked;
          this.m_ShowDataElemsAsHexBtn.Name = "m_ShowDataElemsAsHexBtn";
          this.m_ShowDataElemsAsHexBtn.Size = new System.Drawing.Size(246, 22);
          this.m_ShowDataElemsAsHexBtn.Text = "Display all values in hexadecimal";
