@@ -104,12 +104,30 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
                // if it is a trivial type, use our precomputed map to get the size.
                if (ParserCommon.IsTrivialDataType(tokens[dataDeclarationIdx]))
                {
+                  int paddingSize = ParserCommon.GetNumPaddingBytes(m_TotalBytesLaidOut, alignment);
                   dataSize = ParserCommon.DetermineTrivialDataSize(tokens[dataDeclarationIdx]);
                   int numElementsToStore = ParserCommon.GetArraySize(originalLine.Text, tokens[dataDeclarationIdx]);
-                  int reservedSize = numElementsToStore * dataSize;
-                  int paddingSize = ParserCommon.GetNumPaddingBytes(reservedSize, alignment);
+                  
+                  if (dataSize > paddingSize)
+                  {
+                     // add as much padding as we need to reach the next alignment boundary.
+                     for (int i = 0; i < paddingSize; ++i)
+                     {
+                        ++m_CurrDataAddress;
+                        ++m_TotalBytesLaidOut;
+                     }
+                  }
 
-                  m_CurrDataAddress += (reservedSize + paddingSize);
+                  int reservedSize = numElementsToStore * dataSize;
+
+                  // need to fixup the address here, since we have committed to placing padding
+                  // here.
+                  if (m_UnresolvedSym != null)
+                  {
+                     m_UnresolvedSym.Address = m_CurrDataAddress;
+                  }
+                  m_CurrDataAddress += reservedSize;
+                  m_TotalBytesLaidOut += reservedSize;
                }
 
                // otherwise, we'd expect there to be another token after the data type.
@@ -121,17 +139,54 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
 
                   dataSize = ParserCommon.DetermineNonTrivialDataLength(tokens[dataDeclarationIdx], dataStr);
 
-                  int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
-                  m_CurrDataAddress += (dataSize + paddingSize);
+                  int paddingSize = ParserCommon.GetNumPaddingBytes(m_TotalBytesLaidOut, alignment);
+
+                  if (dataSize > paddingSize)
+                  {
+                     // add as much padding as we need to reach the next alignment boundary.
+                     for (int i = 0; i < paddingSize; ++i)
+                     {
+                        ++m_CurrDataAddress;
+                        ++m_TotalBytesLaidOut;
+                     }
+                  }
+
+                  // need to fixup the address here, since we have committed to placing padding
+                  // here.
+                  if (m_UnresolvedSym != null)
+                  {
+                     m_UnresolvedSym.Address = m_CurrDataAddress;
+                  }
+
+                  m_CurrDataAddress += dataSize;
+                  m_TotalBytesLaidOut += dataSize;
                }
 
                // otherwise, this must be a .space declaration. just get the size following it.
                else
                {
+                  int paddingSize = ParserCommon.GetNumPaddingBytes(m_TotalBytesLaidOut, alignment);
                   dataSize = ParserCommon.DetermineNonTrivialDataLength(tokens[dataDeclarationIdx], tokens[dataDeclarationIdx + 1]);
+                  if (dataSize > paddingSize)
+                  {
+                     // add as much padding as we need to reach the next alignment boundary.
+                     for (int i = 0; i < paddingSize; ++i)
+                     {
+                        ++m_CurrDataAddress;
+                        ++m_TotalBytesLaidOut;
+                     }
+                  }
 
-                  int paddingSize = ParserCommon.GetNumPaddingBytes(dataSize, alignment);
-                  m_CurrDataAddress += (dataSize + paddingSize);
+                  // need to fixup the address here, since we have committed to placing padding
+                  // here.
+                  // need to really clean this logic up.
+                  if (m_UnresolvedSym != null)
+                  {
+                     m_UnresolvedSym.Address = m_CurrDataAddress;
+                  }
+
+                  m_CurrDataAddress += dataSize;
+                  m_TotalBytesLaidOut += dataSize;
                }
             }
             else
@@ -152,5 +207,6 @@ namespace Assembler.SymbolTableConstruction.SymbolBuilders
 
       private Symbol m_UnresolvedSym;
       private int m_CurrDataAddress;
+      private int m_TotalBytesLaidOut;
    }
 }

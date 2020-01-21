@@ -79,11 +79,8 @@ namespace Assembler
          symSection->set_type(SHT_SYMTAB);
          strTabSection->set_flags(SHF_ALLOC);
 
-         ELFIO::section* reloSection = m_pUnderlyingWriter->sections.add(".rela.txt");
-
          // strings of symbol names reside in the string table.
          int stringTableSectionIdx = m_pHelper->GetSectionIndex(".strtab");
-         int relocationSectionIdx = m_pHelper->GetSectionIndex(".rela.txt");
          symSection->set_link(stringTableSectionIdx);
          ELFIO::symbol_section_accessor symbols(*m_pUnderlyingWriter, symSection);
 

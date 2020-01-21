@@ -94,7 +94,7 @@ namespace Assembler
 
                   // build the symbol table
                   var instructionProcFac = new InstructionProcessorFactory(symTable);
-                  var symTableBuilder = new SymbolTableConstruction.SymbolTableBuilder(logger, instructionProcFac);
+                  var symTableBuilder = new SymbolTableBuilder(logger, instructionProcFac);
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Data, symTable);
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
