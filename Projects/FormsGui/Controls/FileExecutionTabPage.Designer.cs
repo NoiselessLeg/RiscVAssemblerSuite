@@ -178,7 +178,7 @@
          // 
          // jefFileViewModelBindingSource
          // 
-         this.jefFileViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.JefFileViewModel);
+         this.jefFileViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.DisassembledFileViewModel);
          // 
          // m_RegisterData
          // 

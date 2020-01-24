@@ -78,11 +78,15 @@ namespace Assembler
          for (auto itr = m_Instance.segments.begin(); itr != m_Instance.segments.end() && !found; ++itr)
          {
             ELFIO::segment* currSeg = *itr;
-            int secIdx = currSeg->get_section_index_at(0);
-            if (m_Instance.sections[secIdx]->get_name() == name)
+            if (currSeg->get_sections_num() > 0)
             {
-               found = true;
-               targetSeg = currSeg;
+               int secIdx = currSeg->get_section_index_at(0);
+
+               if (m_Instance.sections[secIdx]->get_name() == name)
+               {
+                  found = true;
+                  targetSeg = currSeg;
+               }
             }
          }
 

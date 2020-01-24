@@ -155,7 +155,7 @@
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
     <Compile Include="ViewModels\DataAddressViewModel.cs" />
-    <Compile Include="ViewModels\JefFileViewModel.cs" />
+    <Compile Include="ViewModels\DisassembledFileViewModel.cs" />
     <Compile Include="ViewModels\MessagingViewModel.cs" />
     <Compile Include="ViewModels\NotifyPropertyChangedBase.cs" />
     <Compile Include="Utility\ObservableQueue.cs" />
@@ -255,6 +255,7 @@
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.OpenFilesViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.PreferencesViewModel.datasource" />
     <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.TabPageViewModel.datasource" />
+    <None Include="Properties\DataSources\Assembler.FormsGui.ViewModels.WindowViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -38,14 +38,14 @@ namespace Assembler.FormsGui.Views
       private void CreateDataBindings(DebugWindowViewModel vm)
       {
          m_OpenFilesTabCtrl.TabPages.BindToObservableCollection(vm.FilesToExecute,
-            (param) => CreateTabPage(param as JefFileViewModel));
+            (param) => CreateTabPage(param as DisassembledFileViewModel));
 
          m_OpenFilesTabCtrl.DataBindings.Add(
             new Binding(nameof(m_OpenFilesTabCtrl.SelectedIndex), vm, nameof(vm.ActiveTabIdx),
             true, DataSourceUpdateMode.OnPropertyChanged));
       }
 
-      private TabPage CreateTabPage(JefFileViewModel file)
+      private TabPage CreateTabPage(DisassembledFileViewModel file)
       {
          var newTabPage = new TabPage();
          var tabContent = new FileExecutionTabPage(file)

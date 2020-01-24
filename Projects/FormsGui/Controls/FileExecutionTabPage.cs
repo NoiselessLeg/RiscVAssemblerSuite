@@ -19,7 +19,7 @@ namespace Assembler.FormsGui.Controls
          InitializeComponent();
       }
 
-      public FileExecutionTabPage(JefFileViewModel viewModel):
+      public FileExecutionTabPage(DisassembledFileViewModel viewModel):
          this()
       {
          m_PrimarySrcGridRowColor = m_SrcGrid.DefaultCellStyle.BackColor;
@@ -200,7 +200,7 @@ namespace Assembler.FormsGui.Controls
       private readonly Color m_AlternateSrcGridRowColor;
 
       private readonly ExecutionViewModel m_ExViewModel;
-      private readonly JefFileViewModel m_FileViewModel;
+      private readonly DisassembledFileViewModel m_FileViewModel;
       private readonly AssemblerExecutionConsole m_ExConsole;
    }
 }

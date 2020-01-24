@@ -28,7 +28,7 @@ namespace Assembler.FormsGui.ViewModels
          Running
       }
 
-      public ExecutionViewModel(ITerminal terminal, JefFileViewModel underlyingVm, IList<ProgramInstructionViewModel> instructionVm)
+      public ExecutionViewModel(ITerminal terminal, DisassembledFileViewModel underlyingVm, IList<ProgramInstructionViewModel> instructionVm)
       {
          // intialize this so that we're signaled. this will allow the run task
          // to be initialized to not wait until the user actually commands us to pause

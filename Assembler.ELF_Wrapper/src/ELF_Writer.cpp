@@ -39,10 +39,17 @@ namespace Assembler
 
       void ELF_Writer::AddDataSection(array<System::Byte>^ dataBytes, long address)
       {
-         // marshal the managed byte array to an unmanaged char pointer (array)
-         pin_ptr<System::Byte> pinnedBytes = &dataBytes[0]; 
-         unsigned char* bytePtr = pinnedBytes; 
-         const char* signedBytes = reinterpret_cast<const char*>(bytePtr);
+         // if nothing is actually in our array, just set this to the null
+         // character for now. this should never remain 0 for files
+         // with actual data segments.
+         const char* signedBytes = '\0';
+         if (dataBytes->Length > 0)
+         {
+            // marshal the managed byte array to an unmanaged char pointer (array)
+            pin_ptr<System::Byte> pinnedBytes = &dataBytes[0];
+            unsigned char* bytePtr = pinnedBytes;
+            signedBytes = reinterpret_cast<const char*>(bytePtr);
+         }
 
          // create a "permanent" copy of this memory so it doesn't get corrupted
          // once we leave the scope (i.e. the pinning goes away).

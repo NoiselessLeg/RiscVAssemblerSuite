@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.FormsGui.ViewModels
 {
-   public class JefFileViewModel : BaseViewModel
+   public class DisassembledFileViewModel : BaseViewModel
    {
-      public JefFileViewModel(string fileName,
+      public DisassembledFileViewModel(string fileName,
                               OutputProcessing.DisassembledFileBase runtimeFile)
       {
          m_UnderlyingFile = runtimeFile;

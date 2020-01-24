@@ -200,7 +200,7 @@ namespace Assembler.CodeGeneration
                   int numElems = int.Parse(subtokens[1]);
 
                   // first, try to get the value as a byte.
-                  if (!byte.TryParse(subtokens[0], out byte byteElem))
+                  if (!IntExtensions.TryParseEx(subtokens[0], out byte byteElem))
                   {
                      // if we fail, then try parsing the character as a literal.
                      if (!StringUtils.TryParseCharacterLiteralAsByte(subtokens[0], out byteElem))
@@ -226,7 +226,7 @@ namespace Assembler.CodeGeneration
                // otherwise, it should just be an element (without any size modifiers).
                // just parse it and add it.
                // first, try to get the value as a byte.
-               if (!byte.TryParse(token, out byte byteElem))
+               if (!IntExtensions.TryParseEx(token, out byte byteElem))
                {
                   // if we fail, then try parsing the character as a literal.
                   if (!StringUtils.TryParseCharacterLiteralAsByte(token, out byteElem))
@@ -271,7 +271,7 @@ namespace Assembler.CodeGeneration
 
                   // this syntax is wonky; we're trying to parse literal char elements
                   // as well as normal bytes here.
-                  if (!short.TryParse(subtokens[0], out short elemToAdd))
+                  if (!IntExtensions.TryParseEx(subtokens[0], out short elemToAdd))
                   {
                      // see if we can resolve the string as a symbol.
                      Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
@@ -291,7 +291,7 @@ namespace Assembler.CodeGeneration
             {
                // otherwise, it should just be an element (without any size modifiers).
                // just parse it and add it.
-               if (!short.TryParse(token, out short elemToAdd))
+               if (!IntExtensions.TryParseEx(token, out short elemToAdd))
                {
                   // see if we can resolve the string as a symbol.
                   Symbol sym = m_SymTbl.GetSymbol(token);
@@ -332,7 +332,7 @@ namespace Assembler.CodeGeneration
 
                   // this syntax is wonky; we're trying to parse literal char elements
                   // as well as normal bytes here.
-                  if (!int.TryParse(subtokens[0], out int elemToAdd))
+                  if (!IntExtensions.TryParseEx(subtokens[0], out int elemToAdd))
                   {
                      // see if we can resolve the string as a symbol.
                      Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
@@ -352,7 +352,7 @@ namespace Assembler.CodeGeneration
             {
                // otherwise, it should just be an element (without any size modifiers).
                // just parse it and add it.
-               if (!int.TryParse(token, out int elemToAdd))
+               if (!IntExtensions.TryParseEx(token, out int elemToAdd))
                {
                   // see if we can resolve the string as a symbol.
                   Symbol sym = m_SymTbl.GetSymbol(token);
@@ -390,7 +390,7 @@ namespace Assembler.CodeGeneration
                {
                   int numElems = int.Parse(subtokens[1]);
 
-                  if (!long.TryParse(subtokens[0], out long elemToAdd))
+                  if (!IntExtensions.TryParseEx(subtokens[0], out long elemToAdd))
                   {
                      // see if we can resolve the string as a symbol.
                      Symbol sym = m_SymTbl.GetSymbol(subtokens[0]);
@@ -411,7 +411,7 @@ namespace Assembler.CodeGeneration
             {
                // otherwise, it should just be an element (without any size modifiers).
                // just parse it and add it.
-               if (!long.TryParse(token, out long elemToAdd))
+               if (!IntExtensions.TryParseEx(token, out long elemToAdd))
                {
                   // see if we can resolve the string as a symbol.
                   Symbol sym = m_SymTbl.GetSymbol(token);

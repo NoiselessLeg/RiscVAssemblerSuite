@@ -46,7 +46,7 @@ namespace Assembler
          ELFIO::section* dataSection = m_pHelper->GetSectionByName(".data");
          if (!dataSection)
          {
-            throw gcnew System::InvalidOperationException("Compiled file has no data segment to decompile.");
+            return gcnew array<System::Byte>(0);
          }
 
          const char* rawBytes = dataSection->get_data();
@@ -63,7 +63,7 @@ namespace Assembler
          ELFIO::section* symtbl = m_pHelper->GetSectionByType(SHT_SYMTAB);
          if (!symtbl)
          {
-            throw gcnew System::InvalidOperationException("Compiled file has no symbol table to decompile.");
+            return gcnew Assembler::Common::ReverseSymbolTable();
          }
 
          const ELFIO::symbol_section_accessor symbols(*m_pUnderlyingReader, symtbl);
@@ -120,7 +120,7 @@ namespace Assembler
          ELFIO::section* textSection = m_pHelper->GetSectionByName(".text");
          if (!textSection)
          {
-            throw gcnew System::InvalidOperationException("Compiled file has no text segment to decompile.");
+            return gcnew array<System::Int32>(0);
          }
 
          const char* rawBytes = textSection->get_data();
@@ -143,36 +143,49 @@ namespace Assembler
 
       int ELF_Reader::GetDataSegmentSize()
       {
+         int size = 0;
          ELFIO::section* dataSection = m_pHelper->GetSectionByName(".data");
-         if (!dataSection)
+         if (dataSection)
          {
-            throw gcnew System::InvalidOperationException("Compiled file has no data segment to decompile.");
+            size = dataSection->get_size();
          }
 
-         return dataSection->get_size();
+         return size;
       }
 
       int ELF_Reader::GetTextSegmentSize()
       {
+         int size = 0;
          ELFIO::section* textSection = m_pHelper->GetSectionByName(".text");
          if (!textSection)
          {
-            throw gcnew System::InvalidOperationException("Compiled file has no text segment to decompile.");
+            size = textSection->get_size();
          }
 
-         return textSection->get_size();
+         return size;
       }
 
       int ELF_Reader::GetDataSegmentStartingAddress()
       {
          ELFIO::segment* dataSeg = m_pHelper->GetSegmentByName(".data");
-         return dataSeg->get_physical_address();
+         int startingAddr = 0;
+         if (dataSeg)
+         {
+            startingAddr = dataSeg->get_physical_address();
+         }
+
+         return startingAddr;
       }
 
       int ELF_Reader::GetTextSegmentStartingAddress()
       {
+         int size = 0;
          ELFIO::segment* textSeg = m_pHelper->GetSegmentByName(".text");
-         return textSeg->get_physical_address();
+         if (textSeg)
+         {
+            size = textSeg->get_physical_address();
+         }
+         return size;
       }
    }
 }

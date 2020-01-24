@@ -31,7 +31,8 @@ namespace Assembler.FormsGui.ViewModels
          }
          catch (Exception ex)
          {
-            MessageBox.Show(ex.Message, "Preferences Load Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(ex.Message, "Preferences Load Failure", 
+               MessageBoxButtons.OK, MessageBoxIcon.Warning);
          }
 
          m_Views = new ObservableCollection<ViewBase>();

@@ -22,7 +22,7 @@ namespace Assembler.FormsGui.ViewModels
          m_ViewId = viewId;
          m_DisassemblyMgr = new DisassemblyManager();
          m_LoggerVm = new LoggerViewModel();
-         m_FilesToExecute = new ObservableCollection<JefFileViewModel>();
+         m_FilesToExecute = new ObservableCollection<DisassembledFileViewModel>();
          m_FileProc = new FileReaderFactory();
          m_LoadFileCmd = new RelayCommand<string>((param) => LoadFile(param), true);
 
@@ -52,7 +52,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public ObservableCollection<JefFileViewModel> FilesToExecute
+      public ObservableCollection<DisassembledFileViewModel> FilesToExecute
       {
          get { return m_FilesToExecute; }
       }
@@ -70,7 +70,7 @@ namespace Assembler.FormsGui.ViewModels
          var fileReader = m_FileProc.GetFileParser(fileName);
          DisassembledFileBase file = fileReader.ParseFile(fileName, m_LoggerVm.Logger);
          DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
-         m_FilesToExecute.Add(new JefFileViewModel(fileName, file));
+         m_FilesToExecute.Add(new DisassembledFileViewModel(fileName, file));
          ActiveTabIdx = (m_FilesToExecute.Count - 1);
       }
 
@@ -90,6 +90,6 @@ namespace Assembler.FormsGui.ViewModels
       private readonly FileReaderFactory m_FileProc;
       private readonly LoggerViewModel m_LoggerVm;
 
-      private readonly ObservableCollection<JefFileViewModel> m_FilesToExecute;
+      private readonly ObservableCollection<DisassembledFileViewModel> m_FilesToExecute;
    }
 }

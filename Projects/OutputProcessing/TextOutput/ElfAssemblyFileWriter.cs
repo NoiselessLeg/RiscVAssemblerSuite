@@ -40,63 +40,143 @@ namespace Assembler.OutputProcessing.TextOutput
 
          int endAddress = currAddress + dataSegment.SegmentSize;
 
+         // get the address of each symbol in the .data segment, and sort
+         // them in ascending order.
+         var symbolAddresses = symTable.AllSymbols
+            .SelectIf(sym => sym.Address,
+               sym => dataSegment.BaseRuntimeDataAddress <= sym.Address && sym.Address < endAddress)
+            .OrderBy(num => num);
+
          while (currAddress < endAddress)
          {
-            // first, see if there's a label associated with the data element.
-            if (symTable.ContainsSymbol(currAddress))
+            // are there any addresses in our symbol table that fall between our current
+            // address and the next address we'll examine?
+            if (symbolAddresses.Any(address => currAddress <= address && address < (currAddress + sizeof(int))))
             {
-               Symbol sym = symTable.GetSymbol(currAddress);
-               // if so, write it out.
-               writer.Write(sym.LabelName);
-               writer.Write(":\t\t");
-
-               switch (sym.Size)
+               // okay, slightly narrow our screen 
+               if (symbolAddresses.Any(address => currAddress <= address && address < (currAddress + sizeof(short))))
                {
-                  case sizeof(byte):
+                  if (symTable.ContainsSymbol(currAddress))
                   {
+                     Symbol sym = symTable.GetSymbol(currAddress);
+                     writer.Write(sym.LabelName);
+                     writer.Write(":\t\t");
+                     switch (sym.Size)
+                     {
+                        case sizeof(byte):
+                        {
+                           writer.Write(".byte ");
+                           sbyte value = dataSegment.ReadSignedByte(currAddress);
+                           writer.WriteLine(value.ToString(StringifyAsHexadecimal(value, 2)));
+                           currAddress += sizeof(byte);
+                           break;
+                        }
+
+                        case sizeof(short):
+                        {
+                           writer.Write(".half ");
+                           short value = dataSegment.ReadShort(currAddress);
+                           writer.WriteLine(StringifyAsHexadecimal(value, 4));
+                           currAddress += sizeof(short);
+                           break;
+                        }
+
+                        case sizeof(int):
+                        {
+                           writer.Write(".word ");
+                           int value = dataSegment.ReadWord(currAddress);
+                           writer.WriteLine(StringifyAsHexadecimal(value, 8));
+                           currAddress += sizeof(int);
+                           break;
+                        }
+
+                        case sizeof(long):
+                        {
+                           writer.Write(".dword ");
+                           long value = dataSegment.ReadLong(currAddress);
+                           writer.WriteLine(StringifyAsHexadecimal(value, 16));
+                           currAddress += sizeof(int);
+                           break;
+                        }
+
+                        default:
+                        {
+                           // just be cheap for now and write out numeric values
+                           // (even though this could be an ascii string, in theory).
+                           // maybe at some point the assembler will be nice enough
+                           // to force strings into .strtable section for smarter
+                           // heuristics, but we don't want to force that upon the user
+                           // unless the user specifically directs us so.
+                           // (or maybe we do?). if someone thinks of a better
+                           // algorithm that can be done in the disassembler, I'm
+                           // al ears.
+                           int numWordsInSize = sym.Size / sizeof(int);
+                           int numLeftover = sym.Size % sizeof(int);
+
+                           int numHalfWordsInRemainingBytes = numLeftover / sizeof(int);
+                           int numRemainingBytes = numLeftover % sizeof(int);
+
+
+                           for (int i = 0; i < numWordsInSize; ++i)
+                           {
+                              writer.Write(".word ");
+                              int value = dataSegment.ReadWord(currAddress);
+                              writer.WriteLine(StringifyAsHexadecimal(value, 8));
+                              currAddress += sizeof(int);
+                           }
+
+                           for (int i = 0; i < numHalfWordsInRemainingBytes; ++i)
+                           {
+                              writer.Write(".half ");
+                              short value = dataSegment.ReadShort(currAddress);
+                              writer.WriteLine(StringifyAsHexadecimal(value, 4));
+                              currAddress += sizeof(short);
+                           }
+
+                           for (int i = 0; i < numRemainingBytes; ++i)
+                           {
+                              writer.Write(".byte ");
+                              sbyte value = dataSegment.ReadSignedByte(currAddress);
+                              writer.WriteLine(StringifyAsHexadecimal(value, 2));
+                              currAddress += sizeof(byte);
+                           }
+
+                           break;
+                        }
+
+                        // todo: determine if we need to perform alignment
+                        // detection (as in theory at this point we could judge
+                        // if the new byte offset is on a word boundary).
+                     }
+
+                  }
+                  else
+                  {
+
                      writer.Write(".byte ");
-                     byte value = dataSegment.ReadUnsignedByte(currAddress);
-                     writer.WriteLine(value);
+                     sbyte value = dataSegment.ReadSignedByte(currAddress);
+                     writer.WriteLine(value.ToString(StringifyAsHexadecimal(value, 2)));
+                     currAddress += sizeof(byte);
                      break;
                   }
 
-                  case sizeof(short):
-                  {
-                     writer.Write(".half ");
-                     short value = dataSegment.ReadShort(currAddress);
-                     writer.WriteLine(value);
-                     break;
-                  }
 
-                  case sizeof(int):
-                  {
-                     writer.Write(".word ");
-                     int value = dataSegment.ReadWord(currAddress);
-                     writer.WriteLine(value);
-                     break;
-                  }
-
-                  case sizeof(long):
-                  {
-                     writer.Write(".dword ");
-                     long value = dataSegment.ReadLong(currAddress);
-                     writer.WriteLine(value);
-                     break;
-                  }
-
-                  default:
-                  {
-                     writer.Write(".asciiz ");
-                     string value = dataSegment.ReadString(currAddress);
-                     string processedValue = ProcessString(value);
-                     writer.WriteLine(processedValue);
-                     currAddress += value.Length;
-                     break;
-                  }
+               }
+               else
+               {
+                  writer.Write(".half ");
+                  short value = dataSegment.ReadShort(currAddress);
+                  writer.WriteLine(StringifyAsHexadecimal(value, 4));
+                  currAddress += sizeof(short);
                }
             }
-
-            currAddress += sizeof(byte);
+            else
+            {
+               writer.Write(".word ");
+               int value = dataSegment.ReadWord(currAddress);
+               writer.WriteLine(StringifyAsHexadecimal(value, 8));
+               currAddress += sizeof(int);
+            }
          }
 
       }
@@ -130,6 +210,26 @@ namespace Assembler.OutputProcessing.TextOutput
          {
             writer.WriteLine(instruction.Instruction);
          }
+      }
+
+      private static string StringifyAsHexadecimal(long value, int numPlaces)
+      {
+         return "0x" + value.ToString("x" + numPlaces);
+      }
+
+      private static string StringifyAsHexadecimal(int value, int numPlaces)
+      {
+         return "0x" + value.ToString("x" + numPlaces);
+      }
+
+      private static string StringifyAsHexadecimal(short value, int numPlaces)
+      {
+         return "0x" + value.ToString("x" + numPlaces);
+      }
+
+      private static string StringifyAsHexadecimal(sbyte value, int numPlaces)
+      {
+         return "0x" + value.ToString("x" + numPlaces);
       }
 
       private readonly DisassembledFileBase m_UnderlyingFile;
