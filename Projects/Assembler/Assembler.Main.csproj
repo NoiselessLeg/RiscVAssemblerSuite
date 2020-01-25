@@ -163,7 +163,7 @@
     <Compile Include="InstructionProcessing\OrProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Assembler.ELF_Wrapper\Assembler.ELF_Wrapper.vcxproj">
+    <ProjectReference Include="..\ELF_Wrapper\Assembler.ELF_Wrapper.vcxproj">
       <Project>{89ba844d-01bc-44bc-80b2-5ac9a5602341}</Project>
       <Name>Assembler.ELF_Wrapper</Name>
     </ProjectReference>
