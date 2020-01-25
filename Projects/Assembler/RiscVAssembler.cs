@@ -99,7 +99,7 @@ namespace Assembler
                   symTableBuilder.GenerateSymbolTableForSegment(reader, SegmentType.Text, symTable);
 
                   // use the symbol table to generate code with references resolved.
-                  var objFile = new BasicObjectFile(symTable);
+                  var objFile = new BasicObjectFile(inputFile, symTable);
 
                   var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
                   codeGenerator.GenerateCode(reader, objFile);

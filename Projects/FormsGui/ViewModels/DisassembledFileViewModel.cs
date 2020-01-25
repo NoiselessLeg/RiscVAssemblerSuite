@@ -12,12 +12,13 @@ namespace Assembler.FormsGui.ViewModels
    public class DisassembledFileViewModel : BaseViewModel
    {
       public DisassembledFileViewModel(string fileName,
-                              OutputProcessing.DisassembledFileBase runtimeFile)
+                                       DisassembledFileBase runtimeFile)
       {
          m_UnderlyingFile = runtimeFile;
          m_Instructions = new BindingList<ProgramInstructionViewModel>();
          m_FilePath = fileName;
-         IEnumerable<InstructionData> programInstructions = DisassemblerServices.GenerateInstructionData(runtimeFile.SymbolTable, runtimeFile.TextSegment);
+         IEnumerable<InstructionData> programInstructions = 
+            DisassemblerServices.GenerateInstructionData(runtimeFile.SymbolTable, runtimeFile.TextSegment, runtimeFile.SourceInformation);
          foreach (InstructionData instructionElem in programInstructions)
          {
             m_Instructions.Add(new ProgramInstructionViewModel(instructionElem));
@@ -57,7 +58,7 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public OutputProcessing.DisassembledFileBase FileData
+      public DisassembledFileBase FileData
       {
          get { return m_UnderlyingFile; }
       }

@@ -43,6 +43,11 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      public string OriginalInstructionSourceText
+      {
+         get { return m_InstructionData.OriginalSourceInstruction; }
+      }
+
       public string ProgramCounterLocationStr
       {
          get { return "0x" + ProgramCounterLocation.ToString("x8"); }

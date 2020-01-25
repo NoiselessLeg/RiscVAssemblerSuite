@@ -33,10 +33,6 @@
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          this.m_TopHalfSplit = new System.Windows.Forms.SplitContainer();
          this.m_SrcGrid = new Assembler.FormsGui.Controls.BufferedDataGridView();
-         this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-         this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.jefFileViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
          this.m_RegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.RegName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -64,6 +60,11 @@
          this.m_StepBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_TerminateBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+         this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+         this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.OriginalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
          this.m_TopHalfSplit.Panel1.SuspendLayout();
          this.m_TopHalfSplit.Panel2.SuspendLayout();
@@ -120,6 +121,7 @@
             this.IsBreakpointApplied,
             this.programCounterLocationStrDataGridViewTextBoxColumn,
             this.rawBytesStrDataGridViewTextBoxColumn,
+            this.OriginalText,
             this.instructionTextDataGridViewTextBoxColumn});
          this.m_SrcGrid.DataMember = "InstructionList";
          this.m_SrcGrid.DataSource = this.jefFileViewModelBindingSource;
@@ -142,39 +144,6 @@
          this.m_SrcGrid.Size = new System.Drawing.Size(257, 152);
          this.m_SrcGrid.TabIndex = 0;
          this.m_SrcGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OnBreakpointSet);
-         // 
-         // IsBreakpointApplied
-         // 
-         this.IsBreakpointApplied.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.IsBreakpointApplied.DataPropertyName = "IsBreakpointApplied";
-         this.IsBreakpointApplied.HeaderText = "Bkpt";
-         this.IsBreakpointApplied.Name = "IsBreakpointApplied";
-         this.IsBreakpointApplied.Width = 35;
-         // 
-         // programCounterLocationStrDataGridViewTextBoxColumn
-         // 
-         this.programCounterLocationStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
-         this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 105;
-         // 
-         // rawBytesStrDataGridViewTextBoxColumn
-         // 
-         this.rawBytesStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
-         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
-         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
-         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
-         this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
-         // 
-         // instructionTextDataGridViewTextBoxColumn
-         // 
-         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
-         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Instruction";
-         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
-         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
          // 
          // jefFileViewModelBindingSource
          // 
@@ -339,7 +308,7 @@
             this.m_ShowDataElemsAsDecimalBtn,
             this.m_ShowDataElemsAsHexBtn});
          this.m_DataGridCtxMenu.Name = "m_RegisterGridCtxMenu";
-         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 70);
+         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 48);
          // 
          // m_ShowDataElemsAsDecimalBtn
          // 
@@ -426,6 +395,46 @@
          this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
          this.tableLayoutPanel1.TabIndex = 1;
          // 
+         // IsBreakpointApplied
+         // 
+         this.IsBreakpointApplied.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.IsBreakpointApplied.DataPropertyName = "IsBreakpointApplied";
+         this.IsBreakpointApplied.HeaderText = "Bkpt";
+         this.IsBreakpointApplied.Name = "IsBreakpointApplied";
+         this.IsBreakpointApplied.Width = 35;
+         // 
+         // programCounterLocationStrDataGridViewTextBoxColumn
+         // 
+         this.programCounterLocationStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 139;
+         // 
+         // rawBytesStrDataGridViewTextBoxColumn
+         // 
+         this.rawBytesStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
+         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
+         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
+         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
+         this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
+         // 
+         // OriginalText
+         // 
+         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
+         this.OriginalText.HeaderText = "Original Instruction";
+         this.OriginalText.Name = "OriginalText";
+         this.OriginalText.ReadOnly = true;
+         // 
+         // instructionTextDataGridViewTextBoxColumn
+         // 
+         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
+         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Instruction";
+         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
+         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
+         // 
          // FileExecutionTabPage
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -493,6 +502,7 @@
       private System.Windows.Forms.DataGridViewCheckBoxColumn IsBreakpointApplied;
       private System.Windows.Forms.DataGridViewTextBoxColumn programCounterLocationStrDataGridViewTextBoxColumn;
       private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn OriginalText;
       private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
    }
 }

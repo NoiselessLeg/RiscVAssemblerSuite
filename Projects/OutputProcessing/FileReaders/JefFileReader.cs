@@ -27,7 +27,7 @@ namespace Assembler.OutputProcessing.FileReaders
          var textSegment = new TextSegmentAccessor(instructions, jefFile.BaseTextAddress);
 
          return new DisassembledJefFile(dataSegment, textSegment, jefFile.ExternElements, 
-                                        jefFile.SymbolTable, jefFile.DataMetadata);
+                                        jefFile.SymbolTable, jefFile.DataMetadata, jefFile.DebugData);
       }
    }
 }

@@ -10,6 +10,7 @@ using Assembler.FormsGui.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,11 @@ namespace Assembler.FormsGui.ViewModels
          {
             var settingsLoader = new SettingsFileLoader(PREFS_FILENAME);
             m_Preferences.LoadFromStorage(settingsLoader);
+         }
+         catch (FileNotFoundException)
+         {
+            // ignore this. if we caught this, no prefs file exists. don't bother
+            // showing a nasty error as this can happen on a fresh install etc.
          }
          catch (Exception ex)
          {

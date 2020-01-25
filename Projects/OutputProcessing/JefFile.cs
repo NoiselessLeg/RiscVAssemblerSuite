@@ -44,12 +44,15 @@ namespace Assembler.OutputProcessing
             int externSize = hdr.SymTblOffset - hdr.ExternOffset;
             IEnumerable<byte> externElems = fileReader.ReadBytes(externSize);
 
-            // symbol table runs from the starting offset to the end of the file, so just calculate the delta.
-            int symTblSize = (int)(fileReader.BaseStream.Length - hdr.SymTblOffset);
+            int symTblSize = hdr.SrcMapOffset - hdr.SymTblOffset;
             ReverseSymbolTable symTbl = ParseSymbolTableSection(fileReader, symTblSize);
 
+            // src map table runs from the starting offset to the end of the file, so just calculate the delta.
+            int srcMapSize = (int)(fileReader.BaseStream.Length - hdr.SrcMapOffset);
+            SourceDebugData dbgData = ParseSourceMapInformation(fileReader, srcMapSize);
+
             return new JefFile(hdr.BaseDataAddress, hdr.BaseTextAddress, hdr.BaseExternAddress, dataMetaData,
-                               dataElems, textElems, externElems, symTbl);
+                               dataElems, textElems, externElems, symTbl, dbgData);
          }
       }
 
@@ -94,6 +97,12 @@ namespace Assembler.OutputProcessing
       public ReverseSymbolTable SymbolTable => m_SymTbl;
 
       /// <summary>
+      /// Gets the assembly source mapping table, which maps instruction addresses
+      /// to assembly source file line information.
+      /// </summary>
+      public SourceDebugData DebugData => m_DbgData;
+
+      /// <summary>
       /// Creates a representation of a .JEF file in memory.
       /// </summary>
       /// <param name="baseDataAddress">The base .data segment address.</param>
@@ -106,7 +115,7 @@ namespace Assembler.OutputProcessing
       /// <param name="symTable">A reconstructed SymbolTable instance from the .JEF file.</param>
       private JefFile(int baseDataAddress, int baseTextAddress, int baseExternAddress, IEnumerable<MetadataElement> metadataElems,
                       IEnumerable<byte> dataElements, IEnumerable<int> textElements, IEnumerable<byte> externElements,
-                      ReverseSymbolTable symTable)
+                      ReverseSymbolTable symTable, SourceDebugData dbgData)
       {
          m_BaseDataAddress = baseDataAddress;
          m_BaseTextAddress = baseTextAddress;
@@ -116,6 +125,7 @@ namespace Assembler.OutputProcessing
          m_TextElems = textElements;
          m_ExternElems = externElements;
          m_SymTbl = symTable;
+         m_DbgData = dbgData;
       }
 
       /// <summary>
@@ -301,6 +311,43 @@ namespace Assembler.OutputProcessing
       }
 
       /// <summary>
+      /// Parses the source map table segment, and constructs an instruction word to source
+      /// line mapping.
+      /// </summary>
+      /// <param name="reader">The reader to parse the file with.</param>
+      /// <param name="sectionSize">The size of the symbol table area, in bytes.</param>
+      /// <returns>A populated SourceDebugData structure.</returns>
+      private static SourceDebugData ParseSourceMapInformation(BinaryReader reader, int sectionSize)
+      {
+         int totalNumReadBytes = 0;
+         var fileNameBuilder = new StringBuilder();
+         byte readByte = reader.ReadByte();
+         ++totalNumReadBytes;
+         while (readByte != 0 && totalNumReadBytes < sectionSize)
+         {
+            char asciiVal = Convert.ToChar(readByte);
+            fileNameBuilder.Append(asciiVal);
+            readByte = reader.ReadByte();
+            ++totalNumReadBytes;
+         }
+
+         string sourceFilePath = fileNameBuilder.ToString();
+         var srcInfo = new SourceDebugData(sourceFilePath);
+
+         while (totalNumReadBytes < sectionSize)
+         {
+            short lineNum = reader.ReadInt16();
+            totalNumReadBytes += sizeof(short);
+            int instructionAddr = reader.ReadInt32();
+            totalNumReadBytes += sizeof(int);
+            srcInfo.AddSourceLineInformation(new SourceLineInformation(lineNum, instructionAddr));
+         }
+
+         return srcInfo;
+
+      }
+
+      /// <summary>
       /// Reads the header of a .JEF file.
       /// </summary>
       /// <param name="fileReader">The BinaryReader instance used to read the file with.</param>
@@ -341,9 +388,9 @@ namespace Assembler.OutputProcessing
 
          int relTextOffset = fileReader.ReadInt32();
          hdr.TextOffset = (int)(fileReader.BaseStream.Position + relTextOffset - sizeof(int));
-
-         // read the spare word.
-         int spare = fileReader.ReadInt32();
+         
+         int relSrcMapOffset = fileReader.ReadInt32();
+         hdr.SrcMapOffset = (int)(fileReader.BaseStream.Position + relSrcMapOffset - sizeof(int));
 
          int relExternOffset = fileReader.ReadInt32();
          hdr.ExternOffset = (int)(fileReader.BaseStream.Position + relExternOffset - sizeof(int));
@@ -369,6 +416,7 @@ namespace Assembler.OutputProcessing
          public int DataMetadataOffset;
          public int DataOffset;
          public int TextOffset;
+         public int SrcMapOffset;
          public int ExternOffset;
          public int SymTblOffset;
       }
@@ -381,5 +429,6 @@ namespace Assembler.OutputProcessing
       private readonly IEnumerable<byte> m_ExternElems;
       private readonly IEnumerable<int> m_TextElems;
       private readonly ReverseSymbolTable m_SymTbl;
+      private readonly SourceDebugData m_DbgData;
    }
 }

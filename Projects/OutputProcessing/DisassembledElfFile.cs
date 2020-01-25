@@ -12,7 +12,7 @@ namespace Assembler.OutputProcessing
    {
       public DisassembledElfFile(DataSegmentAccessor dataSegment, TextSegmentAccessor instructions,
                                  IEnumerable<byte> externSegment, ReverseSymbolTable symTable) :
-         base(dataSegment, instructions, externSegment, symTable)
+         base(dataSegment, instructions, externSegment, symTable, new SourceDebugData(string.Empty))
       {
          m_FileWriter = new ElfAssemblyFileWriter(this);
       }

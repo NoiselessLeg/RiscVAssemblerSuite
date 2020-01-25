@@ -12,9 +12,11 @@ namespace Assembler.Output
       /// <summary>
       /// Creates an instance of the basic object file.
       /// </summary>
+      /// <param name="srcFileName">The name of the assembly source file.</param>
       /// <param name="symTable">The symbol table that will be stored away.</param>
-      public BasicObjectFile(SymbolTable symTable)
+      public BasicObjectFile(string srcFileName, SymbolTable symTable)
       {
+         m_DbgData = new SourceDebugData(srcFileName);
          m_SymTable = symTable;
          m_DataElements = new List<IObjectFileComponent>();
          m_TextElements = new List<IObjectFileComponent>();
@@ -107,6 +109,15 @@ namespace Assembler.Output
       }
 
       /// <summary>
+      /// Adds .text source information to the object file.
+      /// </summary>
+      /// <param name="srcInfo">The source line information structure to add.</param>
+      public virtual void AddSourceInformation(SourceLineInformation srcInfo)
+      {
+         m_DbgData.AddSourceLineInformation(srcInfo);
+      }
+
+      /// <summary>
       /// Gets an IEnumerable of all saved .text elements in this .obj file.
       /// </summary>
       public IEnumerable<IObjectFileComponent> TextElements => m_TextElements;
@@ -126,7 +137,13 @@ namespace Assembler.Output
       /// </summary>
       public SymbolTable SymbolTable => m_SymTable;
 
+      /// <summary>
+      /// Gets the source file debug data structure.
+      /// </summary>
+      public SourceDebugData DebugData => m_DbgData;
+
       private readonly SymbolTable m_SymTable;
+      private readonly SourceDebugData m_DbgData;
       private readonly List<IObjectFileComponent> m_TextElements;
       private readonly List<IObjectFileComponent> m_DataElements;
       private readonly List<IObjectFileComponent> m_ExternElements;

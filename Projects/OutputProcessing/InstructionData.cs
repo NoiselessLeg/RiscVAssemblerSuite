@@ -13,11 +13,12 @@ namespace Assembler.OutputProcessing
    /// </summary>
    public class InstructionData
    {
-      public InstructionData(int rawWord, int programCounterLoc, string instruction)
+      public InstructionData(int rawWord, int programCounterLoc, string instruction, string originalSource)
       {
          m_Instruction = instruction;
          m_RawWord = rawWord;
          m_ProgramCtrLoc = programCounterLoc;
+         m_SrcInstruction = originalSource;
       }
 
       /// <summary>
@@ -44,8 +45,17 @@ namespace Assembler.OutputProcessing
          get { return m_ProgramCtrLoc; }
       }
 
+      /// <summary>
+      /// Gets the original source instruction from the assembly source file.
+      /// </summary>
+      public string OriginalSourceInstruction
+      {
+         get { return m_SrcInstruction; }
+      }
+
       private readonly string m_Instruction;
       private readonly int m_RawWord;
       private readonly int m_ProgramCtrLoc;
+      private readonly string m_SrcInstruction;
    }
 }

@@ -82,6 +82,9 @@
     <Compile Include="ReverseRegisterMap.cs" />
     <Compile Include="ReverseSymbolTable.cs" />
     <Compile Include="SegmentTypes.cs" />
+    <Compile Include="SourceDebugData.cs" />
+    <Compile Include="SourceLineInformation.cs" />
+    <Compile Include="StreamReaderUtil.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="ThreadSafeLogger.cs" />

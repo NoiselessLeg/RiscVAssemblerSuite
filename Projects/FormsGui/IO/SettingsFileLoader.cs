@@ -41,6 +41,10 @@ namespace Assembler.FormsGui.IO
          }
          catch (FileNotFoundException)
          {
+            // don't hide this. if we "successfully" instantiate, the tabs-to-space
+            // value will be reset to 0 (as that is a default value for an int).
+            // which will then cause the text editor control to break horribly
+            throw;
          }
          catch (Exception)
          {

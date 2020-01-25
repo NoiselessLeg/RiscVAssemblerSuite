@@ -18,7 +18,7 @@ namespace Assembler.OutputProcessing.TextOutput
       public void GenerateOutputFile(string outputFileName)
       {
          IEnumerable<InstructionData> txtInstructions = 
-            DisassemblerServices.GenerateInstructionData(m_File.SymbolTable, m_File.TextSegment);
+            DisassemblerServices.GenerateInstructionData(m_File.SymbolTable, m_File.TextSegment, m_File.SourceInformation);
          using (var writer = new StreamWriter(File.Open(outputFileName, FileMode.Create)))
          {
             GenerateDataSegment(writer, m_File.SymbolTable, m_File.DataSegment);

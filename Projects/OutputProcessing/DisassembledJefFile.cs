@@ -12,8 +12,8 @@ namespace Assembler.OutputProcessing
    {
       public DisassembledJefFile(DataSegmentAccessor dataSegment, TextSegmentAccessor instructions,
                                  IEnumerable<byte> externSegment, ReverseSymbolTable symTable,
-                                 IEnumerable<MetadataElement> metadata):
-         base(dataSegment, instructions, externSegment, symTable)
+                                 IEnumerable<MetadataElement> metadata, SourceDebugData dbgData):
+         base(dataSegment, instructions, externSegment, symTable, dbgData)
       {
          m_FileWriter = new JefAssemblyFileWriter(this);
          m_Metadata = metadata;
