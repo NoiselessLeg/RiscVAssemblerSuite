@@ -133,8 +133,6 @@ namespace Assembler.FormsGui.Views
          }
       }
 
-      private readonly DebugWindowViewModel m_ViewModel;
-
       private void TabControl_OnMouseUp(object sender, MouseEventArgs e)
       {
          if (e.Button == MouseButtons.Right)
@@ -158,5 +156,7 @@ namespace Assembler.FormsGui.Views
             }
          }
       }
+
+      private readonly DebugWindowViewModel m_ViewModel;
    }
 }

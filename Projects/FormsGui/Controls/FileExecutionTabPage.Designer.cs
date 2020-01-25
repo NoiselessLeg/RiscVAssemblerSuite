@@ -62,8 +62,9 @@
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
          this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.SourceLineNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.OriginalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
          this.m_TopHalfSplit.Panel1.SuspendLayout();
@@ -120,8 +121,9 @@
          this.m_SrcGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.IsBreakpointApplied,
             this.programCounterLocationStrDataGridViewTextBoxColumn,
-            this.rawBytesStrDataGridViewTextBoxColumn,
+            this.SourceLineNumber,
             this.OriginalText,
+            this.rawBytesStrDataGridViewTextBoxColumn,
             this.instructionTextDataGridViewTextBoxColumn});
          this.m_SrcGrid.DataMember = "InstructionList";
          this.m_SrcGrid.DataSource = this.jefFileViewModelBindingSource;
@@ -412,6 +414,20 @@
          this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
          this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 139;
          // 
+         // SourceLineNumber
+         // 
+         this.SourceLineNumber.DataPropertyName = "SourceLineNumber";
+         this.SourceLineNumber.HeaderText = "Source Line Number";
+         this.SourceLineNumber.Name = "SourceLineNumber";
+         this.SourceLineNumber.ReadOnly = true;
+         // 
+         // OriginalText
+         // 
+         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
+         this.OriginalText.HeaderText = "Source Line";
+         this.OriginalText.Name = "OriginalText";
+         this.OriginalText.ReadOnly = true;
+         // 
          // rawBytesStrDataGridViewTextBoxColumn
          // 
          this.rawBytesStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -421,17 +437,10 @@
          this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
          this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
          // 
-         // OriginalText
-         // 
-         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
-         this.OriginalText.HeaderText = "Original Instruction";
-         this.OriginalText.Name = "OriginalText";
-         this.OriginalText.ReadOnly = true;
-         // 
          // instructionTextDataGridViewTextBoxColumn
          // 
          this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
-         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Instruction";
+         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Synthesized Instruction";
          this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
          this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
          // 
@@ -501,8 +510,9 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn Word3Str;
       private System.Windows.Forms.DataGridViewCheckBoxColumn IsBreakpointApplied;
       private System.Windows.Forms.DataGridViewTextBoxColumn programCounterLocationStrDataGridViewTextBoxColumn;
-      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn SourceLineNumber;
       private System.Windows.Forms.DataGridViewTextBoxColumn OriginalText;
+      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
       private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
    }
 }

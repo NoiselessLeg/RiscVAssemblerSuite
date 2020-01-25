@@ -51,13 +51,15 @@ namespace Assembler.OutputProcessing
                IParameterStringifier stringifier = InstructionTextMap.GetParameterStringifier(inst.InstructionType);
                string formattedInstruction = stringifier.GetFormattedInstruction(currPgrmCtr, inst, symTable);
                string originalSourceLine = string.Empty;
+               int lineNum = -1;
                if (dbgData.IsSourceTextAssociatedWithAddress(currPgrmCtr))
                {
-                  int sourceLineNum = dbgData.GetLineNumberAssociatedWithAddress(currPgrmCtr);
-                  originalSourceLine = reader.ReadLineAt(sourceLineNum);
+                  lineNum = dbgData.GetLineNumberAssociatedWithAddress(currPgrmCtr);
+                  originalSourceLine = reader.ReadLineAt(lineNum);
                   originalSourceLine = originalSourceLine.Trim();
                }
-               var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, originalSourceLine);
+               var srcLineInfo = new SourceLineInformation(lineNum, currPgrmCtr, originalSourceLine);
+               var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, srcLineInfo);
                instructions.Add(instructionElem);
                currPgrmCtr += sizeof(int);
             }
@@ -76,7 +78,8 @@ namespace Assembler.OutputProcessing
          {
             IParameterStringifier stringifier = InstructionTextMap.GetParameterStringifier(inst.InstructionType);
             string formattedInstruction = stringifier.GetFormattedInstruction(currPgrmCtr, inst, symTable);
-            var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, string.Empty);
+            var srcLineInfo = new SourceLineInformation(-1, currPgrmCtr);
+            var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, srcLineInfo);
             instructions.Add(instructionElem);
             currPgrmCtr += sizeof(int);
          }

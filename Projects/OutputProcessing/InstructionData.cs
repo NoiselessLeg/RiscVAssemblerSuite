@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,12 @@ namespace Assembler.OutputProcessing
    /// </summary>
    public class InstructionData
    {
-      public InstructionData(int rawWord, int programCounterLoc, string instruction, string originalSource)
+      public InstructionData(int rawWord, int programCounterLoc, string instruction, SourceLineInformation srcData)
       {
          m_Instruction = instruction;
          m_RawWord = rawWord;
          m_ProgramCtrLoc = programCounterLoc;
-         m_SrcInstruction = originalSource;
+         m_SrcLineInfo = srcData;
       }
 
       /// <summary>
@@ -50,12 +51,20 @@ namespace Assembler.OutputProcessing
       /// </summary>
       public string OriginalSourceInstruction
       {
-         get { return m_SrcInstruction; }
+         get { return m_SrcLineInfo.SourceLine; }
+      }
+
+      /// <summary>
+      /// Gets the source file line number.
+      /// </summary>
+      public int SourceLineNumber
+      {
+         get { return m_SrcLineInfo.SourceFileLineNumber; }
       }
 
       private readonly string m_Instruction;
       private readonly int m_RawWord;
       private readonly int m_ProgramCtrLoc;
-      private readonly string m_SrcInstruction;
+      private readonly SourceLineInformation m_SrcLineInfo;
    }
 }

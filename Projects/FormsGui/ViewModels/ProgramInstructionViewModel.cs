@@ -43,6 +43,20 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      public string SourceLineNumber
+      {
+         get
+         {
+            string ret = string.Empty;
+            if (m_InstructionData.SourceLineNumber >= 0)
+            {
+               ret = m_InstructionData.SourceLineNumber.ToString();
+            }
+
+            return ret;
+         }
+      }
+
       public string OriginalInstructionSourceText
       {
          get { return m_InstructionData.OriginalSourceInstruction; }
