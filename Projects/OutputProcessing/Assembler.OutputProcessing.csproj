@@ -73,7 +73,9 @@
     <Compile Include="FileReaders\ICompiledFileReader.cs" />
     <Compile Include="FileReaders\JefFileReader.cs" />
     <Compile Include="InstructionData.cs" />
+    <Compile Include="ParamDecoding\EbreakDecoder.cs" />
     <Compile Include="TextOutput\InstructionGenerators\BranchInstructionStringifier.cs" />
+    <Compile Include="TextOutput\InstructionGenerators\EbreakStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\EcallStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\ImmediateParamStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\IParameterStringifier.cs" />

@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assembler.FormsGui.Commands;
+﻿using Assembler.FormsGui.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {
-   public class ActiveViewRequestMessage : IBasicMessage
+   public class ActiveViewRequestMessage : BasicMessage
    {
-      public ActiveViewRequestMessage(int viewIdx)
+      public ActiveViewRequestMessage(int viewIdx) :
+         base(MessageType.ActiveViewRequest)
       {
          m_ViewIdx = viewIdx;
       }
 
-      public MessageType MessageType
+      protected override void ExecuteCommand(ICommand handlerCmd)
       {
-         get { return MessageType.ActiveViewRequest; }
-      }
-
-      public void HandleMessage(ICommand handlerCmd)
-      {
-         if (handlerCmd.CanExecute)
-         {
-            handlerCmd.Execute(m_ViewIdx);
-         }
+         handlerCmd.Execute(m_ViewIdx);
       }
 
       private readonly int m_ViewIdx;

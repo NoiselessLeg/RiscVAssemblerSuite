@@ -66,14 +66,14 @@ namespace Assembler.CodeGeneration
             // trim whitespace from the beginning and end of each token.
             argTokens = argTokens.Apply((str) => str.Trim()).ToArray();
 
-            var srcInfo = new SourceLineInformation(asmLine.LineNum, m_CurrTextAddress, asmLine.Text);
-            objFile.AddSourceInformation(srcInfo);
-
             // find the parser for the instruction.
             IInstructionGenerator parser = m_ParserFac.GetProcessorForInstruction(instructionToken);
 
             // beq instructions should (hopefully) not generate multiple instructions..
             IEnumerable<int> generatedInstructions = parser.GenerateCodeForInstruction(m_CurrTextAddress, argTokens);
+            
+            var srcInfo = new SourceLineInformation(asmLine.LineNum, m_CurrTextAddress, asmLine.Text);
+            objFile.AddSourceInformation(srcInfo);
 
             foreach (int generatedInstruction in generatedInstructions)
             {

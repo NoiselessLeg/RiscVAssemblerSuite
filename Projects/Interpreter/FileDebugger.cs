@@ -1,33 +1,30 @@
 ﻿using Assembler.Common;
 using Assembler.Interpreter.InstructionInterpretation;
-using Assembler.OutputProcessing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
-    public class FileDebugger : IRuntimeEnvironment
-    {
-        /// <summary>
-        /// Creates an instance of the file interpreter.
-        /// </summary>
-        /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
-        public FileDebugger(ITerminal terminal)
-        {
-            m_InterpreterFac = new InterpreterFactory(terminal);
-            m_Terminal = terminal;
-        }
+   [Obsolete("Use the execution context to perform actions", false)]
+   public class FileDebugger : IRuntimeEnvironment
+   {
+      /// <summary>
+      /// Creates an instance of the file interpreter.
+      /// </summary>
+      /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
+      public FileDebugger(ITerminal terminal)
+      {
 
-        /// <summary>
-        /// Diassembles and interprets a .JEF file.
-        /// </summary>
-        /// <param name="fileName">The file name to run the interpreter with.</param>
-        /// <param name="logger">A logging implementation to use to disassemble the file.</param>
-        public void RunJefFile(string fileName, ILogger logger)
-        {
+         m_InterpreterFac = new InterpreterFactory(this, terminal);
+         m_Terminal = terminal;
+      }
+
+      /// <summary>
+      /// Diassembles and interprets a .JEF file.
+      /// </summary>
+      /// <param name="fileName">The file name to run the interpreter with.</param>
+      /// <param name="logger">A logging implementation to use to disassemble the file.</param>
+      public void RunJefFile(string fileName, ILogger logger)
+      {
 #if false
          try
             {
@@ -85,18 +82,23 @@ namespace Assembler.Interpreter
                 logger.Log(LogLevel.Critical, "Runtime exception occurred: " + ex.Message);
             }
 #endif
-        }
+      }
 
-        /// <summary>
-        /// Terminates execution of the current assembly program.
-        /// </summary>
-        public void Terminate()
-        {
-            m_TerminationRequested = true;
-        }
+      /// <summary>
+      /// Terminates execution of the current assembly program.
+      /// </summary>
+      public void Terminate()
+      {
+         m_TerminationRequested = true;
+      }
 
-        private readonly ITerminal m_Terminal;
-        private readonly InterpreterFactory m_InterpreterFac;
-        private bool m_TerminationRequested;
-    }
+      public void Break()
+      {
+
+      }
+
+      private readonly ITerminal m_Terminal;
+      private readonly InterpreterFactory m_InterpreterFac;
+      private bool m_TerminationRequested;
+   }
 }

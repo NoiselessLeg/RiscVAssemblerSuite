@@ -4,7 +4,6 @@ using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
-using ICSharpCode.TextEditor.Document;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -142,19 +141,6 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public int CurrentFileOffset
-      {
-         get { return m_CurrFileOffset; }
-         set
-         {
-            if (m_CurrFileOffset != value)
-            {
-               m_CurrFileOffset = value;
-               OnPropertyChanged();
-            }
-         }
-      }
-
       public LoggerViewModel Logger
       {
          get { return m_LoggerVm; }
@@ -171,9 +157,7 @@ namespace Assembler.FormsGui.ViewModels
       }
 
       private bool m_AreAnyChangesUnsaved;
-
-
-      private int m_CurrFileOffset;
+      
       private readonly ObservableCollection<AssemblyException> m_FileErrors;
 
       private readonly LoggerViewModel m_LoggerVm;

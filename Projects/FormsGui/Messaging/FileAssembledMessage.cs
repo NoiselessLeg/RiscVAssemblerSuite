@@ -7,24 +7,17 @@ using Assembler.FormsGui.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {
-   public class FileAssembledMessage : IBasicMessage
+   public class FileAssembledMessage : BasicMessage
    {
-      public FileAssembledMessage(string assembledFilePath)
+      public FileAssembledMessage(string assembledFilePath):
+         base(MessageType.FileAssembled)
       {
          m_CompiledFilePath = assembledFilePath;
       }
 
-      public MessageType MessageType
+      protected override void ExecuteCommand(ICommand handlerCmd)
       {
-         get { return MessageType.FileAssembled; }
-      }
-
-      public void HandleMessage(ICommand handlerCmd)
-      {
-         if (handlerCmd.CanExecute)
-         {
-            handlerCmd.Execute(m_CompiledFilePath);
-         }
+         handlerCmd.Execute(m_CompiledFilePath);
       }
 
       private readonly string m_CompiledFilePath;

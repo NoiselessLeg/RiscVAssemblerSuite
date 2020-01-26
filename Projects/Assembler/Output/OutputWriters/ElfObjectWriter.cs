@@ -35,11 +35,14 @@ namespace Assembler.Output.OutputWriters
             textBytes = strm.ToArray();
          }
 
-         var underlyingWriter = new ELF_Wrapper.ELF_Writer();
-         underlyingWriter.AddDataSection(dataBytes, Common.CommonConstants.BASE_DATA_ADDRESS);
-         underlyingWriter.AddTextSection(textBytes, Common.CommonConstants.BASE_TEXT_ADDRESS);
-         underlyingWriter.AddSymbolTable(file.SymbolTable);
-         underlyingWriter.WriteFile(fileName);
+         using (var underlyingWriter = new ELF_Wrapper.ELF_Writer())
+         {
+            underlyingWriter.AddDataSection(dataBytes, Common.CommonConstants.BASE_DATA_ADDRESS);
+            underlyingWriter.AddTextSection(textBytes, Common.CommonConstants.BASE_TEXT_ADDRESS);
+            underlyingWriter.AddSymbolTable(file.SymbolTable);
+            underlyingWriter.WriteFile(fileName);
+         }
+            
       }
    }
 }

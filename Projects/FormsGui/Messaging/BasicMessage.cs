@@ -23,8 +23,13 @@ namespace Assembler.FormsGui.Messaging
       {
          if (handlerCmd.CanExecute)
          {
-            handlerCmd.Execute(null);
+            ExecuteCommand(handlerCmd);
          }
+      }
+
+      protected virtual void ExecuteCommand(ICommand handlerCmd)
+      {
+         handlerCmd.Execute(null);
       }
 
       private readonly MessageType m_Type;

@@ -1,11 +1,13 @@
 ﻿using Assembler.Common;
 using Assembler.Interpreter.InstructionInterpretation;
+using System;
 
 namespace Assembler.Interpreter
 {
    /// <summary>
    /// Class that runs and interprets a .JEF RISC-V output file.
    /// </summary>
+   [Obsolete("Use the execution context to perform actions", false)]
    public class FileInterpreter : IRuntimeEnvironment
    {
       /// <summary>
@@ -14,7 +16,7 @@ namespace Assembler.Interpreter
       /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
       public FileInterpreter(ITerminal terminal)
       {
-         m_InterpreterFac = new InterpreterFactory(terminal);
+         m_InterpreterFac = new InterpreterFactory(this, terminal);
       }
 
       /// <summary>
@@ -84,6 +86,11 @@ namespace Assembler.Interpreter
       public void Terminate()
       {
          m_TerminationRequested = true;
+      }
+
+      public void Break()
+      {
+
       }
 
       private readonly InterpreterFactory m_InterpreterFac;

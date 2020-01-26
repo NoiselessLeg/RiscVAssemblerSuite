@@ -91,6 +91,7 @@ https://github.com/ei
                 <Key word = "mv" /> 
                 <Key word = "j" />
                 <Key word = "ecall" />
+                <Key word = "ebreak" />
             </KeyWords>
             
             <KeyWords name="AssemblerDecls" color="Fuchsia" bold="false" italic="false">

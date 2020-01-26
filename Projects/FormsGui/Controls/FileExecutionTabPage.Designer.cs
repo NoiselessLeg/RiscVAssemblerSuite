@@ -32,49 +32,45 @@
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
          System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
          this.m_TopHalfSplit = new System.Windows.Forms.SplitContainer();
+         this.m_RegisterGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.m_ShowDecValuesItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.m_ShowHexValuesItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.m_HorizontalSplitContainer = new System.Windows.Forms.SplitContainer();
+         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+         this.m_DataGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+         this.m_ShowDataElemsAsDecimalBtn = new System.Windows.Forms.ToolStripMenuItem();
+         this.m_ShowDataElemsAsHexBtn = new System.Windows.Forms.ToolStripMenuItem();
+         this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+         this.m_StartBtn = new System.Windows.Forms.ToolStripMenuItem();
+         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.m_SrcGrid = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.jefFileViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
          this.m_RegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.RegName = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.valueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.m_RegisterGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-         this.m_ShowDecValuesItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.m_ShowHexValuesItem = new System.Windows.Forms.ToolStripMenuItem();
          this.executionViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
-         this.m_HorizontalSplitContainer = new System.Windows.Forms.SplitContainer();
-         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
          this.m_DataSegmentGrdView = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.BaseAddressStr = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Word0Str = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Word1Str = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Word2Str = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Word3Str = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.m_DataGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-         this.m_ShowDataElemsAsDecimalBtn = new System.Windows.Forms.ToolStripMenuItem();
-         this.m_ShowDataElemsAsHexBtn = new System.Windows.Forms.ToolStripMenuItem();
          this.m_ConsoleTxt = new Assembler.FormsGui.Controls.ConsoleTextBox();
-         this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-         this.m_StartBtn = new System.Windows.Forms.ToolStripMenuItem();
          this.m_PauseBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_ResumeBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_StepBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_TerminateBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
-         this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
          this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.SourceLineNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.OriginalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
          this.m_TopHalfSplit.Panel1.SuspendLayout();
          this.m_TopHalfSplit.Panel2.SuspendLayout();
          this.m_TopHalfSplit.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).BeginInit();
          this.m_RegisterGridCtxMenu.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.m_HorizontalSplitContainer)).BeginInit();
          this.m_HorizontalSplitContainer.Panel1.SuspendLayout();
          this.m_HorizontalSplitContainer.Panel2.SuspendLayout();
@@ -83,10 +79,14 @@
          this.splitContainer1.Panel1.SuspendLayout();
          this.splitContainer1.Panel2.SuspendLayout();
          this.splitContainer1.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).BeginInit();
          this.m_DataGridCtxMenu.SuspendLayout();
          this.menuStrip1.SuspendLayout();
          this.tableLayoutPanel1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).BeginInit();
          this.SuspendLayout();
          // 
          // m_TopHalfSplit
@@ -106,6 +106,128 @@
          this.m_TopHalfSplit.SplitterDistance = 257;
          this.m_TopHalfSplit.TabIndex = 1;
          // 
+         // m_RegisterGridCtxMenu
+         // 
+         this.m_RegisterGridCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_ShowDecValuesItem,
+            this.m_ShowHexValuesItem});
+         this.m_RegisterGridCtxMenu.Name = "m_RegisterGridCtxMenu";
+         this.m_RegisterGridCtxMenu.Size = new System.Drawing.Size(247, 48);
+         // 
+         // m_ShowDecValuesItem
+         // 
+         this.m_ShowDecValuesItem.Checked = true;
+         this.m_ShowDecValuesItem.CheckOnClick = true;
+         this.m_ShowDecValuesItem.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.m_ShowDecValuesItem.Name = "m_ShowDecValuesItem";
+         this.m_ShowDecValuesItem.Size = new System.Drawing.Size(246, 22);
+         this.m_ShowDecValuesItem.Text = "Display all values in decimal";
+         this.m_ShowDecValuesItem.ToolTipText = "Shows all register values in decimal";
+         // 
+         // m_ShowHexValuesItem
+         // 
+         this.m_ShowHexValuesItem.CheckOnClick = true;
+         this.m_ShowHexValuesItem.Name = "m_ShowHexValuesItem";
+         this.m_ShowHexValuesItem.Size = new System.Drawing.Size(246, 22);
+         this.m_ShowHexValuesItem.Text = "Display all values in hexadecimal";
+         // 
+         // m_HorizontalSplitContainer
+         // 
+         this.m_HorizontalSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_HorizontalSplitContainer.Location = new System.Drawing.Point(3, 27);
+         this.m_HorizontalSplitContainer.Name = "m_HorizontalSplitContainer";
+         this.m_HorizontalSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+         // 
+         // m_HorizontalSplitContainer.Panel1
+         // 
+         this.m_HorizontalSplitContainer.Panel1.Controls.Add(this.m_TopHalfSplit);
+         // 
+         // m_HorizontalSplitContainer.Panel2
+         // 
+         this.m_HorizontalSplitContainer.Panel2.Controls.Add(this.splitContainer1);
+         this.m_HorizontalSplitContainer.Size = new System.Drawing.Size(515, 405);
+         this.m_HorizontalSplitContainer.SplitterDistance = 152;
+         this.m_HorizontalSplitContainer.TabIndex = 2;
+         // 
+         // splitContainer1
+         // 
+         this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+         this.splitContainer1.Name = "splitContainer1";
+         this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+         // 
+         // splitContainer1.Panel1
+         // 
+         this.splitContainer1.Panel1.Controls.Add(this.m_DataSegmentGrdView);
+         // 
+         // splitContainer1.Panel2
+         // 
+         this.splitContainer1.Panel2.Controls.Add(this.m_ConsoleTxt);
+         this.splitContainer1.Size = new System.Drawing.Size(515, 249);
+         this.splitContainer1.SplitterDistance = 114;
+         this.splitContainer1.TabIndex = 1;
+         // 
+         // m_DataGridCtxMenu
+         // 
+         this.m_DataGridCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_ShowDataElemsAsDecimalBtn,
+            this.m_ShowDataElemsAsHexBtn});
+         this.m_DataGridCtxMenu.Name = "m_RegisterGridCtxMenu";
+         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 48);
+         // 
+         // m_ShowDataElemsAsDecimalBtn
+         // 
+         this.m_ShowDataElemsAsDecimalBtn.CheckOnClick = true;
+         this.m_ShowDataElemsAsDecimalBtn.Name = "m_ShowDataElemsAsDecimalBtn";
+         this.m_ShowDataElemsAsDecimalBtn.Size = new System.Drawing.Size(246, 22);
+         this.m_ShowDataElemsAsDecimalBtn.Text = "Display all values in decimal";
+         this.m_ShowDataElemsAsDecimalBtn.ToolTipText = "Shows all register values in decimal";
+         // 
+         // m_ShowDataElemsAsHexBtn
+         // 
+         this.m_ShowDataElemsAsHexBtn.Checked = true;
+         this.m_ShowDataElemsAsHexBtn.CheckOnClick = true;
+         this.m_ShowDataElemsAsHexBtn.CheckState = System.Windows.Forms.CheckState.Checked;
+         this.m_ShowDataElemsAsHexBtn.Name = "m_ShowDataElemsAsHexBtn";
+         this.m_ShowDataElemsAsHexBtn.Size = new System.Drawing.Size(246, 22);
+         this.m_ShowDataElemsAsHexBtn.Text = "Display all values in hexadecimal";
+         // 
+         // menuStrip1
+         // 
+         this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_StartBtn,
+            this.m_PauseBtn,
+            this.m_ResumeBtn,
+            this.m_StepBtn,
+            this.m_TerminateBtn});
+         this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+         this.menuStrip1.Name = "menuStrip1";
+         this.menuStrip1.Size = new System.Drawing.Size(521, 24);
+         this.menuStrip1.TabIndex = 1;
+         this.menuStrip1.Text = "menuStrip1";
+         // 
+         // m_StartBtn
+         // 
+         this.m_StartBtn.Name = "m_StartBtn";
+         this.m_StartBtn.Size = new System.Drawing.Size(98, 20);
+         this.m_StartBtn.Text = "Start Execution";
+         this.m_StartBtn.Click += new System.EventHandler(this.OnStartButtonClicked);
+         // 
+         // tableLayoutPanel1
+         // 
+         this.tableLayoutPanel1.ColumnCount = 1;
+         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tableLayoutPanel1.Controls.Add(this.m_HorizontalSplitContainer, 0, 1);
+         this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
+         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+         this.tableLayoutPanel1.RowCount = 2;
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+         this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
+         this.tableLayoutPanel1.TabIndex = 1;
+         // 
          // m_SrcGrid
          // 
          this.m_SrcGrid.AllowUserToAddRows = false;
@@ -121,10 +243,10 @@
          this.m_SrcGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.IsBreakpointApplied,
             this.programCounterLocationStrDataGridViewTextBoxColumn,
-            this.SourceLineNumber,
-            this.OriginalText,
+            this.instructionTextDataGridViewTextBoxColumn,
             this.rawBytesStrDataGridViewTextBoxColumn,
-            this.instructionTextDataGridViewTextBoxColumn});
+            this.SourceLineNumber,
+            this.OriginalText});
          this.m_SrcGrid.DataMember = "InstructionList";
          this.m_SrcGrid.DataSource = this.jefFileViewModelBindingSource;
          dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -184,71 +306,10 @@
          this.valueDataGridViewTextBoxColumn.HeaderText = "Value";
          this.valueDataGridViewTextBoxColumn.Name = "valueDataGridViewTextBoxColumn";
          // 
-         // m_RegisterGridCtxMenu
-         // 
-         this.m_RegisterGridCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_ShowDecValuesItem,
-            this.m_ShowHexValuesItem});
-         this.m_RegisterGridCtxMenu.Name = "m_RegisterGridCtxMenu";
-         this.m_RegisterGridCtxMenu.Size = new System.Drawing.Size(247, 48);
-         // 
-         // m_ShowDecValuesItem
-         // 
-         this.m_ShowDecValuesItem.Checked = true;
-         this.m_ShowDecValuesItem.CheckOnClick = true;
-         this.m_ShowDecValuesItem.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.m_ShowDecValuesItem.Name = "m_ShowDecValuesItem";
-         this.m_ShowDecValuesItem.Size = new System.Drawing.Size(246, 22);
-         this.m_ShowDecValuesItem.Text = "Display all values in decimal";
-         this.m_ShowDecValuesItem.ToolTipText = "Shows all register values in decimal";
-         // 
-         // m_ShowHexValuesItem
-         // 
-         this.m_ShowHexValuesItem.CheckOnClick = true;
-         this.m_ShowHexValuesItem.Name = "m_ShowHexValuesItem";
-         this.m_ShowHexValuesItem.Size = new System.Drawing.Size(246, 22);
-         this.m_ShowHexValuesItem.Text = "Display all values in hexadecimal";
-         // 
          // executionViewModelBindingSource
          // 
          this.executionViewModelBindingSource.DataMember = "Registers";
          this.executionViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
-         // 
-         // m_HorizontalSplitContainer
-         // 
-         this.m_HorizontalSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_HorizontalSplitContainer.Location = new System.Drawing.Point(3, 27);
-         this.m_HorizontalSplitContainer.Name = "m_HorizontalSplitContainer";
-         this.m_HorizontalSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-         // 
-         // m_HorizontalSplitContainer.Panel1
-         // 
-         this.m_HorizontalSplitContainer.Panel1.Controls.Add(this.m_TopHalfSplit);
-         // 
-         // m_HorizontalSplitContainer.Panel2
-         // 
-         this.m_HorizontalSplitContainer.Panel2.Controls.Add(this.splitContainer1);
-         this.m_HorizontalSplitContainer.Size = new System.Drawing.Size(515, 405);
-         this.m_HorizontalSplitContainer.SplitterDistance = 152;
-         this.m_HorizontalSplitContainer.TabIndex = 2;
-         // 
-         // splitContainer1
-         // 
-         this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-         this.splitContainer1.Name = "splitContainer1";
-         this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-         // 
-         // splitContainer1.Panel1
-         // 
-         this.splitContainer1.Panel1.Controls.Add(this.m_DataSegmentGrdView);
-         // 
-         // splitContainer1.Panel2
-         // 
-         this.splitContainer1.Panel2.Controls.Add(this.m_ConsoleTxt);
-         this.splitContainer1.Size = new System.Drawing.Size(515, 249);
-         this.splitContainer1.SplitterDistance = 114;
-         this.splitContainer1.TabIndex = 1;
          // 
          // m_DataSegmentGrdView
          // 
@@ -304,31 +365,6 @@
          this.Word3Str.HeaderText = "Value (+C)";
          this.Word3Str.Name = "Word3Str";
          // 
-         // m_DataGridCtxMenu
-         // 
-         this.m_DataGridCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_ShowDataElemsAsDecimalBtn,
-            this.m_ShowDataElemsAsHexBtn});
-         this.m_DataGridCtxMenu.Name = "m_RegisterGridCtxMenu";
-         this.m_DataGridCtxMenu.Size = new System.Drawing.Size(247, 48);
-         // 
-         // m_ShowDataElemsAsDecimalBtn
-         // 
-         this.m_ShowDataElemsAsDecimalBtn.CheckOnClick = true;
-         this.m_ShowDataElemsAsDecimalBtn.Name = "m_ShowDataElemsAsDecimalBtn";
-         this.m_ShowDataElemsAsDecimalBtn.Size = new System.Drawing.Size(246, 22);
-         this.m_ShowDataElemsAsDecimalBtn.Text = "Display all values in decimal";
-         this.m_ShowDataElemsAsDecimalBtn.ToolTipText = "Shows all register values in decimal";
-         // 
-         // m_ShowDataElemsAsHexBtn
-         // 
-         this.m_ShowDataElemsAsHexBtn.Checked = true;
-         this.m_ShowDataElemsAsHexBtn.CheckOnClick = true;
-         this.m_ShowDataElemsAsHexBtn.CheckState = System.Windows.Forms.CheckState.Checked;
-         this.m_ShowDataElemsAsHexBtn.Name = "m_ShowDataElemsAsHexBtn";
-         this.m_ShowDataElemsAsHexBtn.Size = new System.Drawing.Size(246, 22);
-         this.m_ShowDataElemsAsHexBtn.Text = "Display all values in hexadecimal";
-         // 
          // m_ConsoleTxt
          // 
          this.m_ConsoleTxt.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -336,27 +372,6 @@
          this.m_ConsoleTxt.Name = "m_ConsoleTxt";
          this.m_ConsoleTxt.Size = new System.Drawing.Size(515, 131);
          this.m_ConsoleTxt.TabIndex = 0;
-         // 
-         // menuStrip1
-         // 
-         this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_StartBtn,
-            this.m_PauseBtn,
-            this.m_ResumeBtn,
-            this.m_StepBtn,
-            this.m_TerminateBtn});
-         this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-         this.menuStrip1.Name = "menuStrip1";
-         this.menuStrip1.Size = new System.Drawing.Size(521, 24);
-         this.menuStrip1.TabIndex = 1;
-         this.menuStrip1.Text = "menuStrip1";
-         // 
-         // m_StartBtn
-         // 
-         this.m_StartBtn.Name = "m_StartBtn";
-         this.m_StartBtn.Size = new System.Drawing.Size(98, 20);
-         this.m_StartBtn.Text = "Start Execution";
-         this.m_StartBtn.Click += new System.EventHandler(this.OnStartButtonClicked);
          // 
          // m_PauseBtn
          // 
@@ -382,21 +397,6 @@
          this.m_TerminateBtn.Size = new System.Drawing.Size(126, 20);
          this.m_TerminateBtn.Text = "Terminate Execution";
          // 
-         // tableLayoutPanel1
-         // 
-         this.tableLayoutPanel1.ColumnCount = 1;
-         this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-         this.tableLayoutPanel1.Controls.Add(this.m_HorizontalSplitContainer, 0, 1);
-         this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
-         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-         this.tableLayoutPanel1.RowCount = 2;
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-         this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
-         this.tableLayoutPanel1.TabIndex = 1;
-         // 
          // IsBreakpointApplied
          // 
          this.IsBreakpointApplied.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -414,19 +414,14 @@
          this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
          this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 139;
          // 
-         // SourceLineNumber
+         // instructionTextDataGridViewTextBoxColumn
          // 
-         this.SourceLineNumber.DataPropertyName = "SourceLineNumber";
-         this.SourceLineNumber.HeaderText = "Source Line Number";
-         this.SourceLineNumber.Name = "SourceLineNumber";
-         this.SourceLineNumber.ReadOnly = true;
-         // 
-         // OriginalText
-         // 
-         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
-         this.OriginalText.HeaderText = "Source Line";
-         this.OriginalText.Name = "OriginalText";
-         this.OriginalText.ReadOnly = true;
+         this.instructionTextDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
+         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Synthesized Instruction";
+         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
+         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
+         this.instructionTextDataGridViewTextBoxColumn.Width = 129;
          // 
          // rawBytesStrDataGridViewTextBoxColumn
          // 
@@ -437,12 +432,22 @@
          this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
          this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
          // 
-         // instructionTextDataGridViewTextBoxColumn
+         // SourceLineNumber
          // 
-         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
-         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Synthesized Instruction";
-         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
-         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
+         this.SourceLineNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.SourceLineNumber.DataPropertyName = "SourceLineNumber";
+         this.SourceLineNumber.HeaderText = "Source Line Number";
+         this.SourceLineNumber.Name = "SourceLineNumber";
+         this.SourceLineNumber.ReadOnly = true;
+         this.SourceLineNumber.Width = 118;
+         // 
+         // OriginalText
+         // 
+         this.OriginalText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
+         this.OriginalText.HeaderText = "Source Line";
+         this.OriginalText.Name = "OriginalText";
+         this.OriginalText.ReadOnly = true;
          // 
          // FileExecutionTabPage
          // 
@@ -455,11 +460,7 @@
          this.m_TopHalfSplit.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).EndInit();
          this.m_TopHalfSplit.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).EndInit();
          this.m_RegisterGridCtxMenu.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).EndInit();
          this.m_HorizontalSplitContainer.Panel1.ResumeLayout(false);
          this.m_HorizontalSplitContainer.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_HorizontalSplitContainer)).EndInit();
@@ -468,12 +469,16 @@
          this.splitContainer1.Panel2.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
          this.splitContainer1.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).EndInit();
          this.m_DataGridCtxMenu.ResumeLayout(false);
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
          this.tableLayoutPanel1.ResumeLayout(false);
          this.tableLayoutPanel1.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).EndInit();
          this.ResumeLayout(false);
 
       }
@@ -510,9 +515,9 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn Word3Str;
       private System.Windows.Forms.DataGridViewCheckBoxColumn IsBreakpointApplied;
       private System.Windows.Forms.DataGridViewTextBoxColumn programCounterLocationStrDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
+      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
       private System.Windows.Forms.DataGridViewTextBoxColumn SourceLineNumber;
       private System.Windows.Forms.DataGridViewTextBoxColumn OriginalText;
-      private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
-      private System.Windows.Forms.DataGridViewTextBoxColumn instructionTextDataGridViewTextBoxColumn;
    }
 }

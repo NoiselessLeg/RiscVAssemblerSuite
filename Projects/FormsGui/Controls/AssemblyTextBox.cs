@@ -20,6 +20,7 @@ namespace Assembler.FormsGui.Controls
 {
    public partial class AssemblyTextBox : UserControl, IDisposable
    {
+
       public AssemblyTextBox()
       {
          InitializeComponent();
@@ -31,6 +32,7 @@ namespace Assembler.FormsGui.Controls
       {
          m_ViewModel = avm;
          m_ViewModel.FileErrors.CollectionChanged += OnFileErrorsChanged;
+
          preferencesViewModelBindingSource.DataSource = preferences;
          assemblyFileViewModelBindingSource.DataSource = avm;
 

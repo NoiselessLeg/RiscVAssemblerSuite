@@ -99,7 +99,7 @@ namespace Assembler.CodeGeneration
          // all of the encountered exceptions.
          if (exceptionList.Any())
          {
-            throw new AggregateException(exceptionList);
+            throw new AggregateAssemblyError(exceptionList);
          }
 
          // reset the StreamReader to the beginning position.

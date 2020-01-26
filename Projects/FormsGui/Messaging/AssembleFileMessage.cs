@@ -8,22 +8,18 @@ using Assembler.FormsGui.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {
-   public class AssembleFileMessage : IBasicMessage
+   public class AssembleFileMessage : BasicMessage
    {
-      public AssembleFileMessage(OutputTypes fileOutputType)
+      public AssembleFileMessage(OutputTypes fileOutputType):
+         base(MessageType.AssembleFileRequest)
       {
          m_OutputType = fileOutputType;
       }
 
-      public void HandleMessage(ICommand handlerCmd)
+      protected override void ExecuteCommand(ICommand handlerCmd)
       {
-         if (handlerCmd.CanExecute)
-         {
-            handlerCmd.Execute(m_OutputType);
-         }
+         handlerCmd.Execute(m_OutputType);
       }
-
-      public MessageType MessageType => MessageType.AssembleFileRequest;
 
       private readonly OutputTypes m_OutputType;
    }

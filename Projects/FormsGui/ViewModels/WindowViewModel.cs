@@ -64,6 +64,7 @@ namespace Assembler.FormsGui.ViewModels
          m_CloseWindowCmd = new RelayCommand(() => SendFileMessage(MessageType.WindowClosingNotification), true);
 
          m_ShowPreferencesCmd = new RelayCommand(() => ShowPreferences(), true);
+         
       }
 
       public IBasicView ActiveView
@@ -159,6 +160,10 @@ namespace Assembler.FormsGui.ViewModels
       private void SendFileAssemblyCommand(OutputTypes fileOutputType)
       {
          BroadcastMessage(new AssembleFileMessage(fileOutputType));
+      }
+
+      private void OnMsgEnqueued(object sender, EventArgs e)
+      {
       }
 
       private int m_ActiveIdx;

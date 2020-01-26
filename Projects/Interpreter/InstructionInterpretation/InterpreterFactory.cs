@@ -2,17 +2,14 @@
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assembler.Interpreter.InstructionInterpretation
 {
-    class InterpreterFactory
-    {
-        public InterpreterFactory(ITerminal terminalWindow)
-        {
-            m_InterpreterTable = new Dictionary<InstructionType, IInstructionInterpreter>()
+   internal class InterpreterFactory
+   {
+      public InterpreterFactory(IRuntimeEnvironment environment, ITerminal terminalWindow)
+      {
+         m_InterpreterTable = new Dictionary<InstructionType, IInstructionInterpreter>()
             {
                 { InstructionType.Addi, new AddiInterpreter() },
                 { InstructionType.Add, new AddInterpreter() },
@@ -51,26 +48,26 @@ namespace Assembler.Interpreter.InstructionInterpretation
                 { InstructionType.Sw, new SwInterpreter() },
                 { InstructionType.Xor, new XorInterpreter() },
                 { InstructionType.Xori, new XoriInterpreter() },
+               { InstructionType.Ebreak, new EbreakInterpreter(environment) }
             };
-        }
-        
-        /// <summary>
-        /// Gets an interpreter for a specified instruction type. Throws an ArgumentException
-        /// if the instruction is not recognized.
-        /// </summary>
-        /// <param name="instructionType">The type of instruction to retrieve an interpreter for.</param>
-        /// <returns>The appropriate interpreter implementation for the instruction.</returns>
-        public IInstructionInterpreter GetInterpreter(InstructionType instructionType)
-        {
-            IInstructionInterpreter stringifier = default(IInstructionInterpreter);
-            if (!m_InterpreterTable.TryGetValue(instructionType, out stringifier))
-            {
-                throw new ArgumentException(instructionType + " is not a valid RISC-V instruction.");
-            }
+      }
 
-            return stringifier;
-        }
+      /// <summary>
+      /// Gets an interpreter for a specified instruction type. Throws an ArgumentException
+      /// if the instruction is not recognized.
+      /// </summary>
+      /// <param name="instructionType">The type of instruction to retrieve an interpreter for.</param>
+      /// <returns>The appropriate interpreter implementation for the instruction.</returns>
+      public IInstructionInterpreter GetInterpreter(InstructionType instructionType)
+      {
+         if (!m_InterpreterTable.TryGetValue(instructionType, out IInstructionInterpreter stringifier))
+         {
+            throw new ArgumentException(instructionType + " is not a valid RISC-V instruction.");
+         }
 
-        private readonly Dictionary<InstructionType, IInstructionInterpreter> m_InterpreterTable;
-    }
+         return stringifier;
+      }
+
+      private readonly Dictionary<InstructionType, IInstructionInterpreter> m_InterpreterTable;
+   }
 }

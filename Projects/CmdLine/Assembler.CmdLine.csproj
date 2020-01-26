@@ -73,6 +73,7 @@
     <Compile Include="LoggerTypes\FileLogger.cs" />
     <Compile Include="LoggerTypes\HybridLogger.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,10 @@
     <ProjectReference Include="..\Interpreter\Assembler.Interpreter.csproj">
       <Project>{795bac7e-64ed-4685-81be-3032dcc461d7}</Project>
       <Name>Assembler.Interpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OutputProcessing\Assembler.OutputProcessing.csproj">
+      <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
+      <Name>Assembler.OutputProcessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>

@@ -189,6 +189,11 @@ namespace Assembler.FormsGui.ViewModels
       {
          m_ExecutionState = PrgmExecutionState.Stopped;
       }
+      
+      public void Break()
+      {
+         PauseExecution();
+      }
 
       private void OnExecutionTaskBegin()
       {

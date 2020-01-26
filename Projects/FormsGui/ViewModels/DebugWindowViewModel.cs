@@ -20,7 +20,6 @@ namespace Assembler.FormsGui.ViewModels
          base(msgMgr)
       {
          m_ViewId = viewId;
-         m_DisassemblyMgr = new DisassemblyManager();
          m_LoggerVm = new LoggerViewModel();
          m_FilesToExecute = new ObservableCollection<DisassembledFileViewModel>();
          m_FileProc = new FileReaderFactory();
@@ -69,7 +68,6 @@ namespace Assembler.FormsGui.ViewModels
 
          var fileReader = m_FileProc.GetFileParser(fileName);
          DisassembledFileBase file = fileReader.ParseFile(fileName, m_LoggerVm.Logger);
-         DataModels.AssemblyFile disassembly = m_DisassemblyMgr.DiassembleCompiledFile(fileName, m_LoggerVm.Logger);
          m_FilesToExecute.Add(new DisassembledFileViewModel(fileName, file));
          ActiveTabIdx = (m_FilesToExecute.Count - 1);
       }
@@ -83,7 +81,6 @@ namespace Assembler.FormsGui.ViewModels
 
       private int m_ActiveTabIdx;
       private readonly int m_ViewId;
-      private readonly DisassemblyManager m_DisassemblyMgr;
 
       private readonly RelayCommand<string> m_LoadFileCmd;
       private readonly RelayCommand<string> m_HandleAssembledFileCmd;

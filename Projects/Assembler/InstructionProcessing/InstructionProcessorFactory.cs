@@ -1,27 +1,27 @@
-﻿using Assembler.Common;
-using Assembler.CodeGeneration;
+﻿using Assembler.CodeGeneration;
+using Assembler.Common;
 using Assembler.SymbolTableConstruction;
 using System;
 using System.Collections.Generic;
 
 namespace Assembler.InstructionProcessing
 {
-    /// <summary>
-    /// Factory that allows both the symbol table generator and code generator
-    /// to retrieve implementations of size estimators and code generators for
-    /// a given instruction.
-    /// </summary>
-    class InstructionProcessorFactory
-    {
-        /// <summary>
-        /// Creates an instance of the ProcessorFactory, and the BaseInstructionProcessor
-        /// implementations.
-        /// </summary>
-        /// <param name="symbolTable">The filled-out symbol table that Processors can utilize for symbol lookup.</param>
-        public InstructionProcessorFactory(SymbolTable symbolTable)
-        {
-            //TODO: Add instructions here as they are generated!
-            m_InstructionList = new Dictionary<string, BaseInstructionProcessor>()
+   /// <summary>
+   /// Factory that allows both the symbol table generator and code generator
+   /// to retrieve implementations of size estimators and code generators for
+   /// a given instruction.
+   /// </summary>
+   internal class InstructionProcessorFactory
+   {
+      /// <summary>
+      /// Creates an instance of the ProcessorFactory, and the BaseInstructionProcessor
+      /// implementations.
+      /// </summary>
+      /// <param name="symbolTable">The filled-out symbol table that Processors can utilize for symbol lookup.</param>
+      public InstructionProcessorFactory(SymbolTable symbolTable)
+      {
+         //TODO: Add instructions here as they are generated!
+         m_InstructionList = new Dictionary<string, BaseInstructionProcessor>()
             {
                 //RV32I
                 { "lui", new LuiProcessor() },
@@ -85,69 +85,68 @@ namespace Assembler.InstructionProcessing
                 { "remu", new PlaceholderProcessor("remu") },
 
                 // for system calls
-                { "ecall", new EcallProcessor() }
-
+                { "ecall", new EcallProcessor() },
+                { "ebreak", new EbreakProcessor() }
             };
-        }
+      }
 
-        /// <summary>
-        /// Retrieves a code generator for a given instruction. The string should be
-        /// checked to determine if it is a supported instruction by calling IsInstruction
-        /// before passing it to this function; if the instruction cannot be found, an
-        /// ArgumentException will be thrown.
-        /// </summary>
-        /// <param name="instruction">The instruction to retrieve an instruction generator for.</param>
-        /// <returns>The processor implementation for this instruction.</returns>
-        public IInstructionGenerator GetProcessorForInstruction(string instruction)
-        {
-            return RetrieveProcessorForInstruction(instruction);
-        }
+      /// <summary>
+      /// Retrieves a code generator for a given instruction. The string should be
+      /// checked to determine if it is a supported instruction by calling IsInstruction
+      /// before passing it to this function; if the instruction cannot be found, an
+      /// ArgumentException will be thrown.
+      /// </summary>
+      /// <param name="instruction">The instruction to retrieve an instruction generator for.</param>
+      /// <returns>The processor implementation for this instruction.</returns>
+      public IInstructionGenerator GetProcessorForInstruction(string instruction)
+      {
+         return RetrieveProcessorForInstruction(instruction);
+      }
 
-        /// <summary>
-        /// Retrieves a size estimator for a given instruction. The string should be
-        /// checked to determine if it is a supported instruction by calling IsInstruction
-        /// before passing it to this function; if the instruction cannot be found, an
-        /// ArgumentException will be thrown.
-        /// </summary>
-        /// <param name="instruction">The instruction to retrieve a size estimator for.</param>
-        /// <returns>The size estimation implementation for this instruction.</returns>
-        public IInstructionSizeEstimator GetEstimatorForInstruction(string instruction)
-        {
-            return RetrieveProcessorForInstruction(instruction);
-        }
+      /// <summary>
+      /// Retrieves a size estimator for a given instruction. The string should be
+      /// checked to determine if it is a supported instruction by calling IsInstruction
+      /// before passing it to this function; if the instruction cannot be found, an
+      /// ArgumentException will be thrown.
+      /// </summary>
+      /// <param name="instruction">The instruction to retrieve a size estimator for.</param>
+      /// <returns>The size estimation implementation for this instruction.</returns>
+      public IInstructionSizeEstimator GetEstimatorForInstruction(string instruction)
+      {
+         return RetrieveProcessorForInstruction(instruction);
+      }
 
-        /// <summary>
-        /// Base implementation for retrieving an instruction processor. This suits both the needs
-        /// of the symbol table generator and the code generator, but each public function returns an instance of
-        /// the interface that the parser in questions requires. This is common between the two, as the base class
-        /// implements both of these interfaces.
-        /// </summary>
-        /// <param name="instruction">The instruction to retrieve a size estimator for.</param>
-        /// <returns>The instruction processor for the given instruction.</returns>
-        private BaseInstructionProcessor RetrieveProcessorForInstruction(string instruction)
-        {
-            BaseInstructionProcessor processorImpl = null;
+      /// <summary>
+      /// Base implementation for retrieving an instruction processor. This suits both the needs
+      /// of the symbol table generator and the code generator, but each public function returns an instance of
+      /// the interface that the parser in questions requires. This is common between the two, as the base class
+      /// implements both of these interfaces.
+      /// </summary>
+      /// <param name="instruction">The instruction to retrieve a size estimator for.</param>
+      /// <returns>The instruction processor for the given instruction.</returns>
+      private BaseInstructionProcessor RetrieveProcessorForInstruction(string instruction)
+      {
 
-            // precondition should that IsInstruction is called prior to retriving a Processor.
-            // if we can't find a Processor, throw an exception.
-            if (!m_InstructionList.TryGetValue(instruction, out processorImpl))
-            {
-                throw new ArgumentException("Cannot find processor for unknown instruction " + instruction);
-            }
+         // precondition should that IsInstruction is called prior to retriving a Processor.
+         // if we can't find a Processor, throw an exception.
+         if (!m_InstructionList.TryGetValue(instruction, out BaseInstructionProcessor processorImpl))
+         {
+            throw new ArgumentException("Cannot find processor for unknown instruction " + instruction);
+         }
 
-            return processorImpl;
-        }
+         return processorImpl;
+      }
 
-        /// <summary>
-        /// Determines if a token is in the list of supported instructions.
-        /// </summary>
-        /// <param name="token">The token to examine.</param>
-        /// <returns>True if the token is a known/supported instruction; otherwise returns false.</returns>
-        public bool IsInstruction(string token)
-        {
-            return m_InstructionList.ContainsKey(token);
-        }
+      /// <summary>
+      /// Determines if a token is in the list of supported instructions.
+      /// </summary>
+      /// <param name="token">The token to examine.</param>
+      /// <returns>True if the token is a known/supported instruction; otherwise returns false.</returns>
+      public bool IsInstruction(string token)
+      {
+         return m_InstructionList.ContainsKey(token);
+      }
 
-        private readonly Dictionary<string, BaseInstructionProcessor> m_InstructionList;
-    }
+      private readonly Dictionary<string, BaseInstructionProcessor> m_InstructionList;
+   }
 }

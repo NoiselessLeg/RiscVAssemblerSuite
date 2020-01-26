@@ -42,6 +42,7 @@
         Sra,
         Or,
         And,
-        Ecall
+        Ecall,
+        Ebreak
     }
 }

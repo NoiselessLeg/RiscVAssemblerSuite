@@ -12,19 +12,22 @@ namespace Assembler.OutputProcessing.FileReaders
    {
       public DisassembledFileBase ParseFile(string fileName, ILogger logger)
       {
-         var elfFileParser = new ELF_Reader(fileName);
-         var decompiledFile = new ELF_CompiledFile(elfFileParser);
+         using (var elfFileParser = new ELF_Reader(fileName))
+         {
+            var decompiledFile = new ELF_CompiledFile(elfFileParser);
 
-         var dataSection = new DataSegmentAccessor(decompiledFile.DataBytes, decompiledFile.DataSegmentStartingAddress, decompiledFile.DataSegmentSize);
-         
-         var textSegmentParser = new TextSegmentParser();
-         IEnumerable<DisassembledInstruction> rawTextSegment = textSegmentParser.ParseTextSegment(decompiledFile.RawInstructions);
-         var textSection = new TextSegmentAccessor(rawTextSegment, decompiledFile.TextSegmentStartingAddress);
+            var dataSection = new DataSegmentAccessor(decompiledFile.DataBytes, decompiledFile.DataSegmentStartingAddress, decompiledFile.DataSegmentSize);
 
-         //TODO: fix when we have better sectioning logic.
-         var dummyExtern = new List<byte>();
+            var textSegmentParser = new TextSegmentParser();
+            IEnumerable<DisassembledInstruction> rawTextSegment = textSegmentParser.ParseTextSegment(decompiledFile.RawInstructions);
+            var textSection = new TextSegmentAccessor(rawTextSegment, decompiledFile.TextSegmentStartingAddress);
 
-         return new DisassembledElfFile(dataSection, textSection, dummyExtern, decompiledFile.SymbolTable);
+            //TODO: fix when we have better sectioning logic.
+            var dummyExtern = new List<byte>();
+
+            return new DisassembledElfFile(dataSection, textSection, dummyExtern, decompiledFile.SymbolTable);
+         }
+            
       }
    }
 }

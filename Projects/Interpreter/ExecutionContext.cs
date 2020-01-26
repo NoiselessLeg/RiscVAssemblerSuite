@@ -21,7 +21,7 @@ namespace Assembler.Interpreter
       {
          m_Environment = environment;
          m_Terminal = terminal;
-         m_InterpreterFac = new InterpreterFactory(terminal);
+         m_InterpreterFac = new InterpreterFactory(environment, terminal);
 
          m_Ctx = new RuntimeContext(environment, dataSegment, registers);
          

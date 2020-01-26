@@ -39,9 +39,6 @@
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -132,6 +129,7 @@
     <Compile Include="Messaging\ActiveViewRequestMessage.cs" />
     <Compile Include="Messaging\AssembleFileMessage.cs" />
     <Compile Include="Messaging\BasicMessage.cs" />
+    <Compile Include="Messaging\DebugActivityNotification.cs" />
     <Compile Include="Messaging\IBasicMessage.cs" />
     <Compile Include="Messaging\MessageManager.cs" />
     <Compile Include="Messaging\FileAssembledMessage.cs" />
@@ -285,6 +283,10 @@
     <ProjectReference Include="..\OutputProcessing\Assembler.OutputProcessing.csproj">
       <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
       <Name>Assembler.OutputProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextEditor\ICSharpCode.TextEditor.csproj">
+      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>

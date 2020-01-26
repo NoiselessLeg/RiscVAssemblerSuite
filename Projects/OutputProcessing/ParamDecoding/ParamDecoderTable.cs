@@ -50,7 +50,8 @@ namespace Assembler.OutputProcessing.ParamDecoding
                 { InstructionType.Sra, new RegisterInstructionDecoder() },
                 { InstructionType.Or, new RegisterInstructionDecoder() },
                 { InstructionType.And, new RegisterInstructionDecoder() },
-                { InstructionType.Ecall, new EcallDecoder() }
+                { InstructionType.Ecall, new EcallDecoder() },
+               { InstructionType.Ebreak, new EbreakDecoder() }
             };
         }
 

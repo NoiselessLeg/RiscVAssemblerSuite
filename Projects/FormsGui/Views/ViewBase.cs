@@ -36,21 +36,40 @@ namespace Assembler.FormsGui.Views
          m_ViewMsgMgr.BroadcastMessage(m_SenderId, msg);
       }
 
+      /// <summary>
+      /// Allows a view to subscribe itself to various message types to process.
+      /// </summary>
+      /// <param name="type">The type of message to subscribe to. Only views subscribed to this
+      /// type will receive this message.</param>
+      /// <param name="handler">An ICommand instance that is able to handle the message and
+      /// any arguments that come with this command type.</param>
       protected void SubscribeToMessageType(MessageType type, ICommand handler)
       {
          m_CmdHandlers.Add(type, handler);
       }
 
+      /// <summary>
+      /// Gets the view sender ID used by the messaging API.
+      /// </summary>
       protected int ViewSenderId
       {
          get { return m_SenderId; }
       }
 
+      /// <summary>
+      /// Gets the view ID used by the messaging API to determine
+      /// which view is requesting to be the active view.
+      /// </summary>
       protected int ViewId
       {
          get { return m_ViewId; }
       }
 
+      /// <summary>
+      /// Broadcasts a message to every other view that is subscribed to the input message
+      /// type.
+      /// </summary>
+      /// <param name="msg">The message to broadcast.</param>
       protected void SendMessage(IBasicMessage msg)
       {
          m_ViewMsgMgr.BroadcastMessage(m_SenderId, msg);
@@ -69,6 +88,9 @@ namespace Assembler.FormsGui.Views
          }
       }
          
+      /// <summary>
+      /// Gets the name of the view.
+      /// </summary>
       public string ViewName
       {
          get { return m_ViewName; }
@@ -76,7 +98,8 @@ namespace Assembler.FormsGui.Views
 
       private void OnExternalMsgReceived(object sender, EventArgs e)
       {
-         IBasicMessage msg = m_MsgQ.Dequeue();
+         var queue = sender as ObservableQueue<IBasicMessage>;
+         IBasicMessage msg = queue.Dequeue();
          if (m_CmdHandlers.TryGetValue(msg.MessageType, out ICommand handler))
          {
             msg.HandleMessage(handler);

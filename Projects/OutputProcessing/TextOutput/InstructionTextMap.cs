@@ -1,5 +1,4 @@
-﻿using Assembler.OutputProcessing;
-using Assembler.OutputProcessing.TextOutput.InstructionGenerators;
+﻿using Assembler.OutputProcessing.TextOutput.InstructionGenerators;
 using System;
 using System.Collections.Generic;
 
@@ -52,6 +51,7 @@ namespace Assembler.OutputProcessing.TextOutput
                 { InstructionType.Or, new RInstructionStringifier("or") },
                 { InstructionType.And, new RInstructionStringifier("and") },
                 { InstructionType.Ecall, new EcallStringifier("ecall") },
+                { InstructionType.Ebreak, new EbreakStringifier("ebreak") }
             };
       }
 

@@ -76,6 +76,7 @@
     <Compile Include="InstructionProcessing\BneProcessor.cs" />
     <Compile Include="InstructionProcessing\BnezProcessor.cs" />
     <Compile Include="InstructionProcessing\BranchInstructionBase.cs" />
+    <Compile Include="InstructionProcessing\EbreakProcessor.cs" />
     <Compile Include="InstructionProcessing\EcallProcessor.cs" />
     <Compile Include="InstructionProcessing\InstructionProcessorFactory.cs" />
     <Compile Include="InstructionProcessing\JalrProcessor.cs" />
