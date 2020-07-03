@@ -42,9 +42,9 @@ namespace Assembler.OutputProcessing
                                                                                     TextSegmentAccessor textSegment,
                                                                                     SourceDebugData dbgData)
       {
+         var instructions = new List<InstructionData>();
          using (var reader = File.OpenText(dbgData.SourceFilePath))
          {
-            var instructions = new List<InstructionData>();
             int currPgrmCtr = textSegment.StartingSegmentAddress;
             foreach (DisassembledInstruction inst in textSegment.RawInstructions)
             {
@@ -58,7 +58,7 @@ namespace Assembler.OutputProcessing
                   originalSourceLine = reader.ReadLineAt(lineNum);
                   originalSourceLine = originalSourceLine.Trim();
                }
-               var srcLineInfo = new SourceLineInformation(lineNum, currPgrmCtr, originalSourceLine);
+               var srcLineInfo = new SourceLineInformation(dbgData.SourceFilePath, lineNum, currPgrmCtr, originalSourceLine);
                var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, srcLineInfo);
                instructions.Add(instructionElem);
                currPgrmCtr += sizeof(int);
@@ -66,7 +66,7 @@ namespace Assembler.OutputProcessing
 
             return instructions;
          }
-               
+
       }
 
       private static IEnumerable<InstructionData> GenerateInstructionDataWithNoSource(ReverseSymbolTable symTable,
@@ -78,7 +78,7 @@ namespace Assembler.OutputProcessing
          {
             IParameterStringifier stringifier = InstructionTextMap.GetParameterStringifier(inst.InstructionType);
             string formattedInstruction = stringifier.GetFormattedInstruction(currPgrmCtr, inst, symTable);
-            var srcLineInfo = new SourceLineInformation(-1, currPgrmCtr);
+            var srcLineInfo = new SourceLineInformation(string.Empty, -1, currPgrmCtr);
             var instructionElem = new InstructionData(inst.InstructionWord, currPgrmCtr, formattedInstruction, srcLineInfo);
             instructions.Add(instructionElem);
             currPgrmCtr += sizeof(int);

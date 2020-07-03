@@ -9,13 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Assembler.CmdLine</RootNamespace>
     <AssemblyName>riscv_asm</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +26,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommandLineParser.2.7.82\lib\net45\CommandLine.dll</HintPath>
+      <HintPath>..\..\packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,30 +68,59 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleTerminal.cs" />
+    <Compile Include="ConsoleEmulator.cs" />
     <Compile Include="LoggerTypes\ConsoleLogger.cs" />
     <Compile Include="LoggerTypes\FileLogger.cs" />
     <Compile Include="LoggerTypes\HybridLogger.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgramExecutor.cs" />
+    <Compile Include="Simulator\ChildProcControl.cs" />
+    <Compile Include="Simulator\CommandInterpreter.cs" />
+    <Compile Include="Simulator\ConsoleCommands\ChangeDirectoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\DirCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\DumpMemoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\FormatAndDumpMemoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\FormatAndReadMemoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\FormatAndReadRegisterCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\InstructionStepCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\LoadFileCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\PwdCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\QuitCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\ReadMemoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\WriteMemoryCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\WriteRegisterCommand.cs" />
+    <Compile Include="Simulator\RuntimeProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Disassembler.cs" />
+    <Compile Include="Simulator\CommandTable.cs" />
+    <Compile Include="Simulator\ConsoleCommands\ContinueExecutionCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\DumpRegistersCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\FormatAndDumpRegistersCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\GenericHelpCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\ReadRegisterCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\SetBreakpointCommand.cs" />
+    <Compile Include="Simulator\ConsoleCommands\RunProcessCommand.cs" />
+    <Compile Include="Simulator\ConsoleSimulation.cs" />
+    <Compile Include="Simulator\ConsoleCommands\IConsoleCommand.cs" />
+    <Compile Include="Simulator\ParsedCommand.cs" />
+    <Compile Include="Simulator\SourceLineInformation.cs" />
+    <Compile Include="Simulator\TerminationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Assembler.UICommon\Assembler.UICommon.csproj">
+      <Project>{a0108d1e-3d47-4120-a6bb-631cd3f7d185}</Project>
+      <Name>Assembler.UICommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assembler\Assembler.Main.csproj">
       <Project>{71d5c5f0-ee31-47be-a430-76dc2c24d87f}</Project>
       <Name>Assembler.Main</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Disassembler\Assembler.Disassembler.csproj">
-      <Project>{ee846cec-7720-4c0d-af2a-283870ae8bec}</Project>
-      <Name>Assembler.Disassembler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Interpreter\Assembler.Interpreter.csproj">
+    <ProjectReference Include="..\Interpreter\Assembler.Simulation.csproj">
       <Project>{795bac7e-64ed-4685-81be-3032dcc461d7}</Project>
-      <Name>Assembler.Interpreter</Name>
+      <Name>Assembler.Simulation</Name>
     </ProjectReference>
     <ProjectReference Include="..\OutputProcessing\Assembler.OutputProcessing.csproj">
       <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
@@ -102,6 +131,7 @@
       <Name>Assembler.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(SolutionDir)binaries" mkdir "$(SolutionDir)binaries"

@@ -14,11 +14,8 @@ namespace Assembler
       ELFIO::section* ELF_Helper::GetSectionByType(long type) const
       {
          ELFIO::section* targetSec = nullptr;
-         for (auto secItr = m_Instance.sections.begin();
-              secItr != m_Instance.sections.end();
-              ++secItr)
+         for (const auto section : m_Instance.sections)
          {
-            ELFIO::section* section = *secItr;
             if (section->get_type() == type)
             {
                targetSec = section;
@@ -32,11 +29,8 @@ namespace Assembler
       ELFIO::section* ELF_Helper::GetSectionByName(const char* name) const
       {
          ELFIO::section* targetSec = nullptr;
-         for (auto secItr = m_Instance.sections.begin();
-              secItr != m_Instance.sections.end();
-              ++secItr)
+         for (const auto section : m_Instance.sections)
          {
-            ELFIO::section* section = *secItr;
             if (section->get_name() == name)
             {
                targetSec = section;
@@ -50,11 +44,8 @@ namespace Assembler
       int ELF_Helper::GetSectionIndex(const char* sectionName) const
       {
          int sectionIdx = -1;
-         for (auto secItr = m_Instance.sections.begin();
-              secItr != m_Instance.sections.end();
-              ++secItr)
+         for (const auto section : m_Instance.sections)
          {
-            ELFIO::section* section = *secItr;
             if (section->get_name() == sectionName)
             {
                sectionIdx = section->get_index();
@@ -73,19 +64,17 @@ namespace Assembler
 
       ELFIO::segment* ELF_Helper::GetSegmentByName(const char* name) const
       {
-         bool found = false;
          ELFIO::segment* targetSeg = nullptr;
-         for (auto itr = m_Instance.segments.begin(); itr != m_Instance.segments.end() && !found; ++itr)
+         for (const auto segment : m_Instance.segments)
          {
-            ELFIO::segment* currSeg = *itr;
-            if (currSeg->get_sections_num() > 0)
+            if (segment->get_sections_num() > 0)
             {
-               int secIdx = currSeg->get_section_index_at(0);
+               int secIdx = segment->get_section_index_at(0);
 
                if (m_Instance.sections[secIdx]->get_name() == name)
                {
-                  found = true;
-                  targetSeg = currSeg;
+                  targetSeg = segment;
+                  break;
                }
             }
          }

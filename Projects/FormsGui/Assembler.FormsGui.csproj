@@ -39,6 +39,9 @@
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -54,8 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyCommandParams.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\AssemblyTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AssemblyTextBox.Designer.cs">
+      <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BindableToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -70,12 +77,6 @@
     </Compile>
     <Compile Include="Controls\ConsoleTextBox.Designer.cs">
       <DependentUpon>ConsoleTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AssemblyTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\AssemblyTextBox.Designer.cs">
-      <DependentUpon>AssemblyTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditorTextBoxHelper.cs" />
     <Compile Include="Controls\FileEditor.cs">
@@ -149,6 +150,7 @@
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\ControlHelper.cs" />
     <Compile Include="Utility\DisassemblyManager.cs" />
+    <Compile Include="Utility\FileSyntaxManager.cs" />
     <Compile Include="Utility\IBasicQueue.cs" />
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
@@ -202,11 +204,11 @@
     <Compile Include="Windows\PreferencesWindow.Designer.cs">
       <DependentUpon>PreferencesWindow.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\ConsoleTextBox.resx">
-      <DependentUpon>ConsoleTextBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\AssemblyTextBox.resx">
       <DependentUpon>AssemblyTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConsoleTextBox.resx">
+      <DependentUpon>ConsoleTextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\FileEditor.resx">
       <DependentUpon>FileEditor.cs</DependentUpon>
@@ -268,25 +270,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Assembler.UICommon\Assembler.UICommon.csproj">
+      <Project>{a0108d1e-3d47-4120-a6bb-631cd3f7d185}</Project>
+      <Name>Assembler.UICommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assembler\Assembler.Main.csproj">
       <Project>{71d5c5f0-ee31-47be-a430-76dc2c24d87f}</Project>
       <Name>Assembler.Main</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Disassembler\Assembler.Disassembler.csproj">
-      <Project>{ee846cec-7720-4c0d-af2a-283870ae8bec}</Project>
-      <Name>Assembler.Disassembler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Interpreter\Assembler.Interpreter.csproj">
+    <ProjectReference Include="..\Interpreter\Assembler.Simulation.csproj">
       <Project>{795bac7e-64ed-4685-81be-3032dcc461d7}</Project>
-      <Name>Assembler.Interpreter</Name>
+      <Name>Assembler.Simulation</Name>
     </ProjectReference>
     <ProjectReference Include="..\OutputProcessing\Assembler.OutputProcessing.csproj">
       <Project>{79b8c0dc-354d-4285-a1aa-46693d7a2ac6}</Project>
       <Name>Assembler.OutputProcessing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TextEditor\ICSharpCode.TextEditor.csproj">
-      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
-      <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>

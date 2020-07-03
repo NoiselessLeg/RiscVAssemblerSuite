@@ -319,28 +319,36 @@ namespace Assembler.OutputProcessing
       /// <returns>A populated SourceDebugData structure.</returns>
       private static SourceDebugData ParseSourceMapInformation(BinaryReader reader, int sectionSize)
       {
-         int totalNumReadBytes = 0;
-         var fileNameBuilder = new StringBuilder();
-         byte readByte = reader.ReadByte();
-         ++totalNumReadBytes;
-         while (readByte != 0 && totalNumReadBytes < sectionSize)
+         SourceDebugData srcInfo = null;
+         try
          {
-            char asciiVal = Convert.ToChar(readByte);
-            fileNameBuilder.Append(asciiVal);
-            readByte = reader.ReadByte();
+            int totalNumReadBytes = 0;
+            var fileNameBuilder = new StringBuilder();
+            byte readByte = reader.ReadByte();
             ++totalNumReadBytes;
+            while (readByte != 0 && totalNumReadBytes < sectionSize)
+            {
+               char asciiVal = Convert.ToChar(readByte);
+               fileNameBuilder.Append(asciiVal);
+               readByte = reader.ReadByte();
+               ++totalNumReadBytes;
+            }
+
+            string sourceFilePath = fileNameBuilder.ToString();
+            srcInfo = new SourceDebugData(sourceFilePath);
+
+            while (totalNumReadBytes < sectionSize)
+            {
+               short lineNum = reader.ReadInt16();
+               totalNumReadBytes += sizeof(short);
+               int instructionAddr = reader.ReadInt32();
+               totalNumReadBytes += sizeof(int);
+               srcInfo.AddSourceLineInformation(new SourceLineInformation(sourceFilePath, lineNum, instructionAddr));
+            }
          }
-
-         string sourceFilePath = fileNameBuilder.ToString();
-         var srcInfo = new SourceDebugData(sourceFilePath);
-
-         while (totalNumReadBytes < sectionSize)
+         catch(Exception ex)
          {
-            short lineNum = reader.ReadInt16();
-            totalNumReadBytes += sizeof(short);
-            int instructionAddr = reader.ReadInt32();
-            totalNumReadBytes += sizeof(int);
-            srcInfo.AddSourceLineInformation(new SourceLineInformation(lineNum, instructionAddr));
+            srcInfo = new SourceDebugData(string.Empty);
          }
 
          return srcInfo;

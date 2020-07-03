@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
+using Assembler.UICommon.Commands;
 
 namespace Assembler.FormsGui.Views
 {

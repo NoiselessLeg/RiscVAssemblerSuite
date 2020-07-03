@@ -10,7 +10,7 @@ namespace Assembler.OutputProcessing.TextOutput
 {
    class JefAssemblyFileWriter : IAssemblyFileWriter
    {
-      public JefAssemblyFileWriter(DisassembledJefFile underlyingFile)
+      public JefAssemblyFileWriter (DisassembledJefFile underlyingFile)
       {
          m_File = underlyingFile;
       }

@@ -1,4 +1,4 @@
-﻿using Assembler.FormsGui.Commands;
+﻿using Assembler.UICommon.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {

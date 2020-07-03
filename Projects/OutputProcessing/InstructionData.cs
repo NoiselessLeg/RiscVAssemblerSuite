@@ -62,6 +62,11 @@ namespace Assembler.OutputProcessing
          get { return m_SrcLineInfo.SourceFileLineNumber; }
       }
 
+      public string SourceFilePath
+      {
+         get { return m_SrcLineInfo.SourceFilePath; }
+      }
+      
       private readonly string m_Instruction;
       private readonly int m_RawWord;
       private readonly int m_ProgramCtrLoc;

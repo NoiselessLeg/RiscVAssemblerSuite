@@ -1,9 +1,10 @@
-﻿using Assembler.FormsGui.Commands;
+﻿
 using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.FormsGui.ViewModels;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

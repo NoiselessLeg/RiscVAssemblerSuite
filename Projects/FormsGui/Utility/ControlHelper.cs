@@ -1,4 +1,4 @@
-﻿using Assembler.FormsGui.Commands;
+﻿using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

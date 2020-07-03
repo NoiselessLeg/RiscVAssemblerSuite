@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\DWARF_Wrapper.h" />
     <ClInclude Include="inc\elfio\elfio.hpp" />
     <ClInclude Include="inc\elfio\elfio_dump.hpp" />
     <ClInclude Include="inc\elfio\elfio_dynamic.hpp" />
@@ -178,6 +179,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\libdwarf\VC\libdwarf.vcxproj">
+      <Project>{307a5d8e-6395-4788-803f-3b9bc1b5ffd5}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Projects\Utility\Assembler.Common.csproj">
       <Project>{12beecbb-6f2b-4d2c-9507-1e7e32ab2ee3}</Project>
     </ProjectReference>

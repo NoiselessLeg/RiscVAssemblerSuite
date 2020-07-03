@@ -1,11 +1,10 @@
 ﻿using Assembler.Common;
-using Assembler.Disassembler;
-using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.Interpreter;
 using Assembler.OutputProcessing;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -299,6 +298,7 @@ namespace Assembler.FormsGui.ViewModels
       /// </summary>
       private void TemporarilyUnblockExecutionTask()
       {
+         m_Terminal.RequestOutputFlush();
          m_ExecutionPauseEvent.Set();
       }
 

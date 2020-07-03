@@ -12,17 +12,27 @@ namespace Assembler.Common
    /// </summary>
    public class SourceLineInformation
    {
-      public SourceLineInformation(int lineNum, int pgmCtrLoc):
-         this(lineNum, pgmCtrLoc, string.Empty)
+      public SourceLineInformation(string fileName, int lineNum, int pgmCtrLoc):
+         this(fileName, lineNum, pgmCtrLoc, string.Empty)
       {
       }
 
-      public SourceLineInformation(int lineNum, int pgmCtrLoc, string text)
+      public SourceLineInformation(string fileName, int lineNum, int pgmCtrLoc, string text)
       {
+         m_SrcFile = fileName;
          m_SrcLineNum = lineNum;
          m_TextSegmentAddr = pgmCtrLoc;
          m_SrcLine = text;
       }
+
+      /// <summary>
+      /// Gets the file path of the source information
+      /// </summary>
+      public string SourceFilePath
+      {
+         get { return m_SrcFile; }
+      }
+      
 
       /// <summary>
       /// Gets the line number of the source file that this instruction was found at.
@@ -47,7 +57,8 @@ namespace Assembler.Common
       {
          get { return m_SrcLine; }
       }
-      
+
+      private readonly string m_SrcFile;
       private readonly string m_SrcLine;
       private readonly int m_SrcLineNum;
       private readonly int m_TextSegmentAddr;

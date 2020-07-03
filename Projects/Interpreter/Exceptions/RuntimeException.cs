@@ -13,5 +13,12 @@ namespace Assembler.Interpreter.Exceptions
         {
 
         }
-    }
+
+
+      public RuntimeException(string why, Exception innerEx) :
+          base(why, innerEx)
+      {
+
+      }
+   }
 }

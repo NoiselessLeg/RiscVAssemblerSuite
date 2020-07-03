@@ -1,5 +1,6 @@
-﻿using Assembler.Disassembler;
+﻿
 using Assembler.OutputProcessing;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

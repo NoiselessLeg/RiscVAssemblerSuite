@@ -156,7 +156,6 @@
     <Compile Include="SymbolTableConstruction\SegmentSymbolParserFactory.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\TextSymbolBuilder.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
-    <Compile Include="Util\RegisterMap.cs" />
     <Compile Include="Util\SegmentTypeHelper.cs" />
     <Compile Include="Util\StreamReaderUtils.cs" />
     <Compile Include="Util\StringUtils.cs" />

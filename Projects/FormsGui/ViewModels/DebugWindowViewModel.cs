@@ -1,9 +1,9 @@
-﻿using Assembler.Disassembler;
-using Assembler.FormsGui.Commands;
+﻿
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
 using Assembler.OutputProcessing;
 using Assembler.OutputProcessing.FileReaders;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

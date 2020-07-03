@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Assembler.FormsGui.Commands;
+using Assembler.UICommon.Commands;
 
 namespace Assembler.FormsGui.Views
 {

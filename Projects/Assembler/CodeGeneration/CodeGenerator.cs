@@ -30,7 +30,7 @@ namespace Assembler.CodeGeneration
       /// </summary>
       /// <param name="reader">A StreamReader instance that will read the input assembly file.</param>
       /// <param name="objFile">The basic object file that will be written to.</param>
-      public void GenerateCode(StreamReader reader, BasicObjectFile objFile)
+      public void GenerateCode(string fileName, StreamReader reader, BasicObjectFile objFile)
       {
          SegmentType currSegmentType = SegmentType.Invalid;
          int currAlignment = CommonConstants.DEFAULT_ALIGNMENT;
@@ -75,7 +75,7 @@ namespace Assembler.CodeGeneration
                         var asmLine = new LineData(line, lineNum);
                         try
                         {
-                           codeGen.GenerateCodeForSegment(asmLine, objFile, currAlignment);
+                           codeGen.GenerateCodeForSegment(fileName, asmLine, objFile, currAlignment);
                         }
                         catch (AssemblyException)
                         {

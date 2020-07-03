@@ -1,6 +1,7 @@
-﻿using Assembler.FormsGui.Commands;
+﻿
 using Assembler.FormsGui.Controls;
 using Assembler.FormsGui.Utility;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

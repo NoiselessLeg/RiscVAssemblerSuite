@@ -102,7 +102,7 @@ namespace Assembler
                   var objFile = new BasicObjectFile(inputFile, symTable);
 
                   var codeGenerator = new CodeGenerator(logger, symTable, instructionProcFac);
-                  codeGenerator.GenerateCode(reader, objFile);
+                  codeGenerator.GenerateCode(inputFile, reader, objFile);
 
                   if (!objFile.TextElements.Any())
                   {

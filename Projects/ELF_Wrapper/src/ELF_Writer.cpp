@@ -93,6 +93,10 @@ namespace Assembler
 
          IEnumerator<Assembler::Common::Symbol^>^ enumerator = symTbl->Symbols->GetEnumerator();
          enumerator->Reset();
+
+         const int DATA_SECTION_IDX = m_pHelper->GetSectionIndex(".data");
+         const int TEXT_SECTION_IDX = m_pHelper->GetSectionIndex(".text");
+
          while (enumerator->MoveNext())
          {
             Assembler::Common::Symbol^ symbol = enumerator->Current;
@@ -106,13 +110,13 @@ namespace Assembler
             {
                case Assembler::Common::SegmentType::Data:
                {
-                  sectionIdx = m_pHelper->GetSectionIndex(".data");
+                  sectionIdx = DATA_SECTION_IDX;
                   break;
                }
                case Assembler::Common::SegmentType::Text:
                {
                   symType = STT_FUNC;
-                  sectionIdx = m_pHelper->GetSectionIndex(".text");
+                  sectionIdx = TEXT_SECTION_IDX;
                   break;
                }
             }
@@ -126,7 +130,7 @@ namespace Assembler
                sectionIdx);
          }
 
-         const size_t SYM_TABLE_ENTRY_SIZE = sizeof(ELFIO::Elf32_Sym);
+         constexpr size_t SYM_TABLE_ENTRY_SIZE = sizeof(ELFIO::Elf32_Sym);
 
          // account for the null symbol table entry.
          symSection->set_info(symTbl->NumSymbols + 2);

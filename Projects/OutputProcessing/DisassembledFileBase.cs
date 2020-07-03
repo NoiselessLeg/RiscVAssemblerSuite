@@ -13,6 +13,13 @@ namespace Assembler.OutputProcessing
    /// </summary>
    public abstract class DisassembledFileBase
    {
+      /// <summary>
+      /// Gets the total file size of the disassembled file.
+      /// </summary>
+      public int TotalFileSize
+      {
+         get { return DataSegmentLength + TextSegment.SegmentSize + ExternSegmentSize; }
+      }
 
       /// <summary>
       /// Gets the accessor to this file's data segment.

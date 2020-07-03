@@ -79,18 +79,20 @@
     <Compile Include="ObjectTypeCode.cs" />
     <Compile Include="OutputTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterMap.cs" />
     <Compile Include="ReverseRegisterMap.cs" />
     <Compile Include="ReverseSymbolTable.cs" />
     <Compile Include="SegmentTypes.cs" />
     <Compile Include="SourceDebugData.cs" />
     <Compile Include="SourceLineInformation.cs" />
+    <Compile Include="StringBuilderUtil.cs" />
     <Compile Include="StreamReaderUtil.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="ThreadSafeLogger.cs" />
+    <Compile Include="Trie.cs" />
     <Compile Include="UserAssemblerError.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

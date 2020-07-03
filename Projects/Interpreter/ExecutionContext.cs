@@ -1,4 +1,5 @@
 ﻿using Assembler.Common;
+using Assembler.Interpreter.Exceptions;
 using Assembler.Interpreter.InstructionInterpretation;
 using Assembler.OutputProcessing;
 using System;
@@ -51,10 +52,11 @@ namespace Assembler.Interpreter
 
       public void ExecuteNextInstruction()
       {
+         // make this separate so the user can figure out where the problem when wrong
+         int originalPcValue = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
          try
          {
-            int pcValue = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
-            DisassembledInstruction instruction = m_TextSegment.FetchInstruction(pcValue);
+            DisassembledInstruction instruction = m_TextSegment.FetchInstruction(originalPcValue);
             IInstructionInterpreter interpreter = m_InterpreterFac.GetInterpreter(instruction.InstructionType);
 
             // if this returns false, then increment the program counter by 4. otherwise, this indicates
@@ -65,21 +67,32 @@ namespace Assembler.Interpreter
             }
 
             // check to make sure something didn't put us in some crazy address
-            pcValue = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
-            if (pcValue < m_TextSegment.StartingSegmentAddress)
+            int newPcValue = m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value;
+            if (newPcValue < m_TextSegment.StartingSegmentAddress)
             {
-               throw new AccessViolationException(string.Format("Program counter value 0x{0} was outside " +
-                  "text segment.", pcValue.ToString("x8")));
+               throw new Exceptions.AccessViolationException(string.Format("Program counter value 0x{0} was outside " +
+                  "text segment.", newPcValue.ToString("x8")));
             }
          }
-         catch (AccessViolationException ex)
+         catch (Exceptions.AccessViolationException ex)
          {
-            m_Terminal.PrintString("Received SIGSEGV: Segmentation fault\n");
+            m_Terminal.PrintString("Received SIGSEGV at 0x" + originalPcValue.ToString("x8") + ": Segmentation fault\n");
+            m_Terminal.PrintString(ex.Message);
+            m_Environment.Terminate();
+         }
+         catch (Simulation.Exceptions.RuntimeSignal)
+         {
+            throw;
+         }
+         catch (RuntimeException ex)
+         {
+            m_Terminal.PrintString("Received SIGABRT at 0x" + originalPcValue.ToString("x8") + ": ");
             m_Terminal.PrintString(ex.Message);
             m_Environment.Terminate();
          }
          catch (Exception ex)
          {
+            m_Terminal.PrintString("Received SIGABRT at 0x" + originalPcValue.ToString("x8") + ": ");
             m_Terminal.PrintString(ex.Message);
             m_Terminal.PrintString(ex.StackTrace);
             m_Environment.Terminate();

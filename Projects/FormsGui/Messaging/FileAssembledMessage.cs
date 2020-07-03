@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Assembler.FormsGui.Commands;
+using Assembler.UICommon.Commands;
 
 namespace Assembler.FormsGui.Messaging
 {

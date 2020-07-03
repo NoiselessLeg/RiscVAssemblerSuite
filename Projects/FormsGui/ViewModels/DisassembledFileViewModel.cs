@@ -1,4 +1,4 @@
-﻿using Assembler.Disassembler;
+﻿using Assembler.Common;
 using Assembler.OutputProcessing;
 using System;
 using System.Collections.Generic;

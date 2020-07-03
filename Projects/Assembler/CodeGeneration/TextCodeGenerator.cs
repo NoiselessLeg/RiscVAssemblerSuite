@@ -30,10 +30,11 @@ namespace Assembler.CodeGeneration
       /// <summary>
       /// Generates code for a .text instruction in the file.
       /// </summary>
+      /// <param name="fileName">The source file name.</param>
       /// <param name="asmLine">The line to parse.</param>
       /// <param name="objFile">The object file that will be written to.</param>
       /// <param name="currAlignment">The current specified alignment of the file. Unused for .text parsers.</param>
-      public void GenerateCodeForSegment(LineData asmLine, BasicObjectFile objFile, int currAlignment)
+      public void GenerateCodeForSegment(string fileName, LineData asmLine, BasicObjectFile objFile, int currAlignment)
       {
          // scan to the first instruction.
          // this could share the same line as a label, so split on ':' and ','
@@ -72,7 +73,7 @@ namespace Assembler.CodeGeneration
             // beq instructions should (hopefully) not generate multiple instructions..
             IEnumerable<int> generatedInstructions = parser.GenerateCodeForInstruction(m_CurrTextAddress, argTokens);
             
-            var srcInfo = new SourceLineInformation(asmLine.LineNum, m_CurrTextAddress, asmLine.Text);
+            var srcInfo = new SourceLineInformation(fileName, asmLine.LineNum, m_CurrTextAddress, asmLine.Text);
             objFile.AddSourceInformation(srcInfo);
 
             foreach (int generatedInstruction in generatedInstructions)

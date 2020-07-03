@@ -1,9 +1,9 @@
 ﻿using Assembler.Common;
-using Assembler.FormsGui.Commands;
 using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.IO;
 using Assembler.FormsGui.Messaging;
 using Assembler.FormsGui.Utility;
+using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -1,6 +1,6 @@
 ﻿using Assembler.CmdLine.LoggerTypes;
 using Assembler.Common;
-using Assembler.Disassembler;
+using Assembler.UICommon;
 using Assembler.Interpreter;
 using CommandLine;
 using System;
@@ -17,10 +17,6 @@ namespace Assembler.CmdLine
                              .WithParsed<AssemblerOptions>(options => RunAssembler(options))
                              .WithParsed<DisassemblerOptions>(options => RunDisassembler(options))
                              .WithParsed<InterpreterOptions>(options => RunInterpreter(options));
-
-#if DEBUG
-         Console.ReadKey();
-#endif
       }
 
       /// <summary>
@@ -87,25 +83,28 @@ namespace Assembler.CmdLine
             logger = new ConsoleLogger();
          }
 
-         var disassembler = new RiscVDisassembler();
+         var disassembler = new Disassembler();
          disassembler.Disassemble(options, logger);
          return 0;
       }
 
       private static int RunInterpreter(InterpreterOptions options)
       {
-         var terminal = new ConsoleTerminal();
+         bool isRestarting = false;
 
-         if (options.DebugDumpEnabled)
+         string inputFileName = options.InputFileName;
+         var interpreter = new Simulator.CommandInterpreter();
+         do
          {
-            var interpreter = new FileDebugger(terminal);
-            interpreter.RunJefFile(options.InputFileName, new ConsoleLogger());
+            var consoleSim = new Simulator.ConsoleSimulation(inputFileName, interpreter);
+            consoleSim.RunSimulator();
+            isRestarting = consoleSim.IsSimulatorRestarting;
+            if (isRestarting)
+            {
+               inputFileName = consoleSim.AsmFileToLoadOnRestart;
+            }
          }
-         else
-         {
-            var interpreter = new FileInterpreter(terminal);
-            interpreter.RunJefFile(options.InputFileName, new ConsoleLogger());
-         }
+         while (isRestarting);
          return 0;
       }
    }

@@ -72,6 +72,9 @@
     <ClInclude Include="inc\ELF_CompiledFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\DWARF_Wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
