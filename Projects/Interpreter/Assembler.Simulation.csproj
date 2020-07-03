@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\AbortSignal.cs" />
     <Compile Include="Exceptions\AccessViolationException.cs" />
     <Compile Include="Exceptions\InterruptSignal.cs" />
     <Compile Include="Exceptions\RuntimeException.cs" />

@@ -152,6 +152,7 @@
     <Compile Include="Utility\DisassemblyManager.cs" />
     <Compile Include="Utility\FileSyntaxManager.cs" />
     <Compile Include="Utility\IBasicQueue.cs" />
+    <Compile Include="Utility\PauseController.cs" />
     <Compile Include="Utility\StringHelper.cs" />
     <Compile Include="IO\AssemblerExecutionConsole.cs" />
     <Compile Include="ViewModels\DataAddressViewModel.cs" />

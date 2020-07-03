@@ -3,7 +3,9 @@ using Assembler.FormsGui.DataModels;
 using Assembler.FormsGui.Services;
 using Assembler.FormsGui.Utility;
 using Assembler.Interpreter;
+using Assembler.Interpreter.Exceptions;
 using Assembler.OutputProcessing;
+using Assembler.Simulation.Exceptions;
 using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
@@ -31,8 +33,8 @@ namespace Assembler.FormsGui.ViewModels
       {
          // intialize this so that we're signaled. this will allow the run task
          // to be initialized to not wait until the user actually commands us to pause
+         m_PauseCtrl = new PauseController();
          m_InstructionAddrToBreakpointMap = new Dictionary<int, bool>();
-         m_ExecutionPauseEvent = new ManualResetEvent(true);
          m_ExecutionState = PrgmExecutionState.Stopped;
          m_Terminal = terminal;
          m_Registers = new RegisterViewModel[InterpreterCommon.MAX_REGISTERS];
@@ -211,14 +213,14 @@ namespace Assembler.FormsGui.ViewModels
       private void CancelExecution()
       {
          ExecutionState = PrgmExecutionState.Stopped;
-         m_ExecutionPauseEvent.Set();
+         m_PauseCtrl.AbortChildProcess();
          m_Ctx.AbortUserInputOperation();
       }
 
       private void PauseExecution()
       {
          ExecutionState = PrgmExecutionState.Paused;
-         m_ExecutionPauseEvent.Reset();
+         m_PauseCtrl.PauseChildTaskExecution();
          m_InstructionStepCmd.CanExecute = true;
          m_ResumeExecutionCmd.CanExecute = true;
          m_PauseExecutionCmd.CanExecute = false;
@@ -232,7 +234,7 @@ namespace Assembler.FormsGui.ViewModels
       private void ResumeExecution()
       {
          ExecutionState = PrgmExecutionState.Running;
-         m_ExecutionPauseEvent.Set();
+         m_PauseCtrl.ResumeChildExecution();
          m_InstructionStepCmd.CanExecute = false;
          m_ResumeExecutionCmd.CanExecute = false;
          m_PauseExecutionCmd.CanExecute = true;
@@ -261,25 +263,33 @@ namespace Assembler.FormsGui.ViewModels
          ResetProgramContext();
 
          runTimer.Start();
-         while (IsRunning && !m_Ctx.EndOfFile)
+         try
          {
-            // double check this here, to see if the user paused it
-            // or there is a breakpoint at our current instruction. if the user
-            // pauses this, a breakpoint will not be applied at the instruction so
-            // we need to see the flag value (as the flag will be set).
-            if (IsPaused ||
-                IsBreakpointAppliedAtInstruction(m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value))
+            while (IsRunning && !m_Ctx.EndOfFile)
             {
-               // we set the pause flag here. if the user steps to the next instruction, we want to 
-               // once again reset the condition variable so we pause again. this is because the step needs
-               // to happen in this task
-               PauseExecution();
+               // double check this here, to see if the user paused it
+               // or there is a breakpoint at our current instruction. if the user
+               // pauses this, a breakpoint will not be applied at the instruction so
+               // we need to see the flag value (as the flag will be set).
+               if (IsPaused ||
+                   IsBreakpointAppliedAtInstruction(m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value))
+               {
+                  // we set the pause flag here. if the user steps to the next instruction, we want to 
+                  // once again reset the condition variable so we pause again. this is because the step needs
+                  // to happen in this task
+                  PauseExecution();
+               }
+
+               m_PauseCtrl.WaitIfPauseCommanded();
+               ExecuteNextInstruction();
             }
-            m_ExecutionPauseEvent.WaitOne();
-            ExecuteNextInstruction();
+            runTimer.Stop();
+            m_Terminal.PrintString("\n\nINFO: Execution completed in " + runTimer.Elapsed);
          }
-         runTimer.Stop();
-         m_Terminal.PrintString("\n\nINFO: Execution completed in " + runTimer.Elapsed);
+         catch (AbortSignal)
+         {
+
+         }
 
          m_Terminal.RequestOutputFlush();
          m_ExecutionState = PrgmExecutionState.Stopped;
@@ -299,7 +309,7 @@ namespace Assembler.FormsGui.ViewModels
       private void TemporarilyUnblockExecutionTask()
       {
          m_Terminal.RequestOutputFlush();
-         m_ExecutionPauseEvent.Set();
+         m_PauseCtrl.ResumeChildExecution();
       }
 
       private void ExecuteNextInstruction()
@@ -375,7 +385,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private readonly ITerminal m_Terminal;
 
-      private readonly ManualResetEvent m_ExecutionPauseEvent;
+      private readonly PauseController m_PauseCtrl;
       private readonly RelayCommand m_ExecuteFileCmd;
       private readonly RelayCommand m_PauseExecutionCmd;
       private readonly RelayCommand m_ResumeExecutionCmd;

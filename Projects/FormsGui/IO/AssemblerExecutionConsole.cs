@@ -40,14 +40,25 @@ namespace Assembler.FormsGui.ViewModels
       public int ReadInt()
       {
          m_OutputWriter.Flush();
-         string line = m_InputReader.ReadLine();
+         string line = null;
+         do
+         {
+            line = m_InputReader.ReadLine();
+         }
+         while (line == null);
          return Convert.ToInt32(line);
       }
 
       public string ReadString()
       {
          m_OutputWriter.Flush();
-         return m_InputReader.ReadLine();
+         string line = null;
+         do
+         {
+            line = m_InputReader.ReadLine();
+         }
+         while (line == null);
+         return line;
       }
 
       public void InterruptInputOperation()

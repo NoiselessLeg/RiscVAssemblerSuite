@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Simulation.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,6 @@ using System.Threading.Tasks;
 
 namespace Assembler.CmdLine.Simulator
 {
-   public class SigAbort : Exception
-   {
-   }
-
-
    public class ChildProcControl
    {
       public ChildProcControl()
@@ -42,7 +38,7 @@ namespace Assembler.CmdLine.Simulator
 
          if (m_IsChildAborted)
          {
-            throw new SigAbort();
+            throw new AbortSignal();
          }
       }
 

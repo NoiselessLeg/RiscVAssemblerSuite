@@ -4,6 +4,7 @@ using Assembler.Common;
 using Assembler.Interpreter;
 using Assembler.OutputProcessing;
 using Assembler.OutputProcessing.FileReaders;
+using Assembler.Simulation.Exceptions;
 using Assembler.UICommon.Commands;
 using System;
 using System.Collections.Generic;
@@ -224,7 +225,7 @@ namespace Assembler.CmdLine
                   RelinquishControlToParentProcess();
                }
             }
-            catch (Simulation.Exceptions.InterruptSignal)
+            catch (InterruptSignal)
             {
                int pcRegValue = ProgramCounterValue;
                m_Terminal.PrintString("\nReceived SIGINT; current instruction: 0x" + pcRegValue.ToString("x8") + '\n');
@@ -232,13 +233,13 @@ namespace Assembler.CmdLine
                {
                   PauseExecution();
                }
-               catch (SigAbort)
+               catch (AbortSignal)
                {
                   Terminate();
                   isExitingNormally = false;
                }
             }
-            catch (SigAbort)
+            catch (AbortSignal)
             {
                Terminate();
                isExitingNormally = false;
