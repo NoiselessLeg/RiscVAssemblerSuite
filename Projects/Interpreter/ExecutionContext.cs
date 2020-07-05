@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
+   /// <summary>
+   /// Provides a common runtime where a RISC-V program can be successfully simulated within.
+   /// </summary>
    public class ExecutionContext
    {
       /// <summary>
@@ -31,6 +34,9 @@ namespace Assembler.Interpreter
          m_Ctx.UserRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
       }
 
+      /// <summary>
+      /// Gets a boolean value determining if the end of the .text segment has been reached.
+      /// </summary>
       public bool EndOfFile
       {
          get
@@ -40,16 +46,25 @@ namespace Assembler.Interpreter
          }
       }
 
+      /// <summary>
+      /// Provides access to the user-level registers in the RISC-V architecture.
+      /// </summary>
       public IList<IRegister> UserRegisters
       {
          get { return m_Ctx.UserRegisters; }
       }
 
+      /// <summary>
+      /// Aborts any current user input operation occurring in the context's terminal instance.
+      /// </summary>
       public void AbortUserInputOperation()
       {
          m_Terminal.InterruptInputOperation();
       }
 
+      /// <summary>
+      /// Executes the instruction pointed at by the current instruction pointer.
+      /// </summary>
       public void ExecuteNextInstruction()
       {
          // make this separate so the user can figure out where the problem when wrong
@@ -99,6 +114,9 @@ namespace Assembler.Interpreter
          }
       }
 
+      /// <summary>
+      /// Increments the instruction pointer by one word size.
+      /// </summary>
       public void IncrementInstructionPointer()
       {
          m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value += sizeof(int);

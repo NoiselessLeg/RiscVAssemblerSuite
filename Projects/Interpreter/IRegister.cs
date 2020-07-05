@@ -12,6 +12,9 @@ namespace Assembler.Interpreter
    /// </summary>
    public interface IRegister
    {
+      /// <summary>
+      /// Gets or sets the value of this specific register.
+      /// </summary>
       int Value
       {
          get; set;

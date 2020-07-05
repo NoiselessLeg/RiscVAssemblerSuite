@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Assembler.OutputProcessing
 {
    /// <summary>
-   /// Represents a completely disassembled file.
+   /// Represents the basic and common elements of a disassembled file.
    /// </summary>
    public abstract class DisassembledFileBase
    {

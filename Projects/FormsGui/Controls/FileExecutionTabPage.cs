@@ -25,61 +25,10 @@ namespace Assembler.FormsGui.Controls
          m_PrimarySrcGridRowColor = m_SrcGrid.DefaultCellStyle.BackColor;
          m_AlternateSrcGridRowColor = m_SrcGrid.AlternatingRowsDefaultCellStyle.BackColor;
 
-         m_ShowDecValuesItem.Click += (s, arg) =>
-         {
-            var btn = s as ToolStripMenuItem;
-            if (btn.Checked)
-            {
-               m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
-               m_ShowHexValuesItem.Checked = false;
-            }
-            else
-            {
-               btn.Checked = true;
-            }
-         };
-
-         m_ShowHexValuesItem.Click += (s, arg) =>
-         {
-            var btn = s as ToolStripMenuItem;
-            if (btn.Checked)
-            {
-               m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
-               m_ShowDecValuesItem.Checked = false;
-            }
-            else
-            {
-               btn.Checked = true;
-            }
-         };
-
-         m_ShowDataElemsAsDecimalBtn.Click += (s, arg) =>
-         {
-            var btn = s as ToolStripMenuItem;
-            if (btn.Checked)
-            {
-               m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
-               m_ShowDataElemsAsHexBtn.Checked = false;
-            }
-            else
-            {
-               btn.Checked = true;
-            }
-         };
-
-         m_ShowDataElemsAsHexBtn.Click += (s, arg) =>
-         {
-            var btn = s as ToolStripMenuItem;
-            if (btn.Checked)
-            { 
-               m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
-               m_ShowDataElemsAsDecimalBtn.Checked = false;
-            }
-            else
-            {
-               btn.Checked = true;
-            }
-         };
+         m_ShowDecValuesItem.Click += OnShowDecimalValuesToolbarItemClick;
+         m_ShowHexValuesItem.Click += OnShowHexValuesToolbarItemClick;
+         m_ShowDataElemsAsDecimalBtn.Click += OnShowDataElemsAsDecimalToolbarItemClick;
+         m_ShowDataElemsAsHexBtn.Click += OnShowDataElemsAsHexToolbarItemClick;
 
          m_FileViewModel = viewModel;
          m_ExConsole = new AssemblerExecutionConsole(m_ConsoleTxt.InputStream, m_ConsoleTxt.OutputStream);
@@ -110,6 +59,28 @@ namespace Assembler.FormsGui.Controls
          // set the first row by default to be highlighted.
          RemoveRowHighlighting(0);
          UpdateRowHighlighting(0);
+      }
+
+      /// <summary> 
+      /// Clean up any resources being used.
+      /// </summary>
+      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+      protected override void Dispose(bool disposing)
+      {
+         if (disposing && (components != null))
+         {
+            components.Dispose();
+         }
+
+         if (disposing)
+         {
+            m_ShowDataElemsAsHexBtn.Click -= OnShowDataElemsAsHexToolbarItemClick;
+            m_ShowDataElemsAsDecimalBtn.Click -= OnShowDataElemsAsDecimalToolbarItemClick;
+            m_ShowHexValuesItem.Click -= OnShowHexValuesToolbarItemClick;
+            m_ShowDecValuesItem.Click -= OnShowDecimalValuesToolbarItemClick;
+         }
+
+         base.Dispose(disposing);
       }
 
       private void OnStartButtonClicked(object sender, EventArgs e)
@@ -192,6 +163,63 @@ namespace Assembler.FormsGui.Controls
          }
          
          return elemOffscreen;
+      }
+
+      private void OnShowDataElemsAsHexToolbarItemClick(object sender, EventArgs args)
+      {
+
+         var btn = sender as ToolStripMenuItem;
+         if (btn.Checked)
+         {
+            m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
+            m_ShowDataElemsAsDecimalBtn.Checked = false;
+         }
+         else
+         {
+            btn.Checked = true;
+         }
+      }
+
+      private void OnShowDataElemsAsDecimalToolbarItemClick(object sender, EventArgs e)
+      {
+         var btn = sender as ToolStripMenuItem;
+         if (btn.Checked)
+         {
+            m_ExViewModel.ChangeDataValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
+            m_ShowDataElemsAsHexBtn.Checked = false;
+         }
+         else
+         {
+            btn.Checked = true;
+         }
+      }
+
+      private void OnShowHexValuesToolbarItemClick(object sender, EventArgs e)
+      {
+         var btn = sender as ToolStripMenuItem;
+         if (btn.Checked)
+         {
+            m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Hexadecimal);
+            m_ShowDecValuesItem.Checked = false;
+         }
+         else
+         {
+            btn.Checked = true;
+         }
+      }
+
+      private void OnShowDecimalValuesToolbarItemClick(object sender, EventArgs e)
+      {
+         var btn = sender as ToolStripMenuItem;
+         if (btn.Checked)
+         {
+            m_ExViewModel.ChangeRegisterValueDisplayTypeCommand.Execute(RegisterDisplayType.Decimal);
+            m_ShowHexValuesItem.Checked = false;
+         }
+         else
+         {
+            btn.Checked = true;
+         }
       }
 
       // used for restoring rows to their former luster when the selected index

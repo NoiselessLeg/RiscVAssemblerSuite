@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace Assembler.Common
 {
+   /// <summary>
+   /// Contains mapping information between a set of instructions and the lines from the original
+   /// assembly source file that they came from.
+   /// </summary>
    public class SourceDebugData
    {
+      /// <summary>
+      /// Initializes the source debug data object with a provided assembly
+      /// source file path.
+      /// </summary>
+      /// <param name="srcFilePath">The path to the assembly source file.</param>
       public SourceDebugData(string srcFilePath)
       {
          m_SrcFilePath = srcFilePath;

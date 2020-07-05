@@ -34,7 +34,7 @@ namespace Assembler
 
 
       private:
-
+         // can't use unique_ptr here, since this is a managed class...
          ELFIO::elfio* m_pUnderlyingReader;
          ELF_Helper* m_pHelper;
          char* m_pDataBytes;

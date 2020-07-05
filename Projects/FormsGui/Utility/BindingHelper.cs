@@ -13,6 +13,9 @@ using System.Windows.Forms;
 
 namespace Assembler.FormsGui.Utility
 {
+   /// <summary>
+   /// Provides helper methods to bind Forms controls to various actions and events.
+   /// </summary>
    public static class BindingHelper
    {
       public static void CreateBinding<TControl, TSource, TControlProp>(this TControl control,
@@ -44,7 +47,12 @@ namespace Assembler.FormsGui.Utility
          btn.Click += (s, e) => cmd.Execute(null);
       }
 
-
+      /// <summary>
+      /// Binds an ICommand's CanExecuteChanged to a ToolStripMenuItem such that the ToolStripMenuItem's
+      /// Enabled property will be appropriately updated to match the ICommand's CanExecute property.
+      /// </summary>
+      /// <param name="item">The ToolStripMenuItem to bind to.</param>
+      /// <param name="cmd">The ICommand to bind to the ToolStripMenuItem.</param>
       public static void BindPredicateToEnabledProperty(ToolStripMenuItem item, ICommand cmd)
       {
          // data bindings don't seem to be working here?
@@ -60,6 +68,13 @@ namespace Assembler.FormsGui.Utility
          };
       }
 
+      /// <summary>
+      /// Binds an ICommand to a ToolStripMenuItem's Enabled property, such that the ToolStripMenuItem
+      /// will only be enabled if the ICommand can be executed. This will also bind the ICommand's Execute
+      /// function to the Click event of the ToolStripMenuItem
+      /// </summary>
+      /// <param name="btn">The ToolStripMenuItem to bind to.</param>
+      /// <param name="cmd">The ICommand instance that will be bound to the ToolStripMenuItem</param>
       public static void BindToCommand(this ToolStripMenuItem btn, ICommand cmd)
       {
          BindPredicateToEnabledProperty(btn, cmd);

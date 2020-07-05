@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Assembler.Interpreter.InstructionInterpretation
 {
+   /// <summary>
+   /// A factory that allows a user to retrieve an implementation of an instruction based
+   /// on the instruction type.
+   /// </summary>
    internal class InterpreterFactory
    {
       public InterpreterFactory(IRuntimeEnvironment environment, ITerminal terminalWindow)

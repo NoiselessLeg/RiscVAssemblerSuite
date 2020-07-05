@@ -136,11 +136,19 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_TerminateExecutionCmd; }
       }
 
+      /// <summary>
+      /// Returns a boolean value indicating the program is NOT in the STOPPED state.
+      /// This returns true for cases where the program may be paused and/or running.
+      /// </summary>
       public bool IsRunning
       {
          get { return m_ExecutionState != PrgmExecutionState.Stopped; }
       }
 
+      /// <summary>
+      /// Gets the index of the instruction that is currently being
+      /// executed from an array of all program instructions.
+      /// </summary>
       public int ActiveInstructionIdx
       {
          get { return m_ActiveInstructionIdx; }
@@ -168,6 +176,9 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
+      /// <summary>
+      /// Gets or sets the current execution state of the program.
+      /// </summary>
       private PrgmExecutionState ExecutionState
       {
          get { return m_ExecutionState; }
@@ -198,8 +209,7 @@ namespace Assembler.FormsGui.ViewModels
 
       private void OnExecutionTaskBegin()
       {
-         // determine if we're already executing a run. if so, just ignore
-         // the command.
+
          if (!IsRunning)
          {
             m_ExecuteFileCmd.CanExecute = false;
@@ -312,6 +322,10 @@ namespace Assembler.FormsGui.ViewModels
          m_PauseCtrl.ResumeChildExecution();
       }
 
+      /// <summary>
+      /// Executes the next instruction as pointed to by the program counter,
+      /// and determines the next active instruction index.
+      /// </summary>
       private void ExecuteNextInstruction()
       {
          m_Ctx.ExecuteNextInstruction();
@@ -332,6 +346,9 @@ namespace Assembler.FormsGui.ViewModels
          get { return m_DataSegmentElements; }
       }
 
+      /// <summary>
+      /// Gets whether or not the program is explicitly in the paused state.
+      /// </summary>
       private bool IsPaused
       {
          get { return m_ExecutionState == PrgmExecutionState.Paused; }
@@ -406,8 +423,5 @@ namespace Assembler.FormsGui.ViewModels
       private PrgmExecutionState m_ExecutionState;
 
       private readonly Dictionary<int, bool> m_InstructionAddrToBreakpointMap;
-
-
-
    }
 }
