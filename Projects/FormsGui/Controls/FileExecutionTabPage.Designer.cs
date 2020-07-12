@@ -16,9 +16,8 @@
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-         this.m_TopHalfSplit = new System.Windows.Forms.SplitContainer();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
          this.m_RegisterGridCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.m_ShowDecValuesItem = new System.Windows.Forms.ToolStripMenuItem();
          this.m_ShowHexValuesItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -30,12 +29,22 @@
          this.menuStrip1 = new System.Windows.Forms.MenuStrip();
          this.m_StartBtn = new System.Windows.Forms.ToolStripMenuItem();
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+         this.m_TopHalfSplit = new System.Windows.Forms.SplitContainer();
          this.m_SrcGrid = new Assembler.FormsGui.Controls.BufferedDataGridView();
+         this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+         this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.SourceLineNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.OriginalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.jefFileViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
-         this.m_RegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
+         this.m_RegTabCtrl = new System.Windows.Forms.TabControl();
+         this.m_UserRegTabPage = new System.Windows.Forms.TabPage();
+         this.m_UsrRegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.RegName = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.valueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.executionViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+         this.usrRegisterBindingSource = new System.Windows.Forms.BindingSource(this.components);
+         this.m_FltPtRegTabPage = new System.Windows.Forms.TabPage();
          this.m_DataSegmentGrdView = new Assembler.FormsGui.Controls.BufferedDataGridView();
          this.BaseAddressStr = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Word0Str = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,16 +56,10 @@
          this.m_ResumeBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_StepBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
          this.m_TerminateBtn = new Assembler.FormsGui.Controls.BindableToolStripMenuItem();
-         this.IsBreakpointApplied = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-         this.programCounterLocationStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.instructionTextDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.rawBytesStrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.SourceLineNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.OriginalText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
-         this.m_TopHalfSplit.Panel1.SuspendLayout();
-         this.m_TopHalfSplit.Panel2.SuspendLayout();
-         this.m_TopHalfSplit.SuspendLayout();
+         this.m_FpRegisterData = new Assembler.FormsGui.Controls.BufferedDataGridView();
+         this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.fpRegBindingSource = new System.Windows.Forms.BindingSource(this.components);
          this.m_RegisterGridCtxMenu.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.m_HorizontalSplitContainer)).BeginInit();
          this.m_HorizontalSplitContainer.Panel1.SuspendLayout();
@@ -69,29 +72,21 @@
          this.m_DataGridCtxMenu.SuspendLayout();
          this.menuStrip1.SuspendLayout();
          this.tableLayoutPanel1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).BeginInit();
+         this.m_TopHalfSplit.Panel1.SuspendLayout();
+         this.m_TopHalfSplit.Panel2.SuspendLayout();
+         this.m_TopHalfSplit.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).BeginInit();
+         this.m_RegTabCtrl.SuspendLayout();
+         this.m_UserRegTabPage.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.m_UsrRegisterData)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.usrRegisterBindingSource)).BeginInit();
+         this.m_FltPtRegTabPage.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_FpRegisterData)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.fpRegBindingSource)).BeginInit();
          this.SuspendLayout();
-         // 
-         // m_TopHalfSplit
-         // 
-         this.m_TopHalfSplit.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_TopHalfSplit.Location = new System.Drawing.Point(0, 0);
-         this.m_TopHalfSplit.Name = "m_TopHalfSplit";
-         // 
-         // m_TopHalfSplit.Panel1
-         // 
-         this.m_TopHalfSplit.Panel1.Controls.Add(this.m_SrcGrid);
-         // 
-         // m_TopHalfSplit.Panel2
-         // 
-         this.m_TopHalfSplit.Panel2.Controls.Add(this.m_RegisterData);
-         this.m_TopHalfSplit.Size = new System.Drawing.Size(515, 152);
-         this.m_TopHalfSplit.SplitterDistance = 257;
-         this.m_TopHalfSplit.TabIndex = 1;
          // 
          // m_RegisterGridCtxMenu
          // 
@@ -215,15 +210,32 @@
          this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 435);
          this.tableLayoutPanel1.TabIndex = 1;
          // 
+         // m_TopHalfSplit
+         // 
+         this.m_TopHalfSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_TopHalfSplit.Location = new System.Drawing.Point(0, 0);
+         this.m_TopHalfSplit.Name = "m_TopHalfSplit";
+         // 
+         // m_TopHalfSplit.Panel1
+         // 
+         this.m_TopHalfSplit.Panel1.Controls.Add(this.m_SrcGrid);
+         // 
+         // m_TopHalfSplit.Panel2
+         // 
+         this.m_TopHalfSplit.Panel2.Controls.Add(this.m_RegTabCtrl);
+         this.m_TopHalfSplit.Size = new System.Drawing.Size(515, 152);
+         this.m_TopHalfSplit.SplitterDistance = 257;
+         this.m_TopHalfSplit.TabIndex = 1;
+         // 
          // m_SrcGrid
          // 
          this.m_SrcGrid.AllowUserToAddRows = false;
          this.m_SrcGrid.AllowUserToDeleteRows = false;
-         dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightGray;
-         dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightGray;
-         dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-         this.m_SrcGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+         dataGridViewCellStyle3.BackColor = System.Drawing.Color.LightGray;
+         dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.LightGray;
+         dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+         this.m_SrcGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
          this.m_SrcGrid.AutoGenerateColumns = false;
          this.m_SrcGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
          this.m_SrcGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -236,14 +248,14 @@
             this.OriginalText});
          this.m_SrcGrid.DataMember = "InstructionList";
          this.m_SrcGrid.DataSource = this.jefFileViewModelBindingSource;
-         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-         dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window;
-         dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-         this.m_SrcGrid.DefaultCellStyle = dataGridViewCellStyle2;
+         dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+         dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+         dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Window;
+         dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+         dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+         this.m_SrcGrid.DefaultCellStyle = dataGridViewCellStyle4;
          this.m_SrcGrid.Dock = System.Windows.Forms.DockStyle.Fill;
          this.m_SrcGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
          this.m_SrcGrid.Location = new System.Drawing.Point(0, 0);
@@ -256,29 +268,103 @@
          this.m_SrcGrid.TabIndex = 0;
          this.m_SrcGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OnBreakpointSet);
          // 
+         // IsBreakpointApplied
+         // 
+         this.IsBreakpointApplied.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.IsBreakpointApplied.DataPropertyName = "IsBreakpointApplied";
+         this.IsBreakpointApplied.HeaderText = "Bkpt";
+         this.IsBreakpointApplied.Name = "IsBreakpointApplied";
+         this.IsBreakpointApplied.Width = 35;
+         // 
+         // programCounterLocationStrDataGridViewTextBoxColumn
+         // 
+         this.programCounterLocationStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
+         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
+         this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 139;
+         // 
+         // instructionTextDataGridViewTextBoxColumn
+         // 
+         this.instructionTextDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
+         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Synthesized Instruction";
+         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
+         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
+         this.instructionTextDataGridViewTextBoxColumn.Width = 129;
+         // 
+         // rawBytesStrDataGridViewTextBoxColumn
+         // 
+         this.rawBytesStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
+         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
+         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
+         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
+         this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
+         // 
+         // SourceLineNumber
+         // 
+         this.SourceLineNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+         this.SourceLineNumber.DataPropertyName = "SourceLineNumber";
+         this.SourceLineNumber.HeaderText = "Source Line Number";
+         this.SourceLineNumber.Name = "SourceLineNumber";
+         this.SourceLineNumber.ReadOnly = true;
+         this.SourceLineNumber.Width = 118;
+         // 
+         // OriginalText
+         // 
+         this.OriginalText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
+         this.OriginalText.HeaderText = "Source Line";
+         this.OriginalText.Name = "OriginalText";
+         this.OriginalText.ReadOnly = true;
+         // 
          // jefFileViewModelBindingSource
          // 
          this.jefFileViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.DisassembledFileViewModel);
          // 
-         // m_RegisterData
+         // m_RegTabCtrl
          // 
-         this.m_RegisterData.AllowUserToAddRows = false;
-         this.m_RegisterData.AllowUserToDeleteRows = false;
-         this.m_RegisterData.AutoGenerateColumns = false;
-         this.m_RegisterData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-         this.m_RegisterData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.m_RegisterData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+         this.m_RegTabCtrl.Controls.Add(this.m_UserRegTabPage);
+         this.m_RegTabCtrl.Controls.Add(this.m_FltPtRegTabPage);
+         this.m_RegTabCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_RegTabCtrl.Location = new System.Drawing.Point(0, 0);
+         this.m_RegTabCtrl.Name = "m_RegTabCtrl";
+         this.m_RegTabCtrl.SelectedIndex = 0;
+         this.m_RegTabCtrl.Size = new System.Drawing.Size(254, 152);
+         this.m_RegTabCtrl.TabIndex = 1;
+         // 
+         // m_UserRegTabPage
+         // 
+         this.m_UserRegTabPage.Controls.Add(this.m_UsrRegisterData);
+         this.m_UserRegTabPage.Location = new System.Drawing.Point(4, 22);
+         this.m_UserRegTabPage.Name = "m_UserRegTabPage";
+         this.m_UserRegTabPage.Padding = new System.Windows.Forms.Padding(3);
+         this.m_UserRegTabPage.Size = new System.Drawing.Size(246, 126);
+         this.m_UserRegTabPage.TabIndex = 0;
+         this.m_UserRegTabPage.Text = "User Registers";
+         this.m_UserRegTabPage.UseVisualStyleBackColor = true;
+         // 
+         // m_UsrRegisterData
+         // 
+         this.m_UsrRegisterData.AllowUserToAddRows = false;
+         this.m_UsrRegisterData.AllowUserToDeleteRows = false;
+         this.m_UsrRegisterData.AutoGenerateColumns = false;
+         this.m_UsrRegisterData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+         this.m_UsrRegisterData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.m_UsrRegisterData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RegName,
             this.valueDataGridViewTextBoxColumn});
-         this.m_RegisterData.ContextMenuStrip = this.m_RegisterGridCtxMenu;
-         this.m_RegisterData.DataSource = this.executionViewModelBindingSource;
-         this.m_RegisterData.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.m_RegisterData.Location = new System.Drawing.Point(0, 0);
-         this.m_RegisterData.MultiSelect = false;
-         this.m_RegisterData.Name = "m_RegisterData";
-         this.m_RegisterData.RowHeadersVisible = false;
-         this.m_RegisterData.Size = new System.Drawing.Size(254, 152);
-         this.m_RegisterData.TabIndex = 0;
+         this.m_UsrRegisterData.ContextMenuStrip = this.m_RegisterGridCtxMenu;
+         this.m_UsrRegisterData.DataSource = this.usrRegisterBindingSource;
+         this.m_UsrRegisterData.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_UsrRegisterData.Location = new System.Drawing.Point(3, 3);
+         this.m_UsrRegisterData.MultiSelect = false;
+         this.m_UsrRegisterData.Name = "m_UsrRegisterData";
+         this.m_UsrRegisterData.RowHeadersVisible = false;
+         this.m_UsrRegisterData.Size = new System.Drawing.Size(240, 120);
+         this.m_UsrRegisterData.TabIndex = 0;
          // 
          // RegName
          // 
@@ -293,10 +379,21 @@
          this.valueDataGridViewTextBoxColumn.HeaderText = "Value";
          this.valueDataGridViewTextBoxColumn.Name = "valueDataGridViewTextBoxColumn";
          // 
-         // executionViewModelBindingSource
+         // usrRegisterBindingSource
          // 
-         this.executionViewModelBindingSource.DataMember = "Registers";
-         this.executionViewModelBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
+         this.usrRegisterBindingSource.DataMember = "Registers";
+         this.usrRegisterBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
+         // 
+         // m_FltPtRegTabPage
+         // 
+         this.m_FltPtRegTabPage.Controls.Add(this.m_FpRegisterData);
+         this.m_FltPtRegTabPage.Location = new System.Drawing.Point(4, 22);
+         this.m_FltPtRegTabPage.Name = "m_FltPtRegTabPage";
+         this.m_FltPtRegTabPage.Padding = new System.Windows.Forms.Padding(3);
+         this.m_FltPtRegTabPage.Size = new System.Drawing.Size(246, 126);
+         this.m_FltPtRegTabPage.TabIndex = 1;
+         this.m_FltPtRegTabPage.Text = "Floating Point Registers";
+         this.m_FltPtRegTabPage.UseVisualStyleBackColor = true;
          // 
          // m_DataSegmentGrdView
          // 
@@ -384,57 +481,43 @@
          this.m_TerminateBtn.Size = new System.Drawing.Size(126, 20);
          this.m_TerminateBtn.Text = "Terminate Execution";
          // 
-         // IsBreakpointApplied
+         // m_FpRegisterData
          // 
-         this.IsBreakpointApplied.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.IsBreakpointApplied.DataPropertyName = "IsBreakpointApplied";
-         this.IsBreakpointApplied.HeaderText = "Bkpt";
-         this.IsBreakpointApplied.Name = "IsBreakpointApplied";
-         this.IsBreakpointApplied.Width = 35;
+         this.m_FpRegisterData.AllowUserToAddRows = false;
+         this.m_FpRegisterData.AllowUserToDeleteRows = false;
+         this.m_FpRegisterData.AutoGenerateColumns = false;
+         this.m_FpRegisterData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+         this.m_FpRegisterData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.m_FpRegisterData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2});
+         this.m_FpRegisterData.ContextMenuStrip = this.m_RegisterGridCtxMenu;
+         this.m_FpRegisterData.DataSource = this.fpRegBindingSource;
+         this.m_FpRegisterData.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.m_FpRegisterData.Location = new System.Drawing.Point(3, 3);
+         this.m_FpRegisterData.MultiSelect = false;
+         this.m_FpRegisterData.Name = "m_FpRegisterData";
+         this.m_FpRegisterData.RowHeadersVisible = false;
+         this.m_FpRegisterData.Size = new System.Drawing.Size(240, 120);
+         this.m_FpRegisterData.TabIndex = 1;
          // 
-         // programCounterLocationStrDataGridViewTextBoxColumn
+         // dataGridViewTextBoxColumn1
          // 
-         this.programCounterLocationStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.programCounterLocationStrDataGridViewTextBoxColumn.DataPropertyName = "ProgramCounterLocationStr";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.HeaderText = "Program Counter Address";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.Name = "programCounterLocationStrDataGridViewTextBoxColumn";
-         this.programCounterLocationStrDataGridViewTextBoxColumn.ReadOnly = true;
-         this.programCounterLocationStrDataGridViewTextBoxColumn.Width = 139;
+         this.dataGridViewTextBoxColumn1.DataPropertyName = "RegisterName";
+         this.dataGridViewTextBoxColumn1.HeaderText = "Register Name";
+         this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+         this.dataGridViewTextBoxColumn1.ReadOnly = true;
          // 
-         // instructionTextDataGridViewTextBoxColumn
+         // dataGridViewTextBoxColumn2
          // 
-         this.instructionTextDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.instructionTextDataGridViewTextBoxColumn.DataPropertyName = "InstructionText";
-         this.instructionTextDataGridViewTextBoxColumn.HeaderText = "Synthesized Instruction";
-         this.instructionTextDataGridViewTextBoxColumn.Name = "instructionTextDataGridViewTextBoxColumn";
-         this.instructionTextDataGridViewTextBoxColumn.ReadOnly = true;
-         this.instructionTextDataGridViewTextBoxColumn.Width = 129;
+         this.dataGridViewTextBoxColumn2.DataPropertyName = "ValueStr";
+         this.dataGridViewTextBoxColumn2.HeaderText = "Value";
+         this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
          // 
-         // rawBytesStrDataGridViewTextBoxColumn
+         // fpRegBindingSource
          // 
-         this.rawBytesStrDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.rawBytesStrDataGridViewTextBoxColumn.DataPropertyName = "RawBytesStr";
-         this.rawBytesStrDataGridViewTextBoxColumn.HeaderText = "Inst. Word";
-         this.rawBytesStrDataGridViewTextBoxColumn.Name = "rawBytesStrDataGridViewTextBoxColumn";
-         this.rawBytesStrDataGridViewTextBoxColumn.ReadOnly = true;
-         this.rawBytesStrDataGridViewTextBoxColumn.Width = 75;
-         // 
-         // SourceLineNumber
-         // 
-         this.SourceLineNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-         this.SourceLineNumber.DataPropertyName = "SourceLineNumber";
-         this.SourceLineNumber.HeaderText = "Source Line Number";
-         this.SourceLineNumber.Name = "SourceLineNumber";
-         this.SourceLineNumber.ReadOnly = true;
-         this.SourceLineNumber.Width = 118;
-         // 
-         // OriginalText
-         // 
-         this.OriginalText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-         this.OriginalText.DataPropertyName = "OriginalInstructionSourceText";
-         this.OriginalText.HeaderText = "Source Line";
-         this.OriginalText.Name = "OriginalText";
-         this.OriginalText.ReadOnly = true;
+         this.fpRegBindingSource.DataMember = "Registers";
+         this.fpRegBindingSource.DataSource = typeof(Assembler.FormsGui.ViewModels.ExecutionViewModel);
          // 
          // FileExecutionTabPage
          // 
@@ -443,10 +526,6 @@
          this.Controls.Add(this.tableLayoutPanel1);
          this.Name = "FileExecutionTabPage";
          this.Size = new System.Drawing.Size(521, 435);
-         this.m_TopHalfSplit.Panel1.ResumeLayout(false);
-         this.m_TopHalfSplit.Panel2.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).EndInit();
-         this.m_TopHalfSplit.ResumeLayout(false);
          this.m_RegisterGridCtxMenu.ResumeLayout(false);
          this.m_HorizontalSplitContainer.Panel1.ResumeLayout(false);
          this.m_HorizontalSplitContainer.Panel2.ResumeLayout(false);
@@ -461,20 +540,29 @@
          this.menuStrip1.PerformLayout();
          this.tableLayoutPanel1.ResumeLayout(false);
          this.tableLayoutPanel1.PerformLayout();
+         this.m_TopHalfSplit.Panel1.ResumeLayout(false);
+         this.m_TopHalfSplit.Panel2.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.m_TopHalfSplit)).EndInit();
+         this.m_TopHalfSplit.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_SrcGrid)).EndInit();
          ((System.ComponentModel.ISupportInitialize)(this.jefFileViewModelBindingSource)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.m_RegisterData)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.executionViewModelBindingSource)).EndInit();
+         this.m_RegTabCtrl.ResumeLayout(false);
+         this.m_UserRegTabPage.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.m_UsrRegisterData)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.usrRegisterBindingSource)).EndInit();
+         this.m_FltPtRegTabPage.ResumeLayout(false);
          ((System.ComponentModel.ISupportInitialize)(this.m_DataSegmentGrdView)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.m_FpRegisterData)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.fpRegBindingSource)).EndInit();
          this.ResumeLayout(false);
 
       }
 
       #endregion
       private System.Windows.Forms.SplitContainer m_TopHalfSplit;
-      private Assembler.FormsGui.Controls.BufferedDataGridView m_RegisterData;
+      private Assembler.FormsGui.Controls.BufferedDataGridView m_UsrRegisterData;
       private System.Windows.Forms.SplitContainer m_HorizontalSplitContainer;
-      private System.Windows.Forms.BindingSource executionViewModelBindingSource;
+      private System.Windows.Forms.BindingSource usrRegisterBindingSource;
       private ConsoleTextBox m_ConsoleTxt;
       private System.Windows.Forms.MenuStrip menuStrip1;
       private System.Windows.Forms.ToolStripMenuItem m_StartBtn;
@@ -506,5 +594,12 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn rawBytesStrDataGridViewTextBoxColumn;
       private System.Windows.Forms.DataGridViewTextBoxColumn SourceLineNumber;
       private System.Windows.Forms.DataGridViewTextBoxColumn OriginalText;
+      private System.Windows.Forms.TabControl m_RegTabCtrl;
+      private System.Windows.Forms.TabPage m_UserRegTabPage;
+      private System.Windows.Forms.TabPage m_FltPtRegTabPage;
+      private BufferedDataGridView m_FpRegisterData;
+      private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+      private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+      private System.Windows.Forms.BindingSource fpRegBindingSource;
    }
 }

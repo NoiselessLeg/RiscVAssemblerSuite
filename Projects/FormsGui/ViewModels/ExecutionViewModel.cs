@@ -5,6 +5,7 @@ using Assembler.FormsGui.Utility;
 using Assembler.Interpreter;
 using Assembler.Interpreter.Exceptions;
 using Assembler.OutputProcessing;
+using Assembler.Simulation;
 using Assembler.Simulation.Exceptions;
 using Assembler.UICommon.Commands;
 using System;
@@ -37,29 +38,31 @@ namespace Assembler.FormsGui.ViewModels
          m_InstructionAddrToBreakpointMap = new Dictionary<int, bool>();
          m_ExecutionState = PrgmExecutionState.Stopped;
          m_Terminal = terminal;
-         m_Registers = new RegisterViewModel[InterpreterCommon.MAX_REGISTERS];
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
+         var registers = new RegisterViewModel[InterpreterCommon.MAX_BASIC_REGISTERS];
+         for (int i = 0; i < InterpreterCommon.MAX_BASIC_REGISTERS; ++i)
          {
             if (i == 0)
             {
-               m_Registers[i] = new ZeroRegisterViewModel();
+               registers[i] = new ZeroRegisterViewModel();
             }
             else
             {
-               m_Registers[i] = new RegisterViewModel(i);
+               registers[i] = new RegisterViewModel(i);
             }
          }
 
          DisassembledFileBase file = underlyingVm.FileData;
+
          var dataSegmentAccessor = new BindableDataSegmentAccessor(file.DataSegment);
-
-         m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_Registers, dataSegmentAccessor, file.TextSegment);
-
-         m_DefaultRegValues = new Register[m_Ctx.UserRegisters.Count];
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
+         
+         var fltPtRegs = new FloatingPointRegisterViewModel[InterpreterCommon.MAX_FLOATING_PT_REGISTERS];
+         for (int i = 0; i < fltPtRegs.Length; ++i)
          {
-            m_DefaultRegValues[i] = new Register(m_Ctx.UserRegisters[i].Value);
+            fltPtRegs[i] = new FloatingPointRegisterViewModel(i);
          }
+
+         m_RegMgr = new RegisterManager(registers, fltPtRegs, file.TextSegment.StartingSegmentAddress, CommonConstants.DEFAULT_STACK_ADDRESS);
+         m_Ctx = new Interpreter.ExecutionContext(this, terminal, dataSegmentAccessor, m_RegMgr, file.TextSegment);
 
          m_DataSegmentElements = new BindingList<DataAddressViewModel>();
 
@@ -336,9 +339,14 @@ namespace Assembler.FormsGui.ViewModels
          }
       }
 
-      public RegisterViewModel[] Registers
+      public IList<RegisterViewModel> Registers
       {
-         get { return m_Registers; }
+         get { return (IList<RegisterViewModel>)m_RegMgr.UserIntRegisters; }
+      }
+
+      public IList<FloatingPointRegisterViewModel> FloatingPointRegisters
+      {
+         get { return (IList<FloatingPointRegisterViewModel>)m_RegMgr.UserFloatingPointRegisters; }
       }
 
       public BindingList<DataAddressViewModel> DataElements
@@ -357,10 +365,7 @@ namespace Assembler.FormsGui.ViewModels
       private void ResetProgramContext()
       {
          ActiveInstructionIdx = 0;
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-         {
-            m_Ctx.UserRegisters[i].Value = m_DefaultRegValues[i].Value;
-         }
+         m_RegMgr.RestoreOriginalRegisterValues();
       }
 
       private void SetProgramBreakpoint(int instructionAddr)
@@ -377,7 +382,8 @@ namespace Assembler.FormsGui.ViewModels
       {
          // this will give us our initial program counter value which we can use
          // to determine how many instructions we've executed.
-         int delta = programCtr - m_DefaultRegValues[InterpreterCommon.PC_REGISTER].Value;
+         int originalPcValue = m_RegMgr.GetOriginalValue(InterpreterCommon.PC_REGISTER);
+         int delta = programCtr - originalPcValue;
          return (delta / sizeof(int));
       }
 
@@ -412,13 +418,11 @@ namespace Assembler.FormsGui.ViewModels
       private readonly RelayCommand m_InstructionStepCmd;
       private readonly RelayCommand<int> m_SetBreakpointCmd;
       private readonly RelayCommand<int> m_UnsetBreakpointCmd;
-      private readonly RegisterViewModel[] m_Registers;
+      private readonly RegisterManager m_RegMgr;
       private readonly BindingList<DataAddressViewModel> m_DataSegmentElements;
 
 
       private readonly Interpreter.ExecutionContext m_Ctx;
-
-      private readonly Register[] m_DefaultRegValues;
 
       private PrgmExecutionState m_ExecutionState;
 

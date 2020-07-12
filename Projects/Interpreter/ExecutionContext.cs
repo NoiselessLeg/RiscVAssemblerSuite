@@ -2,6 +2,7 @@
 using Assembler.Interpreter.Exceptions;
 using Assembler.Interpreter.InstructionInterpretation;
 using Assembler.OutputProcessing;
+using Assembler.Simulation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,18 +21,19 @@ namespace Assembler.Interpreter
       /// Creates an instance of the file interpreter.
       /// </summary>
       /// <param name="terminal">The terminal implementation that will be used for I/O.</param>
-      public ExecutionContext(IRuntimeEnvironment environment, ITerminal terminal, IList<IRegister> registers,
-                              IDataSegmentAccessor dataSegment, TextSegmentAccessor textSegment)
+      public ExecutionContext(IRuntimeEnvironment environment, 
+                              ITerminal terminal,
+                              IDataSegmentAccessor dataSegment, 
+                              RegisterManager regMgr,
+                              TextSegmentAccessor textSegment)
       {
          m_Environment = environment;
          m_Terminal = terminal;
          m_InterpreterFac = new InterpreterFactory(environment, terminal);
 
-         m_Ctx = new RuntimeContext(environment, dataSegment, registers);
+         m_Ctx = new RuntimeContext(environment, dataSegment, regMgr);
          
          m_TextSegment = textSegment;
-         m_Ctx.UserRegisters[InterpreterCommon.PC_REGISTER].Value = m_TextSegment.StartingSegmentAddress;
-         m_Ctx.UserRegisters[InterpreterCommon.SP_REGISTER].Value = CommonConstants.DEFAULT_STACK_ADDRESS;
       }
 
       /// <summary>
@@ -49,7 +51,7 @@ namespace Assembler.Interpreter
       /// <summary>
       /// Provides access to the user-level registers in the RISC-V architecture.
       /// </summary>
-      public IList<IRegister> UserRegisters
+      public IList<IRegister<int>> UserRegisters
       {
          get { return m_Ctx.UserRegisters; }
       }

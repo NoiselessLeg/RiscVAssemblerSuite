@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreter
 {
-    public class ZeroRegister : Register
+    public class ZeroRegister : Register<int>
     {
         public ZeroRegister() :
             base(0)

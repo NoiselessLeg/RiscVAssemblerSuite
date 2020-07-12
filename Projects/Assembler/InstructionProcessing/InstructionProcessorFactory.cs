@@ -75,7 +75,7 @@ namespace Assembler.InstructionProcessing
                 { "j", new JProcessor(symbolTable) },
 
                 //RV32M Integer multiply / divide
-                { "mul", new PlaceholderProcessor("mul") },
+                { "mul", new MulProcessor() },
                 { "mulh", new PlaceholderProcessor("mulh") },
                 { "mulhsu", new PlaceholderProcessor("mulhsu") },
                 { "mulhu", new PlaceholderProcessor("mulhu") },
@@ -83,6 +83,10 @@ namespace Assembler.InstructionProcessing
                 { "divu", new PlaceholderProcessor("divu") },
                 { "rem", new PlaceholderProcessor("rem") },
                 { "remu", new PlaceholderProcessor("remu") },
+
+                //Floating point instructions
+                { "fcvt.w.s", new FcvtwsProcessor() },
+                { "fcvt.s.w", new FcvtswProcessor() },
 
                 // for system calls
                 { "ecall", new EcallProcessor() },

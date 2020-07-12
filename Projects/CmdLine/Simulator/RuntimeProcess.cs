@@ -4,6 +4,7 @@ using Assembler.Common;
 using Assembler.Interpreter;
 using Assembler.OutputProcessing;
 using Assembler.OutputProcessing.FileReaders;
+using Assembler.Simulation;
 using Assembler.Simulation.Exceptions;
 using Assembler.UICommon.Commands;
 using System;
@@ -34,28 +35,11 @@ namespace Assembler.CmdLine
          m_InstructionAddrToBreakpointMap = new Dictionary<int, bool>();
          m_ExecutionState = PrgmExecutionState.Stopped;
          m_Terminal = terminal;
-         m_Registers = new Register[InterpreterCommon.MAX_REGISTERS];
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-         {
-            if (i == 0)
-            {
-               m_Registers[i] = new ZeroRegister();
-            }
-            else
-            {
-               m_Registers[i] = new Register();
-            }
-         }
+         m_RegMgr = new RegisterManager(file.TextSegment.StartingSegmentAddress, CommonConstants.DEFAULT_STACK_ADDRESS);
          
          m_DataSegment = new RuntimeDataSegmentAccessor(file.DataSegment);
 
-         m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_Registers, m_DataSegment, file.TextSegment);
-
-         m_DefaultRegValues = new Register[m_Ctx.UserRegisters.Count];
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-         {
-            m_DefaultRegValues[i] = new Register(m_Ctx.UserRegisters[i].Value);
-         }
+         m_Ctx = new Interpreter.ExecutionContext(this, terminal, m_DataSegment, m_RegMgr, file.TextSegment);
 
          // initialize the instruction breakpoint map.
          // this will give us a positive performance boost when we execute the program
@@ -267,9 +251,9 @@ namespace Assembler.CmdLine
          m_ProcCtrl.RelinquishControlToParentProcess();
       }
 
-      public Register[] Registers
+      public IList<IRegister<int>> Registers
       {
-         get { return m_Registers; }
+         get { return m_Ctx.UserRegisters; }
       }
 
       private PrgmExecutionState ExecutionState
@@ -286,10 +270,7 @@ namespace Assembler.CmdLine
 
       private void ResetProgramContext()
       {
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-         {
-            m_Ctx.UserRegisters[i].Value = m_DefaultRegValues[i].Value;
-         }
+         m_RegMgr.RestoreOriginalRegisterValues();
       }
       
       private void TerminatePreExistingRuntimeTask()
@@ -298,13 +279,11 @@ namespace Assembler.CmdLine
       }
 
       private readonly ITerminal m_Terminal;
-      private readonly Register[] m_Registers;
+      private readonly RegisterManager m_RegMgr;
       private readonly Stopwatch m_RunTimer;
       private readonly ChildProcControl m_ProcCtrl;
       private readonly RuntimeDataSegmentAccessor m_DataSegment;
       private readonly Interpreter.ExecutionContext m_Ctx;
-      
-      private readonly Register[] m_DefaultRegValues;
 
       private PrgmExecutionState m_ExecutionState;
 

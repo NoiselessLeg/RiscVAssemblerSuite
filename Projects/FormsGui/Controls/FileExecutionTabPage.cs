@@ -35,13 +35,20 @@ namespace Assembler.FormsGui.Controls
 
          m_ExViewModel = new ExecutionViewModel(m_ExConsole, viewModel, viewModel.InstructionList);
 
-         var bindingWrapper = new BindingList<RegisterViewModel>(m_ExViewModel.Registers);
-         m_RegisterData.AutoGenerateColumns = false;
-         m_RegisterData.DataSource = bindingWrapper;
+         var usrRegBindingAdapter = new BindingList<RegisterViewModel>(m_ExViewModel.Registers);
+         m_UsrRegisterData.AutoGenerateColumns = false;
+         m_UsrRegisterData.DataSource = usrRegBindingAdapter;
+
+         var fpRegBindingAdapter = new BindingList<FloatingPointRegisterViewModel>(m_ExViewModel.FloatingPointRegisters);
+         m_FpRegisterData.AutoGenerateColumns = false;
+         m_FpRegisterData.DataSource = fpRegBindingAdapter;
 
          m_DataSegmentGrdView.AutoGenerateColumns = false;
          m_DataSegmentGrdView.DataSource = m_ExViewModel.DataElements;
-         executionViewModelBindingSource.DataSource = bindingWrapper;
+         usrRegisterBindingSource.DataSource = usrRegBindingAdapter;
+         fpRegBindingSource.DataSource = fpRegBindingAdapter;
+
+
          jefFileViewModelBindingSource.DataSource = m_FileViewModel;
          m_ExViewModel.PropertyChanged += OnExecutionViewModelChanged;
 

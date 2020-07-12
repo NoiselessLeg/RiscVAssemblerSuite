@@ -78,6 +78,8 @@
     <Compile Include="InstructionProcessing\BranchInstructionBase.cs" />
     <Compile Include="InstructionProcessing\EbreakProcessor.cs" />
     <Compile Include="InstructionProcessing\EcallProcessor.cs" />
+    <Compile Include="InstructionProcessing\FcvtProcessor.cs" />
+    <Compile Include="InstructionProcessing\FlwProcessor.cs" />
     <Compile Include="InstructionProcessing\InstructionProcessorFactory.cs" />
     <Compile Include="InstructionProcessing\JalrProcessor.cs" />
     <Compile Include="InstructionProcessing\JProcessor.cs" />
@@ -146,6 +148,7 @@
     <Compile Include="CodeGeneration\TextCodeGenerator.cs" />
     <Compile Include="SymbolTableConstruction\IInstructionSizeEstimator.cs" />
     <Compile Include="Util\DummyLogger.cs" />
+    <Compile Include="Util\FloatingPointUtils.cs" />
     <Compile Include="Util\InstructionElement.cs" />
     <Compile Include="Util\LineParseResults.cs" />
     <Compile Include="SymbolTableConstruction\SymbolBuilders\DataSymbolBuilder.cs" />

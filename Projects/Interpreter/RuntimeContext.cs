@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Simulation;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -10,34 +11,12 @@ namespace Assembler.Interpreter
    /// </summary>
    public class RuntimeContext
    {
-      public RuntimeContext(IRuntimeEnvironment env, IDataSegmentAccessor dataSegment)
+      public RuntimeContext(IRuntimeEnvironment env, IDataSegmentAccessor dataSegment, RegisterManager regMgr)
       {
-         m_Environment = env;
-         m_DataAccessor = dataSegment;
-         m_RuntimeRegisters = new Register[InterpreterCommon.MAX_REGISTERS];
-         for (int i = 0; i < InterpreterCommon.MAX_REGISTERS; ++i)
-         {
-            if (i == 0)
-            {
-               m_RuntimeRegisters.Add(new ZeroRegister());
-            }
-            else
-            {
-               m_RuntimeRegisters.Add(new Register());
-            }
-         }
-      }
-
-      public RuntimeContext(IRuntimeEnvironment env, IDataSegmentAccessor dataSegment, IList<IRegister> userRegisters)
-      {
-         if (userRegisters.Count != InterpreterCommon.MAX_REGISTERS)
-         {
-            throw new ArgumentException("userRegisters must have " + InterpreterCommon.MAX_REGISTERS + " available elements.");
-         }
 
          m_Environment = env;
          m_DataAccessor = dataSegment;
-         m_RuntimeRegisters = userRegisters;
+         m_RegMgr = regMgr;
       }
 
       /// <summary>
@@ -242,16 +221,10 @@ namespace Assembler.Interpreter
       /// <summary>
       /// Gets the array of registers that are read/writeable during runtime.
       /// </summary>
-      public IList<IRegister> UserRegisters => m_RuntimeRegisters;
-
-      /// <summary>
-      /// Gets the array of registers that are only read/writeable by the environment or via privileged instructions
-      /// </summary>
-      public IList<IRegister> PrivilegedRegisters => m_PrivilegedRegisters;
+      public IList<IRegister<int>> UserRegisters => m_RegMgr.UserIntRegisters;
 
       private readonly IRuntimeEnvironment m_Environment;
       private readonly IDataSegmentAccessor m_DataAccessor;
-      private readonly IList<IRegister> m_RuntimeRegisters;
-      private readonly IList<IRegister> m_PrivilegedRegisters;
+      private readonly RegisterManager m_RegMgr;
    }
 }

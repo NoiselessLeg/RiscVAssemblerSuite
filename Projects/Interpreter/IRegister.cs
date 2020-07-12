@@ -8,14 +8,14 @@ namespace Assembler.Interpreter
 {
    /// <summary>
    /// Defines an interface for a 32-bit register that can have
-   /// values applied or 
+   /// values applied or read from.
    /// </summary>
-   public interface IRegister
+   public interface IRegister<TRegValue>
    {
       /// <summary>
       /// Gets or sets the value of this specific register.
       /// </summary>
-      int Value
+      TRegValue Value
       {
          get; set;
       }

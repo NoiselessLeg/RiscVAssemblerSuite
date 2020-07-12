@@ -7,8 +7,8 @@
     <ProjectGuid>{795BAC7E-64ED-4685-81BE-3032DCC461D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Assembler.Interpreter</RootNamespace>
-    <AssemblyName>Assembler.Interpreter</AssemblyName>
+    <RootNamespace>Assembler.Simulation</RootNamespace>
+    <AssemblyName>Assembler.Simulation</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -118,6 +118,7 @@
     <Compile Include="InterpreterCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.cs" />
+    <Compile Include="RegisterManager.cs" />
     <Compile Include="RuntimeContext.cs" />
     <Compile Include="RuntimeDataSegmentAccessor.cs" />
     <Compile Include="SysCalls\AllocMemorySysCall.cs" />
