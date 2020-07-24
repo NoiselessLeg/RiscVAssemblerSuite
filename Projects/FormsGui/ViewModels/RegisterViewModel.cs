@@ -146,7 +146,7 @@ namespace Assembler.FormsGui.ViewModels
             {
                case RegisterDisplayType.Decimal:
                {
-                  dispStr = Value.ToString();
+                  dispStr = Value.ToString("0.0######");
                   break;
                }
 

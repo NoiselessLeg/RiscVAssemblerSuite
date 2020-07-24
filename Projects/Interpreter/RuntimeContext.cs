@@ -223,6 +223,11 @@ namespace Assembler.Interpreter
       /// </summary>
       public IList<IRegister<int>> UserRegisters => m_RegMgr.UserIntRegisters;
 
+      /// <summary>
+      /// Gets the array of floating-point registers that are read/writeable during runtime.
+      /// </summary>
+      public IList<IRegister<float>> FloatingPointRegisters => m_RegMgr.UserFloatingPointRegisters;
+
       private readonly IRuntimeEnvironment m_Environment;
       private readonly IDataSegmentAccessor m_DataAccessor;
       private readonly RegisterManager m_RegMgr;

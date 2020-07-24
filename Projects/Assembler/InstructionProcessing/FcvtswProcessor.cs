@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,14 +19,13 @@ namespace Assembler.InstructionProcessing
 
          const int BASE_OPCODE = 0x53;
 
-         int rdReg = RegisterMap.GetNumericRegisterValue(instructionArgs[0]);
-         int rs1Reg = RegisterMap.GetNumericFloatingPointRegisterValue(instructionArgs[1]);
+         int rdReg = RegisterMap.GetNumericFloatingPointRegisterValue(instructionArgs[0]);
+         int rs1Reg = RegisterMap.GetNumericRegisterValue(instructionArgs[1]);
 
-         int outputInst = (0x60 << 27) | (rs1Reg << 15) | (rdReg << 7) | BASE_OPCODE;
+         int outputInst = (0x1A << 27) | (rs1Reg << 15) | (rdReg << 7) | BASE_OPCODE;
 
          var instList = new List<int> { outputInst };
          return instList;
-
       }
    }
 }

@@ -76,17 +76,29 @@ namespace Assembler.InstructionProcessing
 
                 //RV32M Integer multiply / divide
                 { "mul", new MulProcessor() },
-                { "mulh", new PlaceholderProcessor("mulh") },
-                { "mulhsu", new PlaceholderProcessor("mulhsu") },
-                { "mulhu", new PlaceholderProcessor("mulhu") },
-                { "div", new PlaceholderProcessor("div") },
-                { "divu", new PlaceholderProcessor("divu") },
-                { "rem", new PlaceholderProcessor("rem") },
-                { "remu", new PlaceholderProcessor("remu") },
+                { "mulh", new MulhProcessor() },
+                { "mulhsu", new MulhsuProcessor() },
+                { "mulhu", new MulhuProcessor() },
+                { "div", new DivProcessor() },
+                { "divu", new DivuProcessor() },
+                { "rem", new RemProcessor() },
+                { "remu", new RemuProcessor() },
 
                 //Floating point instructions
                 { "fcvt.w.s", new FcvtwsProcessor() },
                 { "fcvt.s.w", new FcvtswProcessor() },
+                { "fadd.s", new FaddsProcessor() },
+                { "fsub.s", new FsubsProcessor() },
+                { "fmul.s", new FmulsProcessor() },
+                { "fdiv.s", new FdivsProcessor() },
+                { "fsqrt.s", new FsqrtsProcessor() },
+                { "fmin.s", new FminsProcessor() },
+                { "fmax.s", new FmaxsProcessor() },
+                { "feq.s", new FeqsProcessor() },
+                { "flt.s", new FltsProcessor() },
+                { "fle.s", new FlesProcessor() },
+                { "frcsr", new PlaceholderProcessor("frcsr") },
+
 
                 // for system calls
                 { "ecall", new EcallProcessor() },

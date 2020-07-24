@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler.InstructionProcessing
 {
-   class MulProcessor : BaseInstructionProcessor
+   class MulhuProcessor : BaseInstructionProcessor
    {
       /// <summary>
       /// Parses an instruction and generates the binary code for it.
@@ -37,6 +37,7 @@ namespace Assembler.InstructionProcessing
             instruction |= 0x2000000;
             instruction |= (rs2Reg << 20);
             instruction |= (rs1Reg << 15);
+            instruction |= (0x3 << 12);
             instruction |= (rdReg << 7);
             instruction |= 0x33;
             instructionList.Add(instruction);

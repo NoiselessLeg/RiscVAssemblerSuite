@@ -51,7 +51,29 @@ namespace Assembler.OutputProcessing.TextOutput
                 { InstructionType.Or, new RInstructionStringifier("or") },
                 { InstructionType.And, new RInstructionStringifier("and") },
                 { InstructionType.Ecall, new EcallStringifier("ecall") },
-                { InstructionType.Ebreak, new EbreakStringifier("ebreak") }
+                { InstructionType.Ebreak, new EbreakStringifier("ebreak") },
+
+                { InstructionType.Mul, new RInstructionStringifier("mul") },
+                { InstructionType.Mulh, new RInstructionStringifier("mulh") },
+                { InstructionType.Mulhsu, new RInstructionStringifier("mulhsu") },
+                { InstructionType.Mulhu, new RInstructionStringifier("mulhu") },
+                { InstructionType.Div, new RInstructionStringifier("div") },
+                { InstructionType.Divu, new RInstructionStringifier("divu") },
+                { InstructionType.Rem, new RInstructionStringifier("rem") },
+                { InstructionType.Remu, new RInstructionStringifier("remu") },
+                
+                { InstructionType.FaddS, new FltPtRInstructionStringifier("fadd.s") },
+                { InstructionType.FsubS, new FltPtRInstructionStringifier("fsub.s") },
+                { InstructionType.FmulS, new FltPtRInstructionStringifier("fmul.s") },
+                { InstructionType.FdivS, new FltPtRInstructionStringifier("fdiv.s") },
+                { InstructionType.FminS, new FltPtRInstructionStringifier("fmin.s") },
+                { InstructionType.FmaxS, new FltPtRInstructionStringifier("fmax.s") },
+                { InstructionType.FsqrtS, new FsqrtsStringifier("fsqrt.s") },
+                { InstructionType.FeqS, new FltPtRInstructionStringifier("feq.s") },
+                { InstructionType.FltS, new FltPtRInstructionStringifier("flt.s") },
+                { InstructionType.FleS, new FltPtRInstructionStringifier("fle.s") },
+                { InstructionType.FcvtSW, new FcvtswStringifier() },
+                { InstructionType.FcvtWS, new FcvtwsStringifier() },
             };
       }
 

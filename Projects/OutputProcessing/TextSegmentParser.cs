@@ -6,6 +6,21 @@ namespace Assembler.OutputProcessing
 {
    internal class TextSegmentParser
    {
+      enum BaseOpcodes
+      {
+         Lui = 0x37,
+         Auipc = 0x17,
+         Jal = 0x6F,
+         Jalr = 0x67,
+         Branch = 0x63,
+         Load = 0x03,
+         Store = 0x23,
+         Immediate = 0x13,
+         Register = 0x33,
+         Environment = 0x73,
+         FloatOp = 0x53
+      }
+
       /// <summary>
       /// Generates disassembled instructions from the 32-bit integers in the object file.
       /// </summary>
@@ -35,77 +50,65 @@ namespace Assembler.OutputProcessing
       private static InstructionType GetInstructionType(int instruction)
       {
          InstructionType instType;
-
-         // bitmask the first seven bits. this is our opcode.
-         int opcode = (instruction & 0x7F);
-
+         BaseOpcodes opcode = ReadBaseOpcode(instruction);
          switch (opcode)
          {
-            // LUI opcode.
-            case 0x37:
+            case BaseOpcodes.Lui:
             {
                instType = InstructionType.Lui;
                break;
             }
-
-            // AUIPC opcode
-            case 0x17:
+            
+            case BaseOpcodes.Auipc:
             {
                instType = InstructionType.Auipc;
                break;
             }
-
-            // JAL opcode
-            case 0x6F:
+            
+            case BaseOpcodes.Jal:
             {
                instType = InstructionType.Jal;
                break;
             }
-
-            // JALR opcode
-            case 0x67:
+            
+            case BaseOpcodes.Jalr:
             {
                instType = InstructionType.Jalr;
                break;
             }
-
-            // branch opcode
-            case 0x63:
+            
+            case BaseOpcodes.Branch:
             {
                instType = GetBranchInstructionType(instruction);
                break;
             }
-
-            // load opcode
-            case 0x03:
+            
+            case BaseOpcodes.Load:
             {
                instType = GetLoadInstructionType(instruction);
                break;
             }
-
-            // store opcode
-            case 0x23:
+            
+            case BaseOpcodes.Store:
             {
                instType = GetStoreInstructionType(instruction);
                break;
             }
-
-            // immediate instruction opcode
-            case 0x13:
+            
+            case BaseOpcodes.Immediate:
             {
                instType = GetImmediateInstructionType(instruction);
                break;
             }
 
             // register instruction opcode
-            case 0x33:
+            case BaseOpcodes.Register:
             {
                instType = GetRegisterInstructionType(instruction);
                break;
             }
-
-            // ecall opcode.
-            case 0x73:
+            
+            case BaseOpcodes.Environment:
             {
                int ebreakMask = instruction & 0x100000;
                if (ebreakMask == 0)
@@ -119,14 +122,18 @@ namespace Assembler.OutputProcessing
                break;
             }
 
+            case BaseOpcodes.FloatOp:
+            {
+               instType = GetFloatingPointOpInstructionType(instruction);
+               break;
+            }
+
             default:
             {
                throw new ArgumentException("Unrecognized instruction \"0x" + instruction.ToString("x8") + "\"");
             }
          }
-
-
-
+         
          return instType;
       }
 
@@ -381,26 +388,123 @@ namespace Assembler.OutputProcessing
       /// <returns>The enumerated type representing the instruction.</returns>
       private static InstructionType GetRegisterInstructionType(int instruction)
       {
-         // get the function code by masking bit offsets 12, 13, 14
-         int functionCode = (instruction & 0x7000) >> 12;
+         uint uInst = (uint)instruction;
+         uint func7Code = (uInst & 0xFE000000) >> 25;
 
          InstructionType type;
-         switch (functionCode)
+         switch (func7Code)
          {
-            case 0x00:
+            case 0x0:
             {
-               // 0x00 is unique, need to get the 30th bit offset to determine 
-               int secondaryFuncCode = (instruction & 0x40000000) >> 30;
-               switch (secondaryFuncCode)
+               // get the function code by masking bit offsets 12, 13, 14
+               int func3Code = (instruction & 0x7000) >> 12;
+               switch (func3Code)
                {
-                  case 0x00:
+                  case 0x0:
                   {
                      type = InstructionType.Add;
                      break;
                   }
-                  case 0x01:
+
+                  case 0x1:
                   {
-                     type = InstructionType.Sub;
+                     type = InstructionType.Slli;
+                     break;
+                  }
+
+                  case 0x2:
+                  {
+                     type = InstructionType.Slt;
+                     break;
+                  }
+
+                  case 0x3:
+                  {
+                     type = InstructionType.Sltu;
+                     break;
+                  }
+
+                  case 0x4:
+                  {
+                     type = InstructionType.Xor;
+                     break;
+                  }
+
+                  case 0x5:
+                  {
+                     type = InstructionType.Srl;
+                     break;
+                  }
+
+                  case 0x6:
+                  {
+                     type = InstructionType.Or;
+                     break;
+                  }
+
+                  case 0x7:
+                  {
+                     type = InstructionType.And;
+                     break;
+                  }
+
+                  default:
+                     throw new InvalidOperationException("Should never get to this point, exhausted all three bits");
+               }
+               
+               break;
+            }
+
+            case 0x1:
+            {
+               // get the function code by masking bit offsets 12, 13, 14
+               int func3Code = (instruction & 0x7000) >> 12;
+               switch (func3Code)
+               {
+                  case 0x0:
+                  {
+                     type = InstructionType.Mul;
+                     break;
+                  }
+
+                  case 0x1:
+                  {
+                     type = InstructionType.Mulh;
+                     break;
+                  }
+
+                  case 0x2:
+                  {
+                     type = InstructionType.Mulhsu;
+                     break;
+                  }
+
+                  case 0x3:
+                  {
+                     type = InstructionType.Mulhu;
+                     break;
+                  }
+
+                  case 0x4:
+                  {
+                     type = InstructionType.Div;
+                     break;
+                  }
+                  case 0x5:
+                  {
+                     type = InstructionType.Divu;
+                     break;
+                  }
+
+                  case 0x6:
+                  {
+                     type = InstructionType.Rem;
+                     break;
+                  }
+
+                  case 0x7:
+                  {
+                     type = InstructionType.Remu;
                      break;
                   }
 
@@ -412,42 +516,19 @@ namespace Assembler.OutputProcessing
                break;
             }
 
-            case 0x01:
+            case 0x20:
             {
-               type = InstructionType.Sll;
-               break;
-            }
-
-            case 0x02:
-            {
-               type = InstructionType.Slt;
-               break;
-            }
-
-            case 0x03:
-            {
-               type = InstructionType.Sltu;
-               break;
-            }
-
-            case 0x04:
-            {
-               type = InstructionType.Xor;
-               break;
-            }
-
-            case 0x05:
-            {
-               // 0x05 is unique, need to get the 30th bit offset to determine 
-               int secondaryFuncCode = (instruction & 0x40000000) >> 30;
-               switch (secondaryFuncCode)
+               // get the function code by masking bit offsets 12, 13, 14
+               int func3Code = (instruction & 0x7000) >> 12;
+               switch (func3Code)
                {
-                  case 0x00:
+                  case 0x0:
                   {
-                     type = InstructionType.Srl;
+                     type = InstructionType.Sub;
                      break;
                   }
-                  case 0x01:
+
+                  case 0x5:
                   {
                      type = InstructionType.Sra;
                      break;
@@ -455,31 +536,113 @@ namespace Assembler.OutputProcessing
 
                   default:
                   {
-                     throw new ArgumentException("Unrecognized immediate instruction type " + instruction);
+                     throw new ArgumentException("Unrecognized register instruction type " + instruction);
                   }
                }
                break;
             }
 
-            case 0x06:
+            default:
             {
-               type = InstructionType.Or;
+               throw new ArgumentException("Unrecognized register instruction type " + instruction);
+            }
+         }
+
+         return type;
+      }
+
+      private static InstructionType GetFloatingPointOpInstructionType(int instruction)
+      {
+         // C# doesn't realize at this point that this doesn't really matter
+         // (we just want to use this as a mask to get the upper 32 bits
+         const uint FUNC_MASK = 0xF8000000;
+         uint uInstruction = (uint)instruction;
+         uint funcCode = ((uInstruction & FUNC_MASK)) >> 27;
+
+         InstructionType type;
+         switch (funcCode)
+         {
+            case 0x0:
+            {
+               type = InstructionType.FaddS;
                break;
             }
 
-            case 0x07:
+            case 0x1:
             {
-               type = InstructionType.And;
+               type = InstructionType.FsubS;
+               break;
+            }
+            case 0x2:
+            {
+               type = InstructionType.FmulS;
+               break;
+            }
+
+            case 0x3:
+            {
+               type = InstructionType.FdivS;
+               break;
+            }
+
+            case 0x5:
+            {
+               // get the function code by masking bit offsets 12, 13, 14
+               int func3Code = (instruction & 0x7000) >> 12;
+               switch (func3Code)
+               {
+                  case 0x0:
+                  {
+                     type = InstructionType.FminS;
+                     break;
+                  }
+
+                  case 0x1:
+                  {
+                     type = InstructionType.FmaxS;
+                     break;
+                  }
+
+                  default:
+                  {
+                     throw new ArgumentException("Unrecognized floating point instruction type " + instruction);
+                  }
+               }
+               break;
+            }
+
+            case 0xB:
+            {
+               type = InstructionType.FsqrtS;
+               break;
+            }
+
+            case 0x18:
+            {
+               type = InstructionType.FcvtWS;
+               break;
+            }
+
+            case 0x1A:
+            {
+               type = InstructionType.FcvtSW;
                break;
             }
 
             default:
             {
-               throw new ArgumentException("Unrecognized immediate function code " + functionCode);
+               throw new ArgumentException("Unrecognized floating point function code " + funcCode + ".");
             }
          }
 
          return type;
+
+      }
+
+      private static BaseOpcodes ReadBaseOpcode(int instruction)
+      {
+         // bitmask the first seven bits. this is our opcode.
+         return (BaseOpcodes)(instruction & 0x7F);
       }
    }
 }

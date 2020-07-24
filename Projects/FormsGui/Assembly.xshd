@@ -11,114 +11,136 @@ https://github.com/ei
 
 <SyntaxDefinition name="Assembly" extensions="Untitled;.asm;.ASM">
 
-	
-    <Properties>
-        <Property name="LineComment" value="#"/>
-    </Properties>
-        
-    <Digits name="Digits" color="Black"/>
 
-    <RuleSets>
-        <RuleSet ignorecase="true">
+   <Properties>
+      <Property name="LineComment" value="#"/>
+   </Properties>
+
+   <Digits name="Digits" color="Black"/>
+
+   <RuleSets>
+      <RuleSet ignorecase="true">
+
+         <Delimiters>&amp;&lt;&gt;~!^*()+=|\/{}[]:;"',</Delimiters>
+
+         <Span name="LineComment" stopateol="true" color="Green" bold="false" italic="false">
+            <Begin>#</Begin>
+         </Span>
+
+         <Span name="BlockComment" stopateol="false" color="Green" bold="false" italic="false">
+            <Begin>%comment</Begin>
+            <End>%endcomment</End>
+         </Span>
+
+         <Span name="String" stopateol="true" color="#808080" bold="false" italic="false" escapecharacter="\">
+            <Begin>"</Begin>
+            <End>"</End>
+         </Span>
+
+         <Span name="Char" stopateol="true" color="#D50000" bold="false" italic="false" escapecharacter="\">
+            <Begin>'</Begin>
+            <End>'</End>
+         </Span>
+
+         <KeyWords name="Keywords1" color="DodgerBlue" bold="true" italic="false">
+            <Key word = "lui" />
+            <Key word = "auipc" />
+            <Key word = "jal" />
+            <Key word = "jalr" />
+            <Key word = "beq" />
+            <Key word = "beqz" />
+            <Key word = "bne" />
+            <Key word = "bnez" />
+            <Key word = "blt" />
+            <Key word = "bltz" />
+            <Key word = "bge" />
+            <Key word = "bgez" />
+            <Key word = "bltu" />
+            <Key word = "bgeu" />
+            <Key word = "lb" />
+            <Key word = "lh" />
+            <Key word = "lw" />
+            <Key word = "lbu" />
+            <Key word = "lhu" />
+            <Key word = "sb" />
+            <Key word = "sh" />
+            <Key word = "sw" />
+            <Key word = "addi" />
+            <Key word = "slti" />
+            <Key word = "sltiu" />
+            <Key word = "xori" />
+            <Key word = "ori" />
+            <Key word = "andi" />
+            <Key word = "slli" />
+            <Key word = "srli" />
+            <Key word = "srai" />
+            <Key word = "add" />
+            <Key word = "sub" />
+            <Key word = "sll" />
+            <Key word = "slt" />
+            <Key word = "sltu" />
+            <Key word = "xor" />
+            <Key word = "srl" />
+            <Key word = "sra" />
+            <Key word = "or" />
+            <Key word = "and" />
+            <Key word = "not" />
+            <Key word = "nop" />
+            <Key word = "li" />
+            <Key word = "la" />
+            <Key word = "mv" />
+            <Key word = "j" />
+            <Key word = "ecall" />
+            <Key word = "ebreak" />
             
-            <Delimiters>&amp;&lt;&gt;~!^*()+=|\/{}[]:;"',</Delimiters>
+            <Key word = "mul" />
+            <Key word = "mulh" />
+            <Key word = "mulhsu" />
+            <Key word = "mulhu" />
+            <Key word = "div" />
+            <Key word = "divu" />
+            <Key word = "rem" />
+            <Key word = "remu" />
             
-            <Span name="LineComment" stopateol="true" color="Green" bold="false" italic="false">
-                <Begin>#</Begin>
-            </Span>
-            
-            <Span name="BlockComment" stopateol="false" color="Green" bold="false" italic="false">
-                <Begin>%comment</Begin>
-                <End>%endcomment</End>
-            </Span>
-            
-            <Span name="String" stopateol="true" color="#808080" bold="false" italic="false" escapecharacter="\">
-                <Begin>"</Begin>
-                <End>"</End>
-            </Span>
-            
-            <Span name="Char" stopateol="true" color="#D50000" bold="false" italic="false" escapecharacter="\">
-                <Begin>'</Begin>
-                <End>'</End>
-            </Span>
-            
-            <KeyWords name="Keywords1" color="DodgerBlue" bold="true" italic="false">
-                <Key word = "lui" />
-                <Key word = "auipc" />
-                <Key word = "jal" />
-                <Key word = "jalr" />
-                <Key word = "beq" />
-                <Key word = "beqz" />
-                <Key word = "bne" />
-                <Key word = "bnez" />
-                <Key word = "blt" />
-                <Key word = "bltz" />
-                <Key word = "bge" />
-                <Key word = "bgez" />
-                <Key word = "bltu" />
-                <Key word = "bgeu" />
-                <Key word = "lb" />
-                <Key word = "lh" /> 
-                <Key word = "lw" /> 
-                <Key word = "lbu" /> 
-                <Key word = "lhu" /> 
-                <Key word = "sb" />
-                <Key word = "sh" /> 
-                <Key word = "sw" />
-                <Key word = "addi" /> 
-                <Key word = "slti" /> 
-                <Key word = "sltiu" /> 
-                <Key word = "xori" /> 
-                <Key word = "ori" />
-                <Key word = "andi" />
-                <Key word = "slli" />
-                <Key word = "srli" />
-                <Key word = "srai" />
-                <Key word = "add" />
-                <Key word = "sub" /> 
-                <Key word = "sll" /> 
-                <Key word = "slt" />
-                <Key word = "sltu" />
-                <Key word = "xor" /> 
-                <Key word = "srl" />
-                <Key word = "sra" />
-                <Key word = "or" />
-                <Key word = "and" />
-                <Key word = "not" />
-                <Key word = "nop" />
-                <Key word = "li" />
-                <Key word = "la" />
-                <Key word = "mv" /> 
-                <Key word = "j" />
-                <Key word = "ecall" />
-                <Key word = "ebreak" />
-            </KeyWords>
-            
-            <KeyWords name="AssemblerDecls" color="Fuchsia" bold="false" italic="false">
-                <Key word=".align"/>
-                <Key word=".bss"/>
-                <Key word=".data"/>
-                <Key word=".extern"/>
-                <Key word=".global"/>
-                <Key word=".globl"/>
-                <Key word=".include"/>
-                <Key word=".rodata"/>
-                <Key word=".rodata1"/>
-                <Key word=".text"/>
-            </KeyWords>
-			
-			<KeyWords name="DataTypes" color="DarkOrange" bold="false" italic="false">
-                <Key word=".alpha"/>
-                <Key word=".ascii"/>
-                <Key word=".asciiz"/>
-                <Key word=".byte"/>
-                <Key word=".char"/>
-                <Key word=".half"/>
-                <Key word=".hword"/>
-                <Key word=".long"/>
-                <Key word=".short"/>
-                <Key word=".word"/>
-            </KeyWords>
-        </RuleSet>
-    </RuleSets>
+            <Key word = "fadd.s" />
+            <Key word = "fsub.s" />
+            <Key word = "fmul.s" />
+            <Key word = "fdiv.s" />
+            <Key word = "fsqrt.s" />
+            <Key word = "fmin.s" />
+            <Key word = "fmax.s" />
+            <Key word = "feq.s" />
+            <Key word = "flt.s" />
+            <Key word = "fle.s" />
+            <Key word = "fcvt.s.w" />
+            <Key word = "fcvt.w.s" />
+         </KeyWords>
+
+         <KeyWords name="AssemblerDecls" color="Fuchsia" bold="false" italic="false">
+            <Key word=".align"/>
+            <Key word=".bss"/>
+            <Key word=".data"/>
+            <Key word=".extern"/>
+            <Key word=".global"/>
+            <Key word=".globl"/>
+            <Key word=".include"/>
+            <Key word=".rodata"/>
+            <Key word=".rodata1"/>
+            <Key word=".text"/>
+         </KeyWords>
+
+         <KeyWords name="DataTypes" color="DarkOrange" bold="false" italic="false">
+            <Key word=".alpha"/>
+            <Key word=".ascii"/>
+            <Key word=".asciiz"/>
+            <Key word=".byte"/>
+            <Key word=".char"/>
+            <Key word=".half"/>
+            <Key word=".hword"/>
+            <Key word=".long"/>
+            <Key word=".short"/>
+            <Key word=".word"/>
+         </KeyWords>
+      </RuleSet>
+   </RuleSets>
 </SyntaxDefinition>
