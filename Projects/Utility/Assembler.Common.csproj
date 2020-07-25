@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateAssemblyError.cs" />
+    <Compile Include="ArrayUtils.cs" />
     <Compile Include="AssemblerOptions.cs" />
     <Compile Include="AssemblerResult.cs" />
     <Compile Include="AssemblyException.cs" />

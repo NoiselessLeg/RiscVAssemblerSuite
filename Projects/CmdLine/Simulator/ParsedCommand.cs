@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,7 +60,17 @@ namespace Assembler.CmdLine.Simulator
          }
          else
          {
-            retVal = new ParsedCommand(trimmedLine);
+            string[] tokens = trimmedLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (tokens.Length == 1)
+            {
+               retVal = new ParsedCommand(tokens[0]);
+            }
+            else if (tokens.Length > 1)
+            {
+               string[] args = tokens.SubArray(1, tokens.Length - 1);
+               retVal = new ParsedCommand(tokens[0], args);
+            }
          }
 
          return retVal;
