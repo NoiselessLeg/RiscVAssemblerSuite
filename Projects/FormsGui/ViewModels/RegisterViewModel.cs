@@ -67,7 +67,7 @@ namespace Assembler.FormsGui.ViewModels
 
                case RegisterDisplayType.Hexadecimal:
                {
-                  dispStr = "0x" + Value.ToString("x4");
+                  dispStr = "0x" + Value.ToString("x8");
                   break;
                }
             }
@@ -152,7 +152,9 @@ namespace Assembler.FormsGui.ViewModels
 
                case RegisterDisplayType.Hexadecimal:
                {
-                  dispStr = "0x" + Value.ToString("x4");
+                  byte[] bytes = BitConverter.GetBytes(Value);
+                  int iVal = BitConverter.ToInt32(bytes, 0);
+                  dispStr = "0x" + iVal.ToString("x8");
                   break;
                }
             }

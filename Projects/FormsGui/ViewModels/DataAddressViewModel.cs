@@ -241,10 +241,10 @@ namespace Assembler.FormsGui.ViewModels
              (e.StartingAddress <= m_MaxOffset && m_MaxOffset < maxAffectedAddress) ||
              (m_StartingOffset <= e.StartingAddress && m_MaxOffset >= maxAffectedAddress))
          {
-            OnPropertyChanged(nameof(Word0));
-            OnPropertyChanged(nameof(Word1));
-            OnPropertyChanged(nameof(Word2));
-            OnPropertyChanged(nameof(Word3));
+            OnPropertyChanged(nameof(Word0Str));
+            OnPropertyChanged(nameof(Word1Str));
+            OnPropertyChanged(nameof(Word2Str));
+            OnPropertyChanged(nameof(Word3Str));
          }
       }
 

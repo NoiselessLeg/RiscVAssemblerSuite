@@ -259,6 +259,11 @@ namespace Assembler.FormsGui.ViewModels
          {
             register.DisplayType = displayType;
          }
+
+         foreach (var register in FloatingPointRegisters)
+         {
+            register.DisplayType = displayType;
+         }
       }
 
       private void SwitchDataDisplayType(RegisterDisplayType displayType)

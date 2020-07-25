@@ -22,6 +22,7 @@ namespace Assembler.FormsGui.Controls
       public FileExecutionTabPage(DisassembledFileViewModel viewModel):
          this()
       {
+         
          m_PrimarySrcGridRowColor = m_SrcGrid.DefaultCellStyle.BackColor;
          m_AlternateSrcGridRowColor = m_SrcGrid.AlternatingRowsDefaultCellStyle.BackColor;
 
