@@ -63,10 +63,6 @@ namespace Assembler.FormsGui.Controls
          m_PauseBtn.BindToCommand(m_ExViewModel.PauseExecutionCommand);
          m_ResumeBtn.BindToCommand(m_ExViewModel.ResumeExecutionCommand);
          m_StepBtn.BindToCommand(m_ExViewModel.StepToNextInstructionCommand);
-
-         // set the first row by default to be highlighted.
-         RemoveRowHighlighting(0);
-         UpdateRowHighlighting(0);
       }
 
       /// <summary> 
@@ -148,6 +144,9 @@ namespace Assembler.FormsGui.Controls
          // invoking this in our run loop is HYPER expensive. This is literally just
          // to move the selected index so it's visible to the user if it goes offscreen,
          // so only do that if we're confident the selection moved off screen.
+
+         // also, if this is called from the constructor, perform the initial highlighting
+         // of the row
          if (CurrentElemIndexIsOffscreen(rowIndex))
          {
             m_SrcGrid.InvokeIfRequired(() => m_SrcGrid.FirstDisplayedScrollingRowIndex = rowIndex);
@@ -227,6 +226,23 @@ namespace Assembler.FormsGui.Controls
          else
          {
             btn.Checked = true;
+         }
+      }
+
+      /// <summary>
+      /// This is a workaround for the fact that DataGridView styles cannot
+      /// be updated unless they are visible. Perform the initial highlighting
+      /// upon visibility changing
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void FileExecutionTabPage_VisibleChanged(object sender, EventArgs e)
+      {
+         if (Visible)
+         {
+            // set the first row by default to be highlighted.
+            RemoveRowHighlighting(0);
+            UpdateRowHighlighting(0);
          }
       }
 
