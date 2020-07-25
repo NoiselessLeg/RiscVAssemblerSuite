@@ -241,8 +241,8 @@ namespace Assembler.FormsGui.Controls
          if (Visible)
          {
             // set the first row by default to be highlighted.
-            RemoveRowHighlighting(0);
-            UpdateRowHighlighting(0);
+            RemoveRowHighlighting(m_ExViewModel.ActiveInstructionIdx);
+            UpdateRowHighlighting(m_ExViewModel.ActiveInstructionIdx);
          }
       }
 
