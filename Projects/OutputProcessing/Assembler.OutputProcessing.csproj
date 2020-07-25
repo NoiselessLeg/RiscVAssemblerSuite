@@ -86,9 +86,11 @@
     <Compile Include="TextOutput\InstructionGenerators\IParameterStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\JalInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\JalrInstructionStringifier.cs" />
+    <Compile Include="TextOutput\InstructionGenerators\FLdInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\LdInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\FltPtRInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\RInstructionStringifier.cs" />
+    <Compile Include="TextOutput\InstructionGenerators\FStoreInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\StoreInstructionStringifier.cs" />
     <Compile Include="TextOutput\InstructionGenerators\UInstructionStringifier.cs" />
     <Compile Include="InstructionType.cs" />

@@ -52,6 +52,8 @@
       Divu,
       Rem,
       Remu,
+      Flw,
+      Fsw,
       FaddS,
       FsubS,
       FmulS,

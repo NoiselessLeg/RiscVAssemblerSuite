@@ -61,7 +61,10 @@ namespace Assembler.OutputProcessing.TextOutput
                 { InstructionType.Divu, new RInstructionStringifier("divu") },
                 { InstructionType.Rem, new RInstructionStringifier("rem") },
                 { InstructionType.Remu, new RInstructionStringifier("remu") },
-                
+
+
+                { InstructionType.Flw, new FLdInstructionStringifier() },
+                { InstructionType.Fsw, new FStoreInstructionStringifier() },
                 { InstructionType.FaddS, new FltPtRInstructionStringifier("fadd.s") },
                 { InstructionType.FsubS, new FltPtRInstructionStringifier("fsub.s") },
                 { InstructionType.FmulS, new FltPtRInstructionStringifier("fmul.s") },

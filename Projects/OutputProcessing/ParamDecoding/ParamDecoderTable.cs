@@ -59,6 +59,8 @@ namespace Assembler.OutputProcessing.ParamDecoding
                { InstructionType.Ecall, new EcallDecoder() },
                { InstructionType.Ebreak, new EbreakDecoder() },
 
+               { InstructionType.Fsw, new StoreDecoder() },
+               { InstructionType.Flw, new ImmediateInstructionDecoder() },
                { InstructionType.FaddS, new RegisterInstructionDecoder() },
                { InstructionType.FsubS, new RegisterInstructionDecoder() },
                { InstructionType.FmulS, new RegisterInstructionDecoder() },

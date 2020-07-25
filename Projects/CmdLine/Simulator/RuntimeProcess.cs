@@ -168,6 +168,11 @@ namespace Assembler.CmdLine
          m_DataSegment.WriteWord(address, value);
       }
 
+      public void WriteFloatToMemory(int address, float value)
+      {
+         m_DataSegment.WriteSinglePrecisionFloat(address, value);
+      }
+
       public void DumpMemorySegment()
       {
          for (int segmentItr = 0; segmentItr < m_DataSegment.TotalDataSegmentSize; segmentItr += sizeof(int))
@@ -251,9 +256,9 @@ namespace Assembler.CmdLine
          m_ProcCtrl.RelinquishControlToParentProcess();
       }
 
-      public IList<IRegister<int>> Registers
+      public RegisterManager RegisterManager
       {
-         get { return m_Ctx.UserRegisters; }
+         get { return m_RegMgr; }
       }
 
       private PrgmExecutionState ExecutionState

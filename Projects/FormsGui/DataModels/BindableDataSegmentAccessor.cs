@@ -72,6 +72,11 @@ namespace Assembler.FormsGui.DataModels
          return m_UnderlyingAccessor.ReadUnsignedWord(address);
       }
 
+      public float ReadSinglePrecisionFloat(int address)
+      {
+         return m_UnderlyingAccessor.ReadSinglePrecisionFloat(address);
+      }
+
       public long ReadLong(int address)
       {
          return m_UnderlyingAccessor.ReadLong(address);
@@ -120,6 +125,12 @@ namespace Assembler.FormsGui.DataModels
       public void WriteUnsignedWord(int address, uint value)
       {
          m_UnderlyingAccessor.WriteUnsignedWord(address, value);
+         OnSegmentChanged(address, 1);
+      }
+
+      public void WriteSinglePrecisionFloat(int address, float value)
+      {
+         m_UnderlyingAccessor.WriteSinglePrecisionFloat(address, value);
          OnSegmentChanged(address, 1);
       }
 

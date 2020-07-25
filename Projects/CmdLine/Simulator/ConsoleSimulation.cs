@@ -45,7 +45,6 @@ namespace Assembler.CmdLine.Simulator
       public void RunSimulator()
       {
          m_Terminal.PrintString("Type \"help\" (sans quotes) to print a brief description of available commands.\n");
-         m_Terminal.PrintString("Type \"help(<command name>)\" (sans quotes) to print more details about a specific command.\n");
 
          while (!m_TerminationMgr.IsTerminated)
          {

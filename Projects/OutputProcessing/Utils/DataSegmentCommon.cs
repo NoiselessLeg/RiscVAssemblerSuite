@@ -108,6 +108,26 @@ namespace Assembler.OutputProcessing.Utils
       }
 
       /// <summary>
+      /// Reads a 32 bit single precision floating point value from the data segment.
+      /// </summary>
+      /// <param name="array">The byte array to read from.</param>
+      /// <param name="address">The address in the .data segment to retrieve the value from.</param>
+      /// <param name="runtimeDataSegmentOffset">The starting runtime segment offset.</param>
+      /// <returns>The 32-bit signed integer stored at the provided address.</returns>
+      public static float ReadSinglePrecisionFloat(byte[] array, int address, int runtimeDataSegmentOffset)
+      {
+         try
+         {
+            int idx = address - runtimeDataSegmentOffset;
+            return BitConverter.ToSingle(array, idx);
+         }
+         catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
+         {
+            throw new AccessViolationException("Attempted out-of-bounds 32-bit memory read of address 0x" + address.ToString("X2"));
+         }
+      }
+
+      /// <summary>
       /// Reads a 32 bit signed integer from the data segment.
       /// </summary>
       /// <param name="array">The byte array to read from.</param>

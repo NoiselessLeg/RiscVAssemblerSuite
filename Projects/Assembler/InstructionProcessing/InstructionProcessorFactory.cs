@@ -85,6 +85,8 @@ namespace Assembler.InstructionProcessing
                 { "remu", new RemuProcessor() },
 
                 //Floating point instructions
+                { "flw", new FlwProcessor(symbolTable) },
+                { "fsw", new FswProcessor() },
                 { "fcvt.w.s", new FcvtwsProcessor() },
                 { "fcvt.s.w", new FcvtswProcessor() },
                 { "fadd.s", new FaddsProcessor() },

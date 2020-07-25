@@ -8,17 +8,19 @@ namespace Assembler.OutputProcessing
    {
       enum BaseOpcodes
       {
-         Lui = 0x37,
-         Auipc = 0x17,
-         Jal = 0x6F,
-         Jalr = 0x67,
-         Branch = 0x63,
-         Load = 0x03,
-         Store = 0x23,
+         Load = 0x3,
+         FLoadWord = 0x7,
          Immediate = 0x13,
+         Auipc = 0x17,
+         Store = 0x23,
+         FStoreWord = 0x27,
          Register = 0x33,
-         Environment = 0x73,
-         FloatOp = 0x53
+         Lui = 0x37,
+         FloatOp = 0x53,
+         Branch = 0x63,
+         Jalr = 0x67,
+         Jal = 0x6F,
+         Environment = 0x73
       }
 
       /// <summary>
@@ -94,7 +96,19 @@ namespace Assembler.OutputProcessing
                instType = GetStoreInstructionType(instruction);
                break;
             }
-            
+
+            case BaseOpcodes.FStoreWord:
+            {
+               instType = InstructionType.Fsw;
+               break;
+            }
+
+            case BaseOpcodes.FLoadWord:
+            {
+               instType = InstructionType.Flw;
+               break;
+            }
+
             case BaseOpcodes.Immediate:
             {
                instType = GetImmediateInstructionType(instruction);

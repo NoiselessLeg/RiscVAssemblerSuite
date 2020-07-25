@@ -76,6 +76,8 @@
     <Compile Include="InstructionProcessing\BneProcessor.cs" />
     <Compile Include="InstructionProcessing\BnezProcessor.cs" />
     <Compile Include="InstructionProcessing\BranchInstructionBase.cs" />
+    <Compile Include="InstructionProcessing\FlwProcessor.cs" />
+    <Compile Include="InstructionProcessing\FswProcessor.cs" />
     <Compile Include="InstructionProcessing\RemuProcessor.cs" />
     <Compile Include="InstructionProcessing\RemProcessor.cs" />
     <Compile Include="InstructionProcessing\DivuProcessor.cs" />

@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.Interpreter;
+using Assembler.Simulation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
 {
    public class ReadRegisterCommand : IConsoleCommand
    {
-      public ReadRegisterCommand(Register[] registers, ITerminal terminal)
+      public ReadRegisterCommand(RegisterManager registers, ITerminal terminal)
       {
          m_Registers = registers;
          m_Terminal = terminal;
@@ -18,7 +19,7 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
 
       public string CommandString => "readRegister";
 
-      public string CommandStringWithArgs => CommandString + "(<register name | register index>)";
+      public string CommandStringWithArgs => CommandString + "(<register name>)";
 
       public int NumArguments => 1;
 
@@ -35,26 +36,22 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
          try
          {
             int regIdx = -1;
-            string regName = string.Empty;
-            if (RegisterMap.IsNamedRegister(args[0]))
+            string regName = args[0];
+            if (RegisterMap.IsNamedIntegerRegister(regName))
             {
-               regIdx = RegisterMap.GetNumericRegisterValue(args[0]);
-               regName = args[0];
+               regIdx = RegisterMap.GetNumericRegisterValue(regName);
+               m_Terminal.PrintString("\t" + regName + " = " + m_Registers.UserIntRegisters[regIdx].Value + '\n');
+            }
+            else if (RegisterMap.IsNamedFloatingPointRegister(regName))
+            {
+               regIdx = RegisterMap.GetNumericFloatingPointRegisterValue(regName);
+               m_Terminal.PrintString("\t" + regName + " = " + m_Registers.UserFloatingPointRegisters[regIdx].Value + '\n');
             }
             else
             {
-               regIdx = int.Parse(args[0]);
-               if (regIdx < m_Registers.Length)
-               {
-                  regName = ReverseRegisterMap.GetStringifiedRegisterValue(regIdx);
-               }
-               else
-               {
-                  throw new ParseException(regIdx + " was not a valid register index.");
-               }
+               throw new ParseException(regName + " is not a valid integer register name.");
             }
 
-            m_Terminal.PrintString("\t" + regName + " = " + m_Registers[regIdx].Value + '\n');
          }
          catch (Exception ex)
          {
@@ -62,7 +59,7 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
          }
       }
 
-      private readonly Register[] m_Registers;
+      private readonly RegisterManager m_Registers;
       private readonly ITerminal m_Terminal;
    }
 }

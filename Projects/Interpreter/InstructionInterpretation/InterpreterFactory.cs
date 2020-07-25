@@ -65,7 +65,10 @@ namespace Assembler.Interpreter.InstructionInterpretation
                 { InstructionType.Mulhu, new MulhInterpreter() },
                 { InstructionType.Divu, new DivInterpreter() },
                 { InstructionType.Remu, new RemInterpreter() },
-                
+
+
+                { InstructionType.Flw, new FlwInterpreter() },
+                { InstructionType.Fsw, new FswInterpreter() },
                 { InstructionType.FaddS, new FaddsInterpreter() },
                 { InstructionType.FsubS, new FsubsInterpreter() },
                 { InstructionType.FmulS, new FmulsInterpreter() },

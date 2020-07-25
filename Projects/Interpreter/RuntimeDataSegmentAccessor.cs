@@ -169,6 +169,17 @@ namespace Assembler.Interpreter
       }
 
       /// <summary>
+      /// Reads a 32-bit single precision floating point value from the data segment.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to retrieve the value from.</param>
+      /// <returns>The 32-bit floating point value stored at the provided address.</returns>
+      public float ReadSinglePrecisionFloat(int address)
+      {
+         DataSubsection correspondingSubsection = GetDataSegmentForAddress(address);
+         return DataSegmentCommon.ReadSinglePrecisionFloat(correspondingSubsection.RawData, address, correspondingSubsection.StartingAddress);
+      }
+
+      /// <summary>
       /// Reads a 64 bit signed integer from the data segment.
       /// </summary>
       /// <param name="address">The address in the .data segment to retrieve the value from.</param>
@@ -305,6 +316,26 @@ namespace Assembler.Interpreter
       /// <param name="address">The address in the .data segment to write to.</param>
       /// <param name="value">The value to write to the address.</param>
       public void WriteUnsignedWord(int address, uint value)
+      {
+         try
+         {
+            DataSubsection correspondingSubsection = GetDataSegmentForAddress(address);
+            int idx = address - correspondingSubsection.StartingAddress;
+            byte[] wordBytes = BitConverter.GetBytes(value);
+            CopyBytes(wordBytes, correspondingSubsection.RawData, idx);
+         }
+         catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
+         {
+            throw new AccessViolationException("Attempted out of bounds 32 bit memory write to address 0x" + address.ToString("X8"));
+         }
+      }
+
+      /// <summary>
+      /// Writes a 32-bit single precision flaot into the specified .data segment offset.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to write to.</param>
+      /// <param name="value">The value to write to the address.</param>
+      public void WriteSinglePrecisionFloat(int address, float value)
       {
          try
          {

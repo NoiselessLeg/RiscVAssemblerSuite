@@ -20,11 +20,11 @@ namespace Assembler.Simulation
          {
             if (i == 0)
             {
-               m_BasicRegisters.Add(new ZeroRegister());
+               m_BasicRegisters[i] = new ZeroRegister();
             }
             else
             {
-               m_BasicRegisters.Add(new Register<int>());
+               m_BasicRegisters[i] = new Register<int>();
             }
 
             m_OriginalIntRegisters[i] = m_BasicRegisters[i].Value;
@@ -42,7 +42,7 @@ namespace Assembler.Simulation
 
          for (int i = 0; i < InterpreterCommon.MAX_FLOATING_PT_REGISTERS; ++i)
          {
-            m_FpRegisters.Add(new Register<float>());
+            m_FpRegisters[i] = new Register<float>();
             m_OriginalFpRegisters[i] = m_FpRegisters[i].Value;
          }
       }

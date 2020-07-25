@@ -1,5 +1,6 @@
 ﻿using Assembler.Common;
 using Assembler.Interpreter;
+using Assembler.Simulation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
 {
    public class DumpRegistersCommand : IConsoleCommand
    {
-      public DumpRegistersCommand(Register[] registers, ITerminal terminal)
+      public DumpRegistersCommand(RegisterManager regMgr, ITerminal terminal)
       {
-         m_Registers = registers;
+         m_RegMgr = regMgr;
          m_Terminal = terminal;
       }
 
@@ -32,14 +33,24 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
 
       public void Execute(string[] args)
       {
-         for (int i = 0; i < m_Registers.Length; ++i)
+         int regItr = 0;
+         foreach (var iRegister in m_RegMgr.UserIntRegisters)
          {
-            string regName = ReverseRegisterMap.GetStringifiedRegisterValue(i);
-            m_Terminal.PrintString(regName + " (" + i + ") = " + m_Registers[i].Value.ToString() + '\n');
+            string regName = ReverseRegisterMap.GetStringifiedRegisterValue(regItr);
+            m_Terminal.PrintString(regName + " (" + regItr + ") = " + iRegister.Value.ToString() + '\n');
+            ++regItr;
+         }
+
+         regItr = 0;
+         foreach (var fRegister in m_RegMgr.UserFloatingPointRegisters)
+         {
+            string regName = ReverseRegisterMap.GetStringifiedFloatingPtRegisterValue(regItr);
+            m_Terminal.PrintString(regName + " (" + regItr + ") = " + fRegister.Value.ToString("0.0######") + '\n');
+            ++regItr;
          }
       }
 
-      private readonly Register[] m_Registers;
+      private readonly RegisterManager m_RegMgr;
       private readonly ITerminal m_Terminal;
    }
 }

@@ -101,7 +101,9 @@ https://github.com/ei
             <Key word = "divu" />
             <Key word = "rem" />
             <Key word = "remu" />
-            
+
+            <Key word = "flw" />
+            <Key word = "fsw" />
             <Key word = "fadd.s" />
             <Key word = "fsub.s" />
             <Key word = "fmul.s" />

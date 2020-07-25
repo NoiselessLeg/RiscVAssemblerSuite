@@ -51,6 +51,13 @@
       /// <param name="address">The address in the .data segment to retrieve the value from.</param>
       /// <returns>The 32-bit unsigned integer stored at the provided address.</returns>
       uint ReadUnsignedWord(int address);
+      
+      /// <summary>
+      /// Reads a 32 bit single precision floating point value from the data segment.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to retrieve the value from.</param>
+      /// <returns>The 32-bit float value stored at the provided address.</returns>
+      float ReadSinglePrecisionFloat(int address);
 
       /// <summary>
       /// Reads a 64 bit signed integer from the data segment.
@@ -114,6 +121,13 @@
       /// <param name="address">The address in the .data segment to write to.</param>
       /// <param name="value">The value to write to the address.</param>
       void WriteUnsignedWord(int address, uint value);
+
+      /// <summary>
+      /// Writes a 32-bit single precision flaot into the specified .data segment offset.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to write to.</param>
+      /// <param name="value">The value to write to the address.</param>
+      void WriteSinglePrecisionFloat(int address, float value);
 
       /// <summary>
       /// Writes a 64-bit signed integer into the specified .data segment offset.

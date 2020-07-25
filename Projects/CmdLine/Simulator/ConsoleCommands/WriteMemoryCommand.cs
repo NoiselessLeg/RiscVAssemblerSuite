@@ -28,7 +28,6 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
       {
          try
          {
-
             if (IntExtensions.TryParseEx(args[0], out int address))
             {
                if (IntExtensions.TryParseEx(args[1], out int value))
@@ -36,9 +35,14 @@ namespace Assembler.CmdLine.Simulator.ConsoleCommands
                   m_Proc.WriteMemory(address, value);
                   m_Terminal.PrintString("\t" + args[0] + " = " + args[1] + '\n');
                }
+               else if (FloatExtensions.TryParseEx(args[1], out float fVal))
+               {
+                  m_Proc.WriteFloatToMemory(address, fVal);
+                  m_Terminal.PrintString("\t" + args[0] + " = " + args[1] + '\n');
+               }
                else
                {
-                  m_Terminal.PrintString(args[1] + " was not a valid 32 bit integer.\n");
+                  m_Terminal.PrintString(args[1] + " was not a valid 32 bit value.\n");
                }
             }
             else

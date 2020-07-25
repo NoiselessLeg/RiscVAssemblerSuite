@@ -70,6 +70,7 @@
     <Compile Include="DisassemblerOptions.cs" />
     <Compile Include="Endianness.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="FloatExtensions.cs" />
     <Compile Include="FltExtensions.cs" />
     <Compile Include="InternalAssemblerException.cs" />
     <Compile Include="InterpreterOptions.cs" />

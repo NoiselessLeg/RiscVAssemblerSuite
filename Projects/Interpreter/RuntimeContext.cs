@@ -91,6 +91,15 @@ namespace Assembler.Interpreter
       }
 
       /// <summary>
+      /// Reads a single-precision floating point value from the specified .data segment offset.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to read from.</param>
+      public float ReadSinglePrecisionFloat(int address)
+      {
+         return m_DataAccessor.ReadSinglePrecisionFloat(address);
+      }
+
+      /// <summary>
       /// Reads a 64 bit signed integer from the data segment.
       /// </summary>
       /// <param name="address">The address in the .data segment to retrieve the value from.</param>
@@ -178,6 +187,16 @@ namespace Assembler.Interpreter
       public void WriteUnsignedWord(int address, uint value)
       {
          m_DataAccessor.WriteUnsignedWord(address, value);
+      }
+
+      /// <summary>
+      /// Writes a 32-bit single precision floating point value into the specified .data segment offset.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to write to.</param>
+      /// <param name="value">The value to write to the address.</param>
+      public void WriteSinglePrecisionFloat(int address, float value)
+      {
+         m_DataAccessor.WriteSinglePrecisionFloat(address, value);
       }
 
       /// <summary>

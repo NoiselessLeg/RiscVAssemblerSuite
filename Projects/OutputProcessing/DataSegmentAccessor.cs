@@ -110,6 +110,16 @@ namespace Assembler.OutputProcessing
       }
 
       /// <summary>
+      /// Reads a 32 bit single precision floating point value from the data segment.
+      /// </summary>
+      /// <param name="address">The address in the .data segment to retrieve the value from.</param>
+      /// <returns>The 32-bit float value stored at the provided address.</returns>
+      public float ReadSinglePrecisionFloat(int address)
+      {
+         return DataSegmentCommon.ReadSinglePrecisionFloat(m_ByteArray, address, m_RuntimeDataSegmentOffset);
+      }
+
+      /// <summary>
       /// Reads a 64 bit signed integer from the data segment.
       /// </summary>
       /// <param name="address">The address in the .data segment to retrieve the value from.</param>

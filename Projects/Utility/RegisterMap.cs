@@ -170,7 +170,7 @@ namespace Assembler.Common
       /// </summary>
       /// <param name="value">The string value to interpret</param>
       /// <returns>True if the register is a "named" register, otherwise returns false.</returns>
-      public static bool IsNamedRegister(string value)
+      public static bool IsNamedIntegerRegister(string value)
       {
          return s_RegisterMap.ContainsKey(value);
       }
